@@ -1,4 +1,4 @@
-**About **
+**About**
 
 This repository contains pages (published as github pages) to be implemented as iframes for libraries of Jyvaskyla on jyvaskyla.fi/kirjasto
 
