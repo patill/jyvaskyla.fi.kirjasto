@@ -157,73 +157,82 @@ function getWeekSchelude(direction) {
                 
                 // Self service times.
                 if(data.schedules[i].sections.selfservice != null) {
-                    rowspanCount = rowspanCount +1;
-                    // Get scheludes and check if starts before or at the same time staff is present.
-                    selfServiceStart = data.schedules[i].sections.selfservice.times[0].opens;
-                    selfServiceEnd = data.schedules[i].sections.selfservice.times[0].closes;
-                    if (moment(selfServiceStart, format).isBefore(moment(staffPresentStart, format)) || (moment(selfServiceStart, format).isSame(moment(staffPresentStart, format)))) {
-                        selfServiceBefore = '<tr class="time--sub time ' + isTodayClass + ' time--no-staff">' +
-                        '<td><i class="fa fa-long-arrow-right"></i> Omatoimiaika</td>' +
-                        '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
-                        '</tr>';
-                        // Set dayStart to match selfServiceStart, if dayEnd is '', set it too.
-                        dayStart = selfServiceStart;
-                        if(dayEnd === '') {
-                            dayEnd = selfServiceEnd;
+                    if(data.schedules[i].sections.selfservice.times[0] != null) {
+                        rowspanCount = rowspanCount + 1;
+                        // Get scheludes and check if starts before or at the same time staff is present.
+                        selfServiceStart = data.schedules[i].sections.selfservice.times[0].opens;
+                        selfServiceEnd = data.schedules[i].sections.selfservice.times[0].closes;
+                        if (moment(selfServiceStart, format).isBefore(moment(staffPresentStart, format)) ||
+                            (moment(selfServiceStart, format).isSame(moment(staffPresentStart, format)))) {
+                            selfServiceBefore = '<tr class="time--sub time ' + isTodayClass + ' time--no-staff">' +
+                                '<td><i class="fa fa-long-arrow-right"></i> Omatoimiaika</td>' +
+                                '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
+                                '</tr>';
+                            // Set dayStart to match selfServiceStart, if dayEnd is '', set it too.
+                            dayStart = selfServiceStart;
+                            if (dayEnd === '') {
+                                dayEnd = selfServiceEnd;
+                            }
+                            if (data.schedules[i].sections.selfservice.times[1] != null) {
+                                rowspanCount = rowspanCount +1;
+                                selfServiceStart = data.schedules[i].sections.selfservice.times[1].opens;
+                                selfServiceEnd = data.schedules[i].sections.selfservice.times[1].closes;
+                                selfServiceAfter = '<tr class="time--sub time ' + isTodayClass + ' time--no-staff">' +
+                                    '<td><i class="fa fa-long-arrow-right"></i> Omatoimiaika</td>' +
+                                    '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
+                                    '</tr>';
+                                dayEnd = selfServiceEnd;
+                            }
+                            isClosed = false;
                         }
-                        isClosed = false;
+                        else {
+                            selfServiceAfter = '<tr class="time--sub time ' + isTodayClass + ' time--no-staff">' +
+                            '<td><i class="fa fa-long-arrow-right"></i> Omatoimiaika</td>' +
+                            '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
+                            '</tr>';
+                        }
                     }
-
-                    if (data.schedules[i].sections.selfservice.times[1] != null) {
-                        rowspanCount = rowspanCount +1;
-                        selfServiceStart = data.schedules[i].sections.selfservice.times[1].opens;
-                        selfServiceEnd = data.schedules[i].sections.selfservice.times[1].closes;
-                        selfServiceAfter = '<tr class="time--sub time ' + isTodayClass + ' time--no-staff">' +
-                        '<td><i class="fa fa-long-arrow-right"></i> Omatoimiaika</td>' +
-                        '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
-                        '</tr>';
-                        dayEnd = selfServiceEnd;
-                    }
-
-
                 }
                 // Magazines dep
                 if(data.schedules[i].sections.magazines != null) {
-                   // Get scheludes and check if starts before staff is present.
-                    magazinesStart = data.schedules[i].sections.magazines.times[0].opens;
-                    magazinesEnd = data.schedules[i].sections.magazines.times[0].closes;
-                    if (moment(magazinesStart, format).isBefore(moment(staffPresentStart, format)) || (moment(magazinesStart, format).isSame(moment(staffPresentStart, format)))) {
-                        rowspanCount = rowspanCount +1;
-                        isClosed = false;
-                        magazinesBefore = '<tr class="time--sub time ' + isTodayClass + ' time--no-staff">' +
-                        '<td><i class="fa fa-long-arrow-right"></i> Lehtilukusali</td>' +
-                        '<td>' + magazinesStart + ' – ' + magazinesEnd + '</td>' +
-                        '</tr>';
-                        dayStart = magazinesStart;
-                        if(dayEnd === '') {
-                            dayEnd = magazinesEnd;
+                    if(data.schedules[i].sections.magazines.times[0] != null) {
+                        // Get scheludes and check if starts before staff is present.
+                        magazinesStart = data.schedules[i].sections.magazines.times[0].opens;
+                        magazinesEnd = data.schedules[i].sections.magazines.times[0].closes;
+                        if (moment(magazinesStart, format).isBefore(moment(staffPresentStart, format)) ||
+                            (moment(magazinesStart, format).isSame(moment(staffPresentStart, format)))) {
+                            rowspanCount = rowspanCount + 1;
+                            isClosed = false;
+                            magazinesBefore = '<tr class="time--sub time ' + isTodayClass + ' time--no-staff">' +
+                                '<td><i class="fa fa-long-arrow-right"></i> Lehtilukusali</td>' +
+                                '<td>' + magazinesStart + ' – ' + magazinesEnd + '</td>' +
+                                '</tr>';
+                            dayStart = magazinesStart;
+                            if (dayEnd === '') {
+                                dayEnd = magazinesEnd;
+                            }
+                            if (data.schedules[i].sections.magazines.times[1] != null) {
+                                rowspanCount = rowspanCount +1;
+                                magazinesStart = data.schedules[i].sections.magazines.times[1].opens;
+                                magazinesStart = data.schedules[i].sections.magazines.times[1].closes;
+                                magazinesAfter = '<tr class="time--sub time ' + isTodayClass + ' time--no-staff">' +
+                                    '<td><i class="fa fa-long-arrow-right"></i> Lehtilukusali</td>' +
+                                    '<td>' + selfServiceStart + ' – ' + magazinesEnd + '</td>' +
+                                    '</tr>';
+                                dayEnd = magazinesEnd;
+                            }
+                        } else {
+                            rowspanCount = rowspanCount + 1;
+                            isClosed = false;
+                            magazinesAfter = '<tr class="time--sub time ' + isTodayClass + ' time--no-staff">' +
+                                '<td><i class="fa fa-long-arrow-right"></i> Lehtilukusali</td>' +
+                                '<td>' + magazinesStart + ' – ' + magazinesEnd + '</td>' +
+                                '</tr>';
+                            dayStart = magazinesStart;
+                            if (dayEnd === '') {
+                                dayEnd = magazinesEnd;
+                            }
                         }
-                    } else {
-                        rowspanCount = rowspanCount +1;
-                        isClosed = false;
-                        magazinesAfter = '<tr class="time--sub time ' + isTodayClass + ' time--no-staff">' +
-                        '<td><i class="fa fa-long-arrow-right"></i> Lehtilukusali</td>' +
-                        '<td>' + magazinesStart + ' – ' + magazinesEnd + '</td>' +
-                        '</tr>';
-                        dayStart = magazinesStart;
-                        if(dayEnd === '') {
-                            dayEnd = magazinesEnd;
-                        }
-                    }
-                    if (data.schedules[i].sections.magazines.times[1] != null) {
-                        rowspanCount = rowspanCount +1;
-                        magazinesStart = data.schedules[i].sections.magazines.times[1].opens;
-                        magazinesStart = data.schedules[i].sections.magazines.times[1].closes;
-                        magazinesAfter = '<tr class="time--sub time ' + isTodayClass + ' time--no-staff">' +
-                        '<td><i class="fa fa-long-arrow-right"></i> Lehtilukusali</td>' +
-                        '<td>' + selfServiceStart + ' – ' + magazinesEnd + '</td>' +
-                        '</tr>';
-                        dayEnd = magazinesEnd;
                     }
                 }
                 // Info row.
@@ -261,6 +270,10 @@ function getWeekSchelude(direction) {
 // jsonp_url base
 var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang
 $(document).ready(function($) {
+
+        // If we hide yhteystiedot instantly, the map does not zoom properly.
+        $(".palvelut").hide();
+        $(".yhteystiedot").hide(1000);
          /*
          Esittely 
          */
@@ -272,6 +285,14 @@ $(document).ready(function($) {
                 // Turn bolded Ajankohtaista/Tervetuloa to <h2>
                 description = description.replace("<strong>Ajankohtaista</strong>", "<h2>Ajankohtaista</h2>");
                 description = description.replace("<strong>Tervetuloa kirjastoon!</strong>", "<h2>Tervetuloa kirjastoon!</h2>");
+                // Remove <br> if after new <p>, remove double br.
+                description = description.replace(/(<p><br \/>)+/g, "<p>");
+                description = description.replace(/(<br \/>(\n)<br \/>)+/g, "<p>");
+                // Match <br> or h2 after new line, this does not apparently work.
+                description = description.replace(/(<br \/><br \/>)+/g, "<p>");
+                description = description.replace(/(<br \/>(\n)<h2>)+/g, "<h2>");
+                //console.log(description);
+
                 $( "#intro-content" ).append( description );
             }
             if (data.extra.transit.transit_directions != null) {
@@ -301,7 +322,7 @@ $(document).ready(function($) {
                 $( "#buildingDetails" ).append('<tr><td><strong>Rakennus: </strong></td>' +
                 '<td>'  + data.extra.building.building_name + '</td></tr>');
             }
-            if (data.extra.building.construction_year != null) {
+            if (data.extra.building.construction_year != null && data.extra.building.construction_year != 0) {
                 $( "#buildingDetails" ).append('<tr><td><strong>Rakennettu: </strong></td>' +
                 '<td>'  + data.extra.building.construction_year + '</td></tr>');
             }
@@ -334,7 +355,7 @@ $(document).ready(function($) {
                         else if (value == "Hissi") {
                             $( ".accessibility-images" ).append( ' <img alt="Hissi" src="../../images/accessibility/Esteetön_hissi.png" /> ');
                         }
-                        else if (value == "Ramppi") {
+                        else if (value == "Pyörätuoliluiska") {
                             $( ".accessibility-images" ).append( ' <img alt="Ramppi" src="../../images/accessibility/Esteetön_ramppi.png" /> ');
                         }
                         else if (value == "Induktiosilmukka") {
