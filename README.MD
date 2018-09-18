@@ -1,6 +1,6 @@
 **About**
 
-This repository contains pages (published as github pages) to be implemented as iframes for libraries of Jyvaskyla on jyvaskyla.fi/kirjasto
+This repository contains pages (published as GitHub pages) to be implemented as iframes for libraries of Jyvaskyla on jyvaskyla.fi/kirjasto
 
 Library data is pulled from the kirkanta-api: https://github.com/libraries-fi/kirkanta-api and the UI is heavily inspired by kirjastohakemisto.fi https://github.com/libraries-fi/kirjastohakemisto
 
@@ -10,7 +10,7 @@ Library data is pulled from the kirkanta-api: https://github.com/libraries-fi/ki
 
 | ID        	|     Alias     | URL  | On jyvaskyla.fi |
 | :-------------: |:-------------:| :-----: | --------------- |
-| 85159       | Pääkirjasto | https://hakemisto.kirjastot.fi/jyvaskyla/jyvaskyla_paakirjasto | https://beta.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/lahikirjastot/kirjasto-testisivu |
+| 85159       | Pääkirjasto | https://hakemisto.kirjastot.fi/jyvaskyla/jyvaskyla_paakirjasto | https://beta.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/paakirjasto |
 | 85305      | Halssilan lähikirjasto      | https://hakemisto.kirjastot.fi/jyvaskyla/halssila |  |
 | 85533 | Huhtasuon lähikirjasto      | https://hakemisto.kirjastot.fi/jyvaskyla/huhtasuo |  |
 | 85516 | Keljonkankaan lähikirjasto | https://hakemisto.kirjastot.fi/jyvaskyla/keljonkangas |  |
