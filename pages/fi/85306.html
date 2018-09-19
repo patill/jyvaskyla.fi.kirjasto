@@ -27,11 +27,6 @@
             <div class="col-lg-7 col-xl-8">
                 <article>
                     <blockquote class="blockquote library-slogan"></blockquote>
-                    <div class="details news-description" id="introduction">
-                        <a href="#introduction" class="details-toggle" data-toggle="details" role="button" aria-expanded="false" aria-controls="intro-content" onclick="toggleIntroduction()">Ajankohtaista ja esittely</a>
-                        <div class="details-content" id="intro-content">
-                        </div>
-                    </div>
                     <div class="details transit-accessibility">
                         <a href="#public-transport" class="details-toggle" data-toggle="details" role="button" aria-expanded="false" aria-controls="public-transport" onclick="toggleAdditionalDetails()">Julkinen liikenne ja saavutettavuus</a>
                         <div class="details-content" id="public-transport">
@@ -46,6 +41,11 @@
                             </section>
                         </div>
                     </div><!-- col-lg-8 -->
+                    <div class="details news-description" id="introduction">
+                        <a href="#introduction" class="details-toggle" data-toggle="details" role="button" aria-expanded="false" aria-controls="intro-content" onclick="toggleIntroduction()">Ajankohtaista ja esittely</a>
+                        <div class="details-content" id="intro-content">
+                        </div>
+                    </div>
                 </article>
             </div><!-- col-lg-8 -->
             <div class="col-lg-5 col-xl-4 order-2 sidebar">
@@ -272,4 +272,6 @@
         $('#infoPopup').toggle(delay);
     }
 </script>
+<noscript><h2 class="no-js-notification">Toimiakseen oikein, sivusto tarvitsee JavaScriptiä. Selaimesi ei tue Javascriptiä tai se on estetty.<br>
+    In order to function properly, this page requires Javascript. Your browser does not support it or it has been blocked.</h2></noscript>
 </html>

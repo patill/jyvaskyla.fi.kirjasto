@@ -142,6 +142,10 @@
   background:#F5DBD6;
 }
 
+.no-js-notification {
+  color: red;
+}
+
 .schedules-weekly {
   position: relative;
   margin-top: 0.5rem; }
