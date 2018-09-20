@@ -51,7 +51,7 @@ function toggleFullScreen(target) {
 function addItem(item, listElement) {
     var name = item.name;
     // Use "custom_name", where available.
-    if (item.custom_name != null) {
+    if (item.custom_name != null && item.custom_name.length != 0) {
         name = item.custom_name;
     }
     // Add popup link if additional details are available.
@@ -69,14 +69,14 @@ function addItem(item, listElement) {
             description = description + '<br><br>Hintatiedot: ' +  item.price;
         }
         // Add the item to a desired element.
-        $( listElement ).append('<li> ' + 
-        '<a class="index-item" data-message="' + description + '" data-website="' + websiteLink + '" tabindex="0" href="#"' +
-        'role="button" aria-expanded="false" aria-controls="' + name + '"' +
-        'title="' + name + '">' + name + '</a></li>');
-    // If no description found, don't create the link
+        $( listElement ).append('<li> ' +
+            '<a class="index-item" data-message="' + description + '" data-website="' + websiteLink + '" tabindex="0" href="#"' +
+            'role="button" aria-expanded="false" aria-controls="' + name + '"' +
+            'title="' + name + '">' + name + '</a></li>');
+        // If no description found, don't create the link
     } else {
-        $( listElement ).append('<li> ' + 
-        name + '</li>');
+        $( listElement ).append('<li> ' +
+            name + '</li>');
     }
 }
 
@@ -266,14 +266,9 @@ function getWeekSchelude(direction) {
         $( "#weekSchelude" ).html( str );
     });
 }
-
 // jsonp_url base
 var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang
 $(document).ready(function($) {
-
-        // If we hide yhteystiedot instantly, the map does not zoom properly.
-        $(".palvelut").hide();
-        $(".yhteystiedot").hide(1000);
          /*
          Esittely 
          */
@@ -402,10 +397,20 @@ $(document).ready(function($) {
         /*
          Yhteystiedot 
          */
+
+        // Map coordinates (marker)
+        var lon;
+        var lat;
+        // Generate the box around the marker by +- 0.0018 lat/long
+        var lonBoxStart;
+        var lonBoxEnd;
+        var latBoxStart;
+        var latBoxEnd;
+
         // Generic details
         $.getJSON(jsonp_url + "&with=mail_address", function(data) {
             $( "#streetAddress" ).append( data.name  + '<br>' + data.address.street + '<br>' + data.address.zipcode + ' ' + data.address.city);
-            if (data.mail_address.zipcode != null){
+            if (data.mail_address != null){
                 var boxNumber = '';
                 if(data.mail_address.box_number != null) {
                     boxNumber = 'PL ' + data.mail_address.box_number + '<br>';
@@ -415,23 +420,21 @@ $(document).ready(function($) {
 
             $( "#email" ).append( data.email );
 
+            // Get coordinates to be used in loadMap function.
             // Map coordinates (marker)
-            var lon = data.address.coordinates.lon;
-            var lat = data.address.coordinates.lat;
+            lon = data.address.coordinates.lon;
+            lat = data.address.coordinates.lat;
             // Position, 5 decimal degrees
             var lonDecimal = parseFloat(lon.match(/[\d][\d][^\d][\d][\d][\d][\d][\d]/));
             var latDecimal = parseFloat(lat.match(/[\d][\d][^\d][\d][\d][\d][\d][\d]/));
-
             // Generate the box around the marker by +- 0.0018 lat/long
-            var lonBoxStart = lonDecimal - 0.0018;
-            var lonBoxEnd = lonDecimal + 0.0018;
-            var latBoxStart = latDecimal - 0.0018;
-            var latBoxEnd = latDecimal + 0.0018;
-            // Append the map to the container
-            $("#map-container").append('<iframe id="map-frame" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=' + lonBoxStart + '%2C' + latBoxStart + '%2C' + lonBoxEnd + '%2C' + latBoxEnd + '&amp;layer=mapnik&amp;marker=' + lat + '%2C' + lon + '" style="border: 1px solid black"></iframe>')
-
+            lonBoxStart = lonDecimal - 0.0018;
+            lonBoxEnd = lonDecimal + 0.0018;
+            latBoxStart = latDecimal - 0.0018;
+            latBoxEnd = latDecimal + 0.0018;
         });
-        // Phone numbers.
+
+    // Phone numbers.
         $.getJSON(jsonp_url + "&with=phone_numbers", function(data) {
             for (var i=0; i<data.phone_numbers.length; i++) {
                 $( "#phoneNumbers" ).append( '<tr>' + 
@@ -444,7 +447,7 @@ $(document).ready(function($) {
         $.getJSON(jsonp_url + "&with=persons", function(data) {
             for (var i=0; i<data.persons.length; i++) {
                 $( "#staffMembers" ).append( '<tr>' + 
-                '<td>' + data.persons[i].first_name + ' ' + data.persons[i].first_name + '</td>' +
+                '<td>' + data.persons[i].first_name + ' ' + data.persons[i].last_name + '</td>' +
                 '<td>' + data.persons[i].job_title + '</td>' +
                 '<td>' + data.persons[i].email + '</td>' +
                 '</tr>' );
@@ -461,44 +464,54 @@ $(document).ready(function($) {
             var serviceCount = 0;
             for (var i=0; i<data.services.length; i++) {
                 // Collections
-                if (data.services[i].type == "collection") {
-                    collectionCount = collectionCount +1;
-                    addItem(data.services[i], '#collectionItems');
-                }
-                // Hardware
-                else if (data.services[i].type == "hardware") {
-                    hardwareCount = hardwareCount +1;
-                    addItem(data.services[i], '#hardwareItems');
-                }
-                // Rooms
-                else if (data.services[i].type == "room") {
-                    roomCount = roomCount +1;
-                    addItem(data.services[i], '#roomItems'); 
-                }
-                // Services
-                else if (data.services[i].type == "service") {
-                    serviceCount = serviceCount +1;
-                    addItem(data.services[i], '#serviceItems');  
+                if(data.services[i].name != null && data.services[i].name.length != 0 || data.services[i].custom_name != null) {
+                    if (data.services[i].type == "collection") {
+                        collectionCount = collectionCount +1;
+                        addItem(data.services[i], '#collectionItems');
+                    }
+                    // Hardware
+                    else if (data.services[i].type == "hardware") {
+                        hardwareCount = hardwareCount +1;
+                        addItem(data.services[i], '#hardwareItems');
+                    }
+                    // Rooms
+                    else if (data.services[i].type == "room") {
+                        roomCount = roomCount +1;
+                        addItem(data.services[i], '#roomItems');
+                    }
+                    // Services
+                    else if (data.services[i].type == "service") {
+                        serviceCount = serviceCount +1;
+                        addItem(data.services[i], '#serviceItems');
+                    }
                 }
             }
+            var noServices = true;
             // Show titles & counts if found.
             if (collectionCount != 0) {
                 $( "#collection" ).css('display', 'block');
                 $( "#collectionBadge" ).append('(' + collectionCount + ')');
+                noServices = false;
             }
             if (hardwareCount != 0) {
                 $( "#hardware" ).css('display', 'block');
                 $( "#hardwareBadge" ).append('(' + hardwareCount + ')');
+                noServices = false;
             }
             if (roomCount != 0) {
                 $( "#room" ).css('display', 'block');
                 $( "#roomBadge" ).append('(' + roomCount + ')');
+                noServices = false;
             }
             if (serviceCount != 0) {
                 $( "#service" ).css('display', 'block');
                 $( "#serviceBadge" ).append('(' + serviceCount + ')');
+                noServices = false;
             }
-            
+            if(noServices) {
+                $('#library-services').append("Kirjaston tietoihin ei ole lisätty palveluita.")
+            }
+
             // When item link is clicked.
             $( ".index-item" ).on('click', function () {
                 // If infobox already visible, hide it instantly to avoid wonky animations.
@@ -522,5 +535,81 @@ $(document).ready(function($) {
                 }
                 toggleInfoBox(100);
             });
-        });
+        }); // Palvelut
+
+
+    // Togles the visibility of the popover modal.
+    var isInfoBoxVisible = false;
+    function toggleInfoBox(delay) {
+        if(isInfoBoxVisible) {
+            isInfoBoxVisible = false;
+        }
+        else {
+            isInfoBoxVisible = true;
+        }
+        $('#infoPopup').toggle(delay);
+    }
+
+    // Hide/Show sections on mobile
+    $( "#newsDescriptionToggle" ).on('click', function () {
+        $(".news-description").toggleClass('expanded');
     });
+
+    $( "#transitAccessibilityToggle" ).on('click', function () {
+        $(".transit-accessibility").toggleClass('expanded');
+    });
+
+    // Navigation events
+    $( "#navEsittely" ).on('click', function () {
+        // Hide other sections & active nav styles.
+        $("#navYhteystiedot").removeClass( "active" );
+        $("#navPalvelut").removeClass( "active" )
+        $(".yhteystiedot").hide(600);
+        $(".palvelut").hide(600);
+        // Show selected section + add active to nav
+        $("#navEsittely").addClass( "active" )
+        $(".esittely").show(600);
+        // Hide infobox if visible.
+        if(isInfoBoxVisible) {
+            toggleInfoBox();
+        }
+    });
+    var mapLoaded = false;
+    $( "#navYhteystiedot" ).on('click', function () {
+        // Hide other sections & active nav styles.
+        $("#navEsittely").removeClass( "active" )
+        $("#navPalvelut").removeClass( "active" )
+        $(".esittely").hide(600);
+        $(".palvelut").hide(600);
+        // Show selected section + add active to nav.
+        $("#navYhteystiedot").addClass( "active" );
+        $(".yhteystiedot").show(600);
+        // Hide infobox if visible.
+        if(isInfoBoxVisible) {
+            toggleInfoBox();
+        }
+        // Map zoom gets messed if the map is loaded before hiding the map div.
+        if(!mapLoaded) {
+            setTimeout(function(){
+                $("#map-container").append('<iframe id="map-frame" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=' + lonBoxStart + '%2C' + latBoxStart + '%2C' + lonBoxEnd + '%2C' + latBoxEnd + '&amp;layer=mapnik&amp;marker=' + lat + '%2C' + lon + '" style="border: 1px solid black"></iframe>')
+            }, 700);
+            mapLoaded = true;
+        }
+    });
+    // When item link is clicked.
+    $( "#navPalvelut" ).on('click', function () {
+        // Hide other sections & active nav styles.
+        $("#navEsittely").removeClass( "active" )
+        $("#navYhteystiedot").removeClass( "active" )
+        $(".esittely").hide(600);
+        $(".yhteystiedot").hide(600);
+        // Show selected section + add active to nav.
+        $("#navPalvelut").addClass( "active" )
+        $(".palvelut").show(600);
+    });
+
+    $( "#closeInfoBtn" ).on('click', function () {
+        toggleInfoBox(200);
+    });
+
+}); // OnReady

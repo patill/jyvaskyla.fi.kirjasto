@@ -17,9 +17,9 @@
     <div class="col-md-8">
       <header>
         <nav class="nav nav-pills nav-library-page">
-          <a id="navEsittely" class="nav-item nav-link active" href="#" onclick="navigateEsittely()">Esittely</a>
-          <a id="navYhteystiedot" class="nav-item nav-link" href="#" onclick="navigateYhteystiedot()">Yhteystiedot</a>
-          <a id="navPalvelut" class="nav-item nav-link" href="#" onclick="navigatePalvelut()">Palvelut</a>
+          <a id="navEsittely" class="nav-item nav-link active" href="#">Esittely</a>
+          <a id="navYhteystiedot" class="nav-item nav-link" href="#">Yhteystiedot</a>
+          <a id="navPalvelut" class="nav-item nav-link" href="#">Palvelut</a>
         </nav>
       </header>
     </div>
@@ -28,7 +28,7 @@
         <article>
           <blockquote class="blockquote library-slogan"></blockquote>
           <div class="details transit-accessibility">
-            <a href="#public-transport" class="details-toggle" data-toggle="details" role="button" aria-expanded="false" aria-controls="public-transport" onclick="toggleAdditionalDetails()">Julkinen liikenne ja saavutettavuus</a>
+            <a id="transitAccessibilityToggle"href="#public-transport" class="details-toggle" data-toggle="details" role="button" aria-expanded="false" aria-controls="public-transport">Julkinen liikenne ja saavutettavuus</a>
             <div class="details-content" id="public-transport">
               <section class="transit-details" style="display: none;">
                 <h3>Liikenneyhteydet</h3>
@@ -42,7 +42,7 @@
             </div>
           </div><!-- col-lg-8 -->
           <div class="details news-description" id="introduction">
-            <a href="#introduction" class="details-toggle" data-toggle="details" role="button" aria-expanded="false" aria-controls="intro-content" onclick="toggleIntroduction()">Ajankohtaista ja esittely</a>
+            <a id="newsDescriptionToggle" href="#introduction" class="details-toggle" data-toggle="details" role="button" aria-expanded="false" aria-controls="intro-content">Ajankohtaista ja esittely</a>
             <div class="details-content" id="intro-content">
             </div>
           </div>
@@ -89,7 +89,7 @@
       </div>
     </div><!-- Esittely -->
     <!-- Yhteystiedot -->
-    <div class="row yhteystiedot" id="page--contact-info">
+    <div class="row yhteystiedot" id="page--contact-info" style="display: none">
       <div class="col-sm-12">
         <section class="contact-details">
           <div class="row">
@@ -157,7 +157,7 @@
         </section>
       </div>
     </div> <!-- Yhteystiedot -->
-    <div class="row palvelut">
+    <div class="row palvelut" style="display: none">
       <section class="container" id="library-services">
         <p>Palvelun lisätiedot avautuvat linkkiä klikkaamalla.</p>
         <!-- Collections -->
@@ -205,72 +205,11 @@
     <p id="link-to-info"></p>
   </div>
   <div class="text-center">
-    <button onclick='toggleInfoBox(200)' type="button" class="btn btn-md btn-primary py-0 mb-3">Sulje</button>
+    <button id="closeInfoBtn" type="button" class="btn btn-md btn-primary py-0 mb-3">Sulje</button>
   </div>
 </div>
 </body>
 <script>
-
-    function navigateEsittely() {
-        // Hide other sections & active nav styles.
-        $("#navYhteystiedot").removeClass( "active" )
-        $("#navPalvelut").removeClass( "active" )
-        $(".yhteystiedot").hide(600);
-        $(".palvelut").hide(600);
-        // Show selected section + add active to nav.
-        $("#navEsittely").addClass( "active" );
-        $(".esittely").show(600);
-        // Hide infobox if visible.
-        if(isInfoBoxVisible) {
-            toggleInfoBox();
-        }
-    }
-
-    function navigateYhteystiedot() {
-        // Hide other sections & active nav styles.
-        $("#navEsittely").removeClass( "active" )
-        $("#navPalvelut").removeClass( "active" )
-        $(".esittely").hide(600);
-        $(".palvelut").hide(600);
-        // Show selected section + add active to nav.
-        $("#navYhteystiedot").addClass( "active" );
-        $(".yhteystiedot").show(600);
-        // Hide infobox if visible.
-        if(isInfoBoxVisible) {
-            toggleInfoBox();
-        }
-    }
-
-    function navigatePalvelut() {
-        // Hide other sections & active nav styles.
-        $("#navEsittely").removeClass( "active" )
-        $("#navYhteystiedot").removeClass( "active" )
-        $(".esittely").hide(600);
-        $(".yhteystiedot").hide(600);
-        // Show selected section + add active to nav.
-        $("#navPalvelut").addClass( "active" )
-        $(".palvelut").show(600);
-    }
-
-    function toggleIntroduction() {
-        $(".news-description").toggleClass('expanded');
-    }
-
-    function toggleAdditionalDetails() {
-        $(".transit-accessibility").toggleClass('expanded');
-    }
-
-    // Togles the visibility of the popover modal.
-    var isInfoBoxVisible = false;
-    function toggleInfoBox(delay) {
-        if(isInfoBoxVisible) {
-            isInfoBoxVisible = false;
-        }
-        else {
-            isInfoBoxVisible = true;
-        }
-        $('#infoPopup').toggle(delay);
-    }
 </script>
 <noscript><h2 class="no-js-notification">Toimiakseen oikein, sivusto tarvitsee JavaScriptiä. Selaimesi ei tue Javascriptiä tai se on estetty.<br>
   In order to function properly, this page requires Javascript. Your browser does not support it or it has been blocked.</h2></noscript>
