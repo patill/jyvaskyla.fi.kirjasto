@@ -294,7 +294,7 @@ $(document).ready(function($) {
                 $('.transit-details').css('display', 'block');
                 $('.transit-details').append('<h4>Julkinen liikenne</h4><p>' + data.extra.transit.transit_directions + '</p>')
                 if(data.extra.transit.buses != null && data.extra.transit.buses !== "") {
-                    $('.transit-details').append('<h5>Linjautot</h5><p>' + data.extra.transit.buses + '</p>')
+                    $('.transit-details').append('<h5>Linja-autot</h5><p>' + data.extra.transit.buses + '</p>')
                 }
             }
             // Replace row splits with <br>
