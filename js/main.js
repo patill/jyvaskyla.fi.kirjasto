@@ -19,7 +19,7 @@ lang = getParamValue('lang');
 /*
 
  Alternative:   <script data-library="85111" data-lang="fi" src="../../js/main.js" type="text/javascript"></script>*/
-// If lang and lib are undefined (page not in iframe)
+// If lang and lib are undefined (not used in iframe)
 if(lang == undefined && library == undefined){
     var scripts = document.getElementsByTagName('script');
     var lastScript = scripts[scripts.length-1];
@@ -27,8 +27,9 @@ if(lang == undefined && library == undefined){
     library = scriptName.getAttribute('data-library'),
         lang = scriptName.getAttribute('data-lang')
 }
-// Adjust html lang attribute, setup translations
+
 $("html").attr("lang", lang);
+
 var i18n = $('body').translate({lang: lang, t: dict}); // Use the correct language
 
 function toggleFullScreen(target) {
@@ -320,8 +321,8 @@ function fetchInformation(language) {
     jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + language;
     // Generic details
     $.getJSON(jsonp_url + "&with=extra", function(data) {
-        if ($(".library-slogan").is(':empty')) {
-            $(".library-slogan").append(data.extra.slogan);
+        if ($("#blockquote").is(':empty')) {
+            $("#blockquote").append(' <blockquote class="blockquote library-slogan">' + data.extra.slogan + '</blockquote>');
         }
         if (isEmpty($('#intro-content'))) {
             var description = data.extra.description;
@@ -398,27 +399,27 @@ function fetchInformation(language) {
                     var splittedValues = element.value.split("\r\n");
                     $.each(splittedValues, function (index, value) {
                         if (value == "Esteetön sisäänpääsy") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön sisäänpääsy") + '" src="../../images/accessibility/Esteetön_kulku_saavutettavuus.png" /> ');
+                            $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön sisäänpääsy") + '" src="../images/accessibility/Esteetön_kulku_saavutettavuus.png" /> ');
                             $("#accessibility-list").append('<li>' + i18n.get("Esteetön sisäänpääsy") + '</li>');
                         }
                         else if (value == "Invapysäköinti") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Invapysäköinti") + '" src="../../images/accessibility/Esteetön_parkki.png" /> ');
+                            $(".accessibility-images").append(' <img alt="' + i18n.get("Invapysäköinti") + '" src="../images/accessibility/Esteetön_parkki.png" /> ');
                             $("#accessibility-list").append('<li>' + i18n.get("Invapysäköinti") + '</li>');
                         }
                         else if (value == "Esteetön wc") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön wc") + '" src="../../images/accessibility/Esteetön_wc.png" /> ');
+                            $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön wc") + '" src="../images/accessibility/Esteetön_wc.png" /> ');
                             $("#accessibility-list").append('<li>' + i18n.get("Esteetön wc") + '</li>');
                         }
                         else if (value == "Hissi") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Hissi") + '" src="../../images/accessibility/Esteetön_hissi.png" /> ');
+                            $(".accessibility-images").append(' <img alt="' + i18n.get("Hissi") + '" src="../images/accessibility/Esteetön_hissi.png" /> ');
                             $("#accessibility-list").append('<li>' + i18n.get("Hissi") + '</li>');
                         }
                         else if (value == "Pyörätuoliluiska") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Ramppi") + '" src="../../images/accessibility/Esteetön_ramppi.png" /> ');
+                            $(".accessibility-images").append(' <img alt="' + i18n.get("Ramppi") + '" src="../images/accessibility/Esteetön_ramppi.png" /> ');
                             $("#accessibility-list").append('<li>' + i18n.get("Ramppi") + '</li>');
                         }
                         else if (value == "Induktiosilmukka") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Induktiosilmukka") + '" src="../../images/accessibility/Esteetön_induktiosilmukka.png" /> ');
+                            $(".accessibility-images").append(' <img alt="' + i18n.get("Induktiosilmukka") + '" src="../images/accessibility/Esteetön_induktiosilmukka.png" /> ');
                             $("#accessibility-list").append('<li>' + i18n.get("Induktiosilmukka") + '</li>');
                         }
                         else if (value == "Suuren kirjasinkoon kokoelma") {
@@ -620,7 +621,7 @@ function fetchInformation(language) {
     }
 }
 
-$(document).ready(function($) {
+$(document).ready(function() {
     fetchInformation(lang);
     // Scheludes
     getWeekSchelude(0);
@@ -646,16 +647,17 @@ $(document).ready(function($) {
             var url = element.url;
             if (url.indexOf("facebook") !== -1) {
                 $( ".some-links" ).append('<a target="_blank" ' +
-                    'href="' + url +'" title="' + element.name + '"> <img src="../../images/icons/facebook.svg" alt="' + i18n.get("Kirjaston") + ' Facebook"/>' +
+                    'href="' + url +'" title="' + element.name + '"> <img src="../images/icons/facebook.svg" alt="' + i18n.get("Kirjaston") + ' Facebook"/>' +
                     '</a>');
             }
             else if (url.indexOf("instagram") !== -1) {
                 $( ".some-links" ).append('<a target="_blank" ' +
-                    'href="' + url +'" title="' + element.name + '"> <img src="../../images/icons/instagram.svg" alt="' + i18n.get("Kirjaston") + ' Instagram"/>' +
+                    'href="' + url +'" title="' + element.name + '"> <img src="../images/icons/instagram.svg" alt="' + i18n.get("Kirjaston") + ' Instagram"/>' +
                     '</a>');
             }
         });
     });
+
     // Hide/Show sections on mobile
     $( "#newsDescriptionToggle" ).on('click', function () {
         $(".news-description").toggleClass('expanded');
@@ -663,6 +665,60 @@ $(document).ready(function($) {
     $( "#transitAccessibilityToggle" ).on('click', function () {
         $(".transit-accessibility").toggleClass('expanded');
     });
+    // Navigation events
+    $( "#navEsittely" ).on('click', function () {
+        // Hide other sections & active nav styles.
+        $("#navYhteystiedot").removeClass( "active" );
+        $("#navPalvelut").removeClass( "active" );
+        $(".yhteystiedot").hide(600);
+        $(".palvelut").hide(600);
+        // Show selected section + add active to nav
+        $("#navEsittely").addClass( "active" );
+        $(".esittely").show(600);
+        // Hide infobox if visible.
+        if(isInfoBoxVisible) {
+            toggleInfoBox();
+        }
+    });
+
+    var mapLoaded = false;
+    $( "#navYhteystiedot" ).on('click', function () {
+        // Hide other sections & active nav styles.
+        $("#navEsittely").removeClass( "active" );
+        $("#navPalvelut").removeClass( "active" );
+        $(".esittely").hide(600);
+        $(".palvelut").hide(600);
+        // Show selected section + add active to nav.
+        $("#navYhteystiedot").addClass( "active" );
+        $(".yhteystiedot").show(600);
+        // Hide infobox if visible.
+        if(isInfoBoxVisible) {
+            toggleInfoBox();
+        }
+        // Map zoom gets messed if the map is loaded before hiding the map div.
+        if(!mapLoaded) {
+            setTimeout(function(){
+                $("#map-container").append('<iframe id="map-frame" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=' + lonBoxStart + '%2C' + latBoxStart + '%2C' + lonBoxEnd + '%2C' + latBoxEnd + '&amp;layer=mapnik&amp;marker=' + lat + '%2C' + lon + '" style="border: 1px solid black"></iframe>')
+            }, 700);
+            mapLoaded = true;
+        }
+    });
+    // When item link is clicked.
+    $( "#navPalvelut" ).on('click', function () {
+        // Hide other sections & active nav styles.
+        $("#navEsittely").removeClass( "active" );
+        $("#navYhteystiedot").removeClass( "active" );
+        $(".esittely").hide(600);
+        $(".yhteystiedot").hide(600);
+        // Show selected section + add active to nav.
+        $("#navPalvelut").addClass( "active" );
+        $(".palvelut").show(600);
+    });
+
+    $( "#closeInfoBtn" ).on('click', function () {
+        toggleInfoBox(200);
+    });
+
     // UI texts.
     $('#navEsittely').append(i18n.get("Esittely"));
     $('#navYhteystiedot').append(i18n.get("Yhteystiedot"));
@@ -689,62 +745,4 @@ $(document).ready(function($) {
     $('#nameTh').append(i18n.get("Nimi"));
     $('#titleTh').append(i18n.get("Työnimike"));
     $('#contactDetailsTh').append(i18n.get("Yhteystiedot"));
-    // Navigation events
-    $( "#navEsittely" ).on('click', function () {
-        // Hide other sections & active nav styles.
-        $("#navYhteystiedot").removeClass( "active" );
-        $("#navPalvelut").removeClass( "active" )
-        $(".yhteystiedot").hide(600);
-        $(".palvelut").hide(600);
-        // Show selected section + add active to nav
-        $("#navEsittely").addClass( "active" )
-        $(".esittely").show(600);
-        // Hide infobox if visible.
-        if(isInfoBoxVisible) {
-            toggleInfoBox();
-        }
-    });
-    var mapLoaded = false;
-    $( "#navYhteystiedot" ).on('click', function () {
-        // Hide other sections & active nav styles.
-        $("#navEsittely").removeClass( "active" )
-        $("#navPalvelut").removeClass( "active" )
-        $(".esittely").hide(600);
-        $(".palvelut").hide(600);
-        // Show selected section + add active to nav.
-        $("#navYhteystiedot").addClass( "active" );
-        $(".yhteystiedot").show(600);
-        // Hide infobox if visible.
-        if(isInfoBoxVisible) {
-            toggleInfoBox();
-        }
-        // Map zoom gets messed if the map is loaded before hiding the map div.
-        if(!mapLoaded) {
-            setTimeout(function(){
-                $("#map-container").append('<iframe id="map-frame" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=' + lonBoxStart + '%2C' + latBoxStart + '%2C' + lonBoxEnd + '%2C' + latBoxEnd + '&amp;layer=mapnik&amp;marker=' + lat + '%2C' + lon + '" style="border: 1px solid black"></iframe>')
-            }, 700);
-            mapLoaded = true;
-        }
-    });
-    // When item link is clicked.
-    $( "#navPalvelut" ).on('click', function () {
-        // Hide other sections & active nav styles.
-        $("#navEsittely").removeClass( "active" )
-        $("#navYhteystiedot").removeClass( "active" )
-        $(".esittely").hide(600);
-        $(".yhteystiedot").hide(600);
-        // Show selected section + add active to nav.
-        $("#navPalvelut").addClass( "active" )
-        $(".palvelut").show(600);
-    });
-
-    $( "#closeInfoBtn" ).on('click', function () {
-        toggleInfoBox(200);
-    });
-
-
-    setTimeout(function(){
-    }, 700);
-
-
 }); // OnReady

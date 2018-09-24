@@ -12,24 +12,22 @@
 <script src="../js/lib/moment-with-locales.min.js"></script>
 <script src="../js/lib/responsiveslides.js"></script>
 <script src="../js/translations.js"></script>
-<script src="../js/newMain.js" type="text/javascript"></script>
+<script src="../js/main.js" type="text/javascript"></script>
 </head>
 <body>
 <div class="container" id="page-container">
 <main class="container main content">
-  <div class="col-md-8">
-    <header>
-      <nav class="nav nav-pills nav-library-page">
-        <a id="navEsittely" class="nav-item nav-link active" href="#"></a>
-        <a id="navYhteystiedot" class="nav-item nav-link" href="#"></a>
-        <a id="navPalvelut" class="nav-item nav-link" href="#"></a>
-      </nav>
-    </header>
-  </div>
+  <header>
+    <nav class="nav nav-pills nav-library-page">
+      <a id="navEsittely" class="nav-item nav-link active" href="#"></a>
+      <a id="navYhteystiedot" class="nav-item nav-link" href="#"></a><br>
+      <a id="navPalvelut" class="nav-item nav-link" href="#"></a>
+    </nav>
+  </header>
   <div class="row esittely">
     <div class="col-lg-7 col-xl-8">
       <article>
-        <blockquote class="blockquote library-slogan"></blockquote>
+        <div id="blockquote"></div>
         <div class="details transit-accessibility">
           <a id="transitAccessibilityToggle"href="#public-transport" class="details-toggle" data-toggle="details" role="button" aria-expanded="false" aria-controls="public-transport"></a>
           <div class="details-content" id="public-transport">
