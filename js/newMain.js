@@ -19,7 +19,7 @@ lang = getParamValue('lang');
 /*
 
  Alternative:   <script data-library="85111" data-lang="fi" src="../../js/main.js" type="text/javascript"></script>*/
-// If lang and lib are undefined (page not in iframe)
+// If lang and lib are undefined (not used in iframe)
 if(lang == undefined && library == undefined){
     var scripts = document.getElementsByTagName('script');
     var lastScript = scripts[scripts.length-1];
@@ -27,8 +27,9 @@ if(lang == undefined && library == undefined){
     library = scriptName.getAttribute('data-library'),
         lang = scriptName.getAttribute('data-lang')
 }
-// Adjust html lang attribute, setup translations
+
 $("html").attr("lang", lang);
+
 var i18n = $('body').translate({lang: lang, t: dict}); // Use the correct language
 
 function toggleFullScreen(target) {
@@ -398,27 +399,27 @@ function fetchInformation(language) {
                     var splittedValues = element.value.split("\r\n");
                     $.each(splittedValues, function (index, value) {
                         if (value == "Esteetön sisäänpääsy") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön sisäänpääsy") + '" src="../../images/accessibility/Esteetön_kulku_saavutettavuus.png" /> ');
+                            $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön sisäänpääsy") + '" src="../images/accessibility/Esteetön_kulku_saavutettavuus.png" /> ');
                             $("#accessibility-list").append('<li>' + i18n.get("Esteetön sisäänpääsy") + '</li>');
                         }
                         else if (value == "Invapysäköinti") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Invapysäköinti") + '" src="../../images/accessibility/Esteetön_parkki.png" /> ');
+                            $(".accessibility-images").append(' <img alt="' + i18n.get("Invapysäköinti") + '" src="../images/accessibility/Esteetön_parkki.png" /> ');
                             $("#accessibility-list").append('<li>' + i18n.get("Invapysäköinti") + '</li>');
                         }
                         else if (value == "Esteetön wc") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön wc") + '" src="../../images/accessibility/Esteetön_wc.png" /> ');
+                            $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön wc") + '" src="../images/accessibility/Esteetön_wc.png" /> ');
                             $("#accessibility-list").append('<li>' + i18n.get("Esteetön wc") + '</li>');
                         }
                         else if (value == "Hissi") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Hissi") + '" src="../../images/accessibility/Esteetön_hissi.png" /> ');
+                            $(".accessibility-images").append(' <img alt="' + i18n.get("Hissi") + '" src="../images/accessibility/Esteetön_hissi.png" /> ');
                             $("#accessibility-list").append('<li>' + i18n.get("Hissi") + '</li>');
                         }
                         else if (value == "Pyörätuoliluiska") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Ramppi") + '" src="../../images/accessibility/Esteetön_ramppi.png" /> ');
+                            $(".accessibility-images").append(' <img alt="' + i18n.get("Ramppi") + '" src="../images/accessibility/Esteetön_ramppi.png" /> ');
                             $("#accessibility-list").append('<li>' + i18n.get("Ramppi") + '</li>');
                         }
                         else if (value == "Induktiosilmukka") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Induktiosilmukka") + '" src="../../images/accessibility/Esteetön_induktiosilmukka.png" /> ');
+                            $(".accessibility-images").append(' <img alt="' + i18n.get("Induktiosilmukka") + '" src="../images/accessibility/Esteetön_induktiosilmukka.png" /> ');
                             $("#accessibility-list").append('<li>' + i18n.get("Induktiosilmukka") + '</li>');
                         }
                         else if (value == "Suuren kirjasinkoon kokoelma") {
@@ -646,12 +647,12 @@ $(document).ready(function($) {
             var url = element.url;
             if (url.indexOf("facebook") !== -1) {
                 $( ".some-links" ).append('<a target="_blank" ' +
-                    'href="' + url +'" title="' + element.name + '"> <img src="../../images/icons/facebook.svg" alt="' + i18n.get("Kirjaston") + ' Facebook"/>' +
+                    'href="' + url +'" title="' + element.name + '"> <img src="../images/icons/facebook.svg" alt="' + i18n.get("Kirjaston") + ' Facebook"/>' +
                     '</a>');
             }
             else if (url.indexOf("instagram") !== -1) {
                 $( ".some-links" ).append('<a target="_blank" ' +
-                    'href="' + url +'" title="' + element.name + '"> <img src="../../images/icons/instagram.svg" alt="' + i18n.get("Kirjaston") + ' Instagram"/>' +
+                    'href="' + url +'" title="' + element.name + '"> <img src="../images/icons/instagram.svg" alt="' + i18n.get("Kirjaston") + ' Instagram"/>' +
                     '</a>');
             }
         });
