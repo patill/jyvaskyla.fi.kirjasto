@@ -98,6 +98,10 @@ var dict = {
         fi: "Kuva kirjastolta",
         en: "Picture from the library",
     },
+    "Suljettu": {
+        fi: "Suljettu",
+        en: "Closed",
+    },
     "Avaa tai sulje kokoruututila": {
         fi: "Avaa tai sulje kokoruututila.",
         en: "Toggle full-screen.",

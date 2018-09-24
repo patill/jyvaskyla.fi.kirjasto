@@ -575,7 +575,9 @@ function fetchInformation(language) {
         }
         if(!collectionsAdded || !hardwareAdded || !roomsAdded || !servicesAdded) {
             if(noServices) {
-                $('#servicesInfo').append(i18n.get("Ei palveluita"));
+                if(lang == "fi") {
+                    $('#servicesInfo').append(i18n.get("Ei palveluita"));
+                }
             } else {
                 $('#servicesInfo').append(i18n.get("Palvelun lisätiedot"));
                 $('#closeInfoBtn').append(i18n.get("Sulje"));
