@@ -346,7 +346,9 @@ function fetchInformation(language) {
             if (description != null) {
                 // Turn bolded Ajankohtaista/Tervetuloa to <h2>
                 description = description.replace("<strong>Ajankohtaista</strong>", "<h2>Ajankohtaista</h2>");
+                description = description.replace("<p><h2>Ajankohtaista</h2></p>", "<h2>Ajankohtaista</h2>");
                 description = description.replace("<strong>Tervetuloa kirjastoon!</strong>", "<h2>Tervetuloa kirjastoon!</h2>");
+                description = description.replace("<p><h2>Tervetuloa kirjastoon!</h2></p>", "<h2>Tervetuloa kirjastoon!</h2>");
                 // Remove <br> if after new <p>, remove double br.
                 description = description.replace(/(<p><br \/>)+/g, "<p>");
                 description = description.replace(/(<br \/>(\n)<br \/>)+/g, "<p>");
