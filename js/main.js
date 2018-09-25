@@ -110,14 +110,14 @@ function getWeekSchelude(direction) {
     }
     // Display week number.
     $( "#weekNumber" ).html( i18n.get("Viikko") + ' ' + moment().add(weekCounter, 'weeks').format('W'));
-    // If monday & week counter == 0 & lang == en, add 1 week. Otherwise last week will be shown.
-    if(weekCounter == 0 && new Date().getDay() == 1 && lang == "en") {
+    // If week counter == 0 & lang == en, add 1 week. Otherwise last week will be shown... but why?
+    if(weekCounter == 0 && lang == "en") {
         weekCounter = weekCounter + 1;
     }
     $.getJSON(jsonp_url + "&with=schedules&period.start=" + weekCounter + "w&period.end=" + weekCounter + "w", function(data) {
         //  Week adjustment
         moment.locale(lang);
-        var format = 'hh:mm'
+        var format = 'hh:mm';
         moment().add(weekCounter, 'weeks');
         var date = moment().add(weekCounter, 'weeks');
             begin = moment(date).startOf('week').isoWeekday(1);
@@ -139,7 +139,7 @@ function getWeekSchelude(direction) {
                 // ScheludeRow will be used to bring things together
                 var scheludeRow = '';
                 // Variables for schelude times.
-                var staffPresentStart
+                var staffPresentStart;
                 var staffPresentEnd;
                 var selfServiceStart;
                 var selfServiceEnd;
@@ -361,14 +361,16 @@ function fetchInformation(language) {
         if (isEmpty($('#genericTransit'))) {
             if (data.extra.transit.transit_directions != null && data.extra.transit.transit_directions.length != 0) {
                 $('.transit-details').css('display', 'block');
-                    $('#genericTransit').append('<h4>' + i18n.get("Julkinen liikenne") + '</h4><p>' + data.extra.transit.transit_directions + '</p>')
-                    if (data.extra.transit.buses != null && data.extra.transit.buses !== "") {
-                        $('#genericTransit').append('<h5>' + i18n.get("Linja-autot") + '</h5><p>' + data.extra.transit.buses + '</p>')
-                    }
+                $('#genericTransit').append('<h5>' + i18n.get("Julkinen liikenne") + '</h5><p>' + data.extra.transit.transit_directions + '</p>')
+            }
+            if (data.extra.transit.buses != null && data.extra.transit.buses !== "") {
+                $('.transit-details').css('display', 'block');
+                $('#genericTransit').append('<h4>' + i18n.get("Linja-autot") + ':</h4><p>' + data.extra.transit.buses + '</p>')
             }
         }
         if (isEmpty($('#parkingDetails'))) {
             if (data.extra.transit.parking_instructions != null && data.extra.transit.parking_instructions !== "") {
+                $('.transit-details').css('display', 'block');
                 // Replace row splits with <br>
                 var parking_instructions = data.extra.transit.parking_instructions.replace(/\r\n/g, "<br>");
                 $('#parkingDetails').append('<h4>' + i18n.get("Pysäköinti") + '</h4><p>' + parking_instructions + '</p>')
@@ -615,7 +617,7 @@ function fetchInformation(language) {
                             // Set top to be slightly under the element
                             posY = $(this).offset().top + 20;
                         // Set popup position & content, toggle visibility.
-                        $( "#infoPopup" ).css ('transform', 'translate3d(' + posX + 'px,' + posY + 'px, 0px')
+                        $( "#infoPopup" ).css ('transform', 'translate3d(' + posX + 'px,' + posY + 'px, 0px');
                         $( "#popover-content" ).html( '<p id="popover-content">' + $(this).data('message') + '</p>');
                         // If website is not null and contains stuff. Sometimes empty website is shown unless lenght is checked.
                         if ($(this).data('website') != null && $(this).data('website').length > 5) {
@@ -653,7 +655,7 @@ $(document).ready(function() {
             var altText = i18n.get("Kuva kirjastolta") + ' (' + altCount  + '/' + data.pictures.length + ')';
             $( ".rslides" ).append( '<li><img src="'+ data.pictures[i].files.large + '" alt="' + altText + '"></li>');
         }
-        $('#currentSlide').html(1)
+        $('#currentSlide').html(1);
         $('.top-left').append('/' + data.pictures.length);
         $(".rslides").responsiveSlides({
             navContainer: "#sliderBox"  // Selector: Where controls should be appended to, default is after the 'ul'
@@ -679,13 +681,18 @@ $(document).ready(function() {
         });
     });
 
+    $( "#transitAccessibilityToggle" ).on('click', function () {
+        $('#transitAccessibilityMarker').toggleClass("fa-eye").toggleClass("fa-eye-slash");
+        $(".transit-accessibility").toggle(500);
+        // $(".transit-accessibility").toggleClass('expanded');
+    });
+
     // Hide/Show sections on mobile
     $( "#newsDescriptionToggle" ).on('click', function () {
-        $(".news-description").toggleClass('expanded');
+        $('#newsDescriptionMarker').toggleClass("fa-eye").toggleClass("fa-eye-slash");
+        $(".news-description").toggle(500);
     });
-    $( "#transitAccessibilityToggle" ).on('click', function () {
-        $(".transit-accessibility").toggleClass('expanded');
-    });
+
     // Navigation events
     $( "#navEsittely" ).on('click', function () {
         // Hide other sections & active nav styles.

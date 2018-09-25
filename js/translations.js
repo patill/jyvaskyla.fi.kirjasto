@@ -12,12 +12,12 @@ var dict = {
         en: "Services",
     },
     "Liikenneyhteydet ja saavutettavuus": {
-        fi: "Liikenneyhteydet ja saavutettavuus",
-        en: "Transportation and accessibility",
+        fi: "Liikenne & saavutettavuus",
+        en: "Transit & accessibility",
     },
     "Ajankohtaista ja esittely": {
-        fi: "Ajankohtaista ja esittely",
-        en: "Services",
+        fi: "Ajankohtaista & esittely",
+        en: "News & introduction",
     },
     "Liikenneyhteydet": {
         fi: "Liikenneyhteydet",
@@ -210,4 +210,4 @@ var dict = {
         fi: "Sulje",
         en: "Close",
     },
-}
+};

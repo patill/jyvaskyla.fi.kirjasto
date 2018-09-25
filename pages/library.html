@@ -28,8 +28,10 @@
     <div class="col-lg-7 col-xl-8">
       <article>
         <div id="blockquote"></div>
-        <div class="details transit-accessibility">
-          <a id="transitAccessibilityToggle"href="#public-transport" class="details-toggle" data-toggle="details" role="button" aria-expanded="false" aria-controls="public-transport"></a>
+        <nav class="details">
+          <a id="transitAccessibilityToggle"href="#public-transport" class="details-toggle always-visible" role="button" aria-expanded="false" aria-controls="public-transport"><i id="transitAccessibilityMarker" class="visibility-marker fa fa-eye"></i> </a>
+        </nav>
+        <div class="transit-accessibility" style="display: none">
           <div class="details-content" id="public-transport">
             <section class="transit-details" style="display: none;">
               <h3 id="transitTitle"></h3>
@@ -44,8 +46,10 @@
             </section>
           </div>
         </div><!-- col-lg-8 -->
-          <div class="details news-description" id="introduction">
-            <a id="newsDescriptionToggle" href="#introduction" class="details-toggle" data-toggle="details" role="button" aria-expanded="false" aria-controls="intro-content"></a>
+        <nav class="details">
+          <a id="newsDescriptionToggle" href="#introduction" class="details-toggle always-visible" data-toggle="details" role="button" aria-expanded="false" aria-controls="intro-content"><i id="newsDescriptionMarker" class="visibility-marker fa fa-eye-slash"></i> </a>
+        </nav>
+          <div class="news-description" id="introduction">
             <div class="details-content" id="intro-content">
             </div>
           </div>
@@ -205,6 +209,7 @@
   </div>
 </div>
 </body>
-<noscript><h2 class="no-js-notification">In order to function properly, this page requires Javascript. Your browser does not support it or it has been blocked.<br>
-  Toimiakseen oikein, sivusto tarvitsee JavaScriptiä. Selaimesi ei tue Javascriptiä tai se on estetty.</h2></noscript>
+<noscript><h2 class="no-js-notification">Toimiakseen oikein, sivusto tarvitsee JavaScriptiä. Selaimesi ei tue Javascriptiä tai se on estetty.
+  <br>In order to function properly, this page requires Javascript. Your browser does not support it or it has been blocked.
+  </h2></noscript>
 </html>

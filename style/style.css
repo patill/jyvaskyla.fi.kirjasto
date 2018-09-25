@@ -157,6 +157,17 @@
 .library-slogan {
 }
 
+.always-visible {
+    display: block!important;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.visibility-marker {
+  font-size: 3.5rem;
+  margin-right: 5px;
+}
+
 .schedules-weekly {
   position: relative;
   margin-top: 0.5rem; }
@@ -573,7 +584,7 @@ h2, .h2 {
   font-size: x-large; }
 
 h3, .h3 {
-  font-size: 1.3em; 
+  font-size: 1.3em;
   margin-bottom: 10px;
 }
 
@@ -1466,7 +1477,7 @@ pre {
 .table .thead-light th {
   color: #495057;
   background-color: #edf1f5;
-  border-color: #dee2e6; 
+  border-color: #dee2e6;
 }
 
 .table-dark {
@@ -4323,7 +4334,7 @@ button.close {
   .bs-popover-top .arrow::before, .bs-popover-auto[x-placement^="top"] .arrow::before {
     bottom: 0;
     border-top-color: rgba(0, 0, 0, 0.25); }
-  
+
   .bs-popover-top .arrow::after,
   .bs-popover-auto[x-placement^="top"] .arrow::after {
     bottom: 1px;
@@ -4343,7 +4354,7 @@ button.close {
   .bs-popover-right .arrow::before, .bs-popover-auto[x-placement^="right"] .arrow::before {
     left: 0;
     border-right-color: rgba(0, 0, 0, 0.25); }
-  
+
   .bs-popover-right .arrow::after,
   .bs-popover-auto[x-placement^="right"] .arrow::after {
     left: 1px;
@@ -4360,7 +4371,7 @@ button.close {
   .bs-popover-bottom .arrow::before, .bs-popover-auto[x-placement^="bottom"] .arrow::before {
     top: 0;
     border-bottom-color: rgba(0, 0, 0, 0.25); }
-  
+
   .bs-popover-bottom .arrow::after,
   .bs-popover-auto[x-placement^="bottom"] .arrow::after {
     top: 1px;
@@ -4389,7 +4400,7 @@ button.close {
   .bs-popover-left .arrow::before, .bs-popover-auto[x-placement^="left"] .arrow::before {
     right: 0;
     border-left-color: rgba(0, 0, 0, 0.25); }
-  
+
   .bs-popover-left .arrow::after,
   .bs-popover-auto[x-placement^="left"] .arrow::after {
     right: 1px;
@@ -9273,10 +9284,13 @@ ul.cols {
     width: 100%; }
   .details .details-content {
     padding: 0.5rem 0;
-    display: none; }
+    display: none;
+  }
 
 .details.expanded .details-content {
-  display: block; }
+  display: block;
+  transition: visibility 0s, opacity 0.5s linear;
+}
 
 @media (min-width: 992px) {
   .details .details-toggle {
