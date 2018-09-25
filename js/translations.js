@@ -23,9 +23,9 @@ var dict = {
         fi: "Liikenneyhteydet",
         en: "Transit details",
     },
-    "Julkinen liikenne": {
-        fi: "Julkinen liikenne",
-        en: "Public transportation",
+    "Ohjeita liikenteeseen": {
+        fi: "Ohjeita liikenteeseen",
+        en: "Instructions for transit",
     },
     "Linja-autot": {
         en: "Buses",

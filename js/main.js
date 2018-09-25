@@ -139,12 +139,12 @@ function getWeekSchelude(direction) {
                 // ScheludeRow will be used to bring things together
                 var scheludeRow = '';
                 // Variables for schelude times.
-                var staffPresentStart;
-                var staffPresentEnd;
-                var selfServiceStart;
-                var selfServiceEnd;
-                var magazinesStart;
-                var magazinesEnd;
+                var staffPresentStart = '';
+                var staffPresentEnd = '';
+                var selfServiceStart = '';
+                var selfServiceEnd = '';
+                var magazinesStart = '';
+                var magazinesEnd = '';
                 // Capitalize 1st letter of dayname.
                 var dayName = begin.format("dddd");
                 dayName = dayName[0].toUpperCase() + dayName.substr(1);
@@ -361,7 +361,7 @@ function fetchInformation(language) {
         if (isEmpty($('#genericTransit'))) {
             if (data.extra.transit.transit_directions != null && data.extra.transit.transit_directions.length != 0) {
                 $('.transit-details').css('display', 'block');
-                $('#genericTransit').append('<h5>' + i18n.get("Julkinen liikenne") + '</h5><p>' + data.extra.transit.transit_directions + '</p>')
+                $('#genericTransit').append('<h4>' + i18n.get("Ohjeita liikenteeseen") + '</h4><p>' + data.extra.transit.transit_directions + '</p>')
             }
             if (data.extra.transit.buses != null && data.extra.transit.buses !== "") {
                 $('.transit-details').css('display', 'block');
