@@ -355,13 +355,15 @@ function fetchInformation(language) {
                 // Match <br> or h2 after new line, this does not apparently work.
                 description = description.replace(/(<br \/><br \/>)+/g, "<p>");
                 description = description.replace(/(<br \/>(\n)<h2>)+/g, "<h2>");
+                // Add target="_blank" to links. Same url links would open inside Iframe, links to outside  wouldn't work.
+                description = description.replace(/(<a )+/g, '<a target="_blank" ');
                 $("#intro-content").append(description);
             }
         }
         if (isEmpty($('#genericTransit'))) {
             if (data.extra.transit.transit_directions != null && data.extra.transit.transit_directions.length != 0) {
                 $('.transit-details').css('display', 'block');
-                $('#genericTransit').append('<h4>' + i18n.get("Ohjeita liikenteeseen") + '</h4><p>' + data.extra.transit.transit_directions + '</p>')
+                $('#genericTransit').append('<h4>' + i18n.get("Ohjeita liikenteeseen") + '</h4><p>' + data.extra.transit.transit_directions.replace(/(<a )+/g, '<a target="_blank" ') + '</p>')
             }
             if (data.extra.transit.buses != null && data.extra.transit.buses !== "") {
                 $('.transit-details').css('display', 'block');
@@ -411,7 +413,7 @@ function fetchInformation(language) {
             if(element.id == "saavutettavuus-info") {
                 if (isEmpty($('#accessibilityDetails'))) {
                     if(element.value != null & element.value.length != 0) {
-                        $("#accessibilityDetails").append('<p>' + element.value + '</p>');
+                        $("#accessibilityDetails").append('<p>' + element.value.replace(/(<a )+/g, '<a target="_blank" ') + '</p>');
                     }
                 }
             }
