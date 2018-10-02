@@ -52,7 +52,7 @@
 }
 
 .small-slider .rslides1 {
-  border: solid 1px #025BA9;
+  border: solid 2px #025BA9;
 }
 
 /* Scale image width up to 140% on 'small' slider, thus cropping sides in order to fill vertically (eq. 16:9 images). */
@@ -96,11 +96,11 @@
   padding-bottom: 6px;
 }
 
-/* Note: centered left and right are 15 px too much to the left by default. */
+/* Note: centered left and right are about 25px too much to the left by default. */
 .centered-left {
   position: absolute;
   top: 50%;
-  left: 25px;
+  left: 35px;
   transform: translate(-50%, -50%);
   z-index: 97;
 }
