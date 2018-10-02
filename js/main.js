@@ -35,6 +35,10 @@ var i18n = $('body').translate({lang: lang, t: dict}); // Use the correct langua
 function toggleFullScreen(target) {
     // if already full screen; exit
     // else go fullscreen
+    // If slider, toggle small-slider class.
+    if(target === "#sliderBox") {
+        $('#sliderBox').toggleClass("small-slider");
+    }
     if (
       document.fullscreenElement ||
       document.webkitFullscreenElement ||
@@ -654,8 +658,9 @@ $(document).ready(function() {
     $.getJSON(jsonp_url + "&with=pictures", function(data) {
         for (var i=0; i<data.pictures.length; i++) {
             var altCount = i + 1;
+            // Use medium image size, large scales smaller images a lot...
             var altText = i18n.get("Kuva kirjastolta") + ' (' + altCount  + '/' + data.pictures.length + ')';
-            $( ".rslides" ).append( '<li><img src="'+ data.pictures[i].files.large + '" alt="' + altText + '"></li>');
+            $( ".rslides" ).append( '<li><img src="'+ data.pictures[i].files.medium + '" alt="' + altText + '"></li>');
         }
         $('#currentSlide').html(1);
         $('.top-left').append('/' + data.pictures.length);
