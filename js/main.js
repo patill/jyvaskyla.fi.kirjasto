@@ -347,7 +347,8 @@ function fetchInformation(language) {
         }
         if (isEmpty($('#intro-content'))) {
             var description = data.extra.description;
-            if (description != null) {
+            if (description != null && description.length !== 0) {
+                $('#newsDescriptionToggle').css('visibility', 'visible');
                 // Turn bolded Ajankohtaista/Tervetuloa to <h2>
                 description = description.replace("<strong>Ajankohtaista</strong>", "<h2>Ajankohtaista</h2>");
                 description = description.replace("<p><h2>Ajankohtaista</h2></p>", "<h2>Ajankohtaista</h2>");
@@ -362,6 +363,13 @@ function fetchInformation(language) {
                 // Add target="_blank" to links. Same url links would open inside Iframe, links to outside  wouldn't work.
                 description = description.replace(/(<a )+/g, '<a target="_blank" ');
                 $("#intro-content").append(description);
+            } else {
+                // If no description, display the transit & accessibility details (if hidden) and hide the toggler.
+                // If we don't hide the toggler instantly, it will be visible for a moment.
+                $('#newsDescriptionToggle').css('visibility', 'hidden');
+                if($( "#transitAccessibilityMarker" ).hasClass( "fa-eye" ) && language === "fi") {
+                    $("#transitAccessibilityToggle").click();
+                }
             }
         }
         if (isEmpty($('#genericTransit'))) {
@@ -662,11 +670,17 @@ $(document).ready(function() {
             var altText = i18n.get("Kuva kirjastolta") + ' (' + altCount  + '/' + data.pictures.length + ')';
             $( ".rslides" ).append( '<li><img src="'+ data.pictures[i].files.medium + '" alt="' + altText + '"></li>');
         }
-        $('#currentSlide').html(1);
-        $('.top-left').append('/' + data.pictures.length);
-        $(".rslides").responsiveSlides({
-            navContainer: "#sliderBox" // Selector: Where controls should be appended to, default is after the 'ul'
-        });
+        // If no pictures found, hide the slider...
+        if(data.pictures.length === 0) {
+            $('#sliderBox').css('display', 'none');
+        }
+        else {
+            $('#currentSlide').html(1);
+            $('.top-left').append('/' + data.pictures.length);
+            $(".rslides").responsiveSlides({
+                navContainer: "#sliderBox" // Selector: Where controls should be appended to, default is after the 'ul'
+            });
+        }
     });
 
     // Social media links
@@ -688,14 +702,36 @@ $(document).ready(function() {
         });
     });
 
+    // Check if element is visible on screen. If this is not used, visibility togglers are lost on mobile when sections are shown.
+    // https://stackoverflow.com/questions/5353934/check-if-element-is-visible-on-screen
+    function checkVisible(elm) {
+        var rect = elm.getBoundingClientRect();
+        var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+        return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+    }
+
     $( "#transitAccessibilityToggle" ).on('click', function () {
+        setTimeout(function(){
+            // Scroll to navigation if not visible.
+            if(!checkVisible(document.getElementById('navEsittely'))) {
+                document.getElementById('navEsittely').scrollIntoView();
+            }
+        }, 501);
         $('#transitAccessibilityMarker').toggleClass("fa-eye").toggleClass("fa-eye-slash");
         $(".transit-accessibility").toggle(500);
-        // $(".transit-accessibility").toggleClass('expanded');
     });
 
     // Hide/Show sections on mobile
     $( "#newsDescriptionToggle" ).on('click', function () {
+        // Perform only if we are showing the information..
+        if($( "#newsDescriptionMarker" ).hasClass( "fa-eye" )) {
+            setTimeout(function(){
+                // Scroll to element if not visible or on mobile.
+                if(!checkVisible(document.getElementById('newsDescriptionToggle')) || $(window).width() < 500) {
+                    document.getElementById('newsDescriptionToggle').scrollIntoView();
+                }
+            }, 501);
+        }
         $('#newsDescriptionMarker').toggleClass("fa-eye").toggleClass("fa-eye-slash");
         $(".news-description").toggle(500);
     });
