@@ -347,7 +347,8 @@ function fetchInformation(language) {
         }
         if (isEmpty($('#intro-content'))) {
             var description = data.extra.description;
-            if (description != null) {
+            if (description != null && description.length !== 0) {
+                $('#newsDescriptionToggle').css('visibility', 'visible');
                 // Turn bolded Ajankohtaista/Tervetuloa to <h2>
                 description = description.replace("<strong>Ajankohtaista</strong>", "<h2>Ajankohtaista</h2>");
                 description = description.replace("<p><h2>Ajankohtaista</h2></p>", "<h2>Ajankohtaista</h2>");
@@ -362,6 +363,13 @@ function fetchInformation(language) {
                 // Add target="_blank" to links. Same url links would open inside Iframe, links to outside  wouldn't work.
                 description = description.replace(/(<a )+/g, '<a target="_blank" ');
                 $("#intro-content").append(description);
+            } else {
+                // If no description, display the transit & accessibility details (if hidden) and hide the toggler.
+                // If we don't hide the toggler instantly, it will be visible for a moment.
+                $('#newsDescriptionToggle').css('visibility', 'hidden');
+                if($( "#transitAccessibilityMarker" ).hasClass( "fa-eye" ) && language === "fi") {
+                    $("#transitAccessibilityToggle").click();
+                }
             }
         }
         if (isEmpty($('#genericTransit'))) {
