@@ -688,14 +688,36 @@ $(document).ready(function() {
         });
     });
 
+    // Check if element is visible on screen. If this is not used, visibility togglers are lost on mobile when sections are shown.
+    // https://stackoverflow.com/questions/5353934/check-if-element-is-visible-on-screen
+    function checkVisible(elm) {
+        var rect = elm.getBoundingClientRect();
+        var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+        return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+    }
+
     $( "#transitAccessibilityToggle" ).on('click', function () {
+        setTimeout(function(){
+            // Scroll to navigation if not visible.
+            if(!checkVisible(document.getElementById('navEsittely'))) {
+                document.getElementById('navEsittely').scrollIntoView();
+            }
+        }, 501);
         $('#transitAccessibilityMarker').toggleClass("fa-eye").toggleClass("fa-eye-slash");
         $(".transit-accessibility").toggle(500);
-        // $(".transit-accessibility").toggleClass('expanded');
     });
 
     // Hide/Show sections on mobile
     $( "#newsDescriptionToggle" ).on('click', function () {
+        // Perform only if we are showing the information..
+        if($( "#newsDescriptionMarker" ).hasClass( "fa-eye" )) {
+            setTimeout(function(){
+                // Scroll to element if not visible or on mobile.
+                if(!checkVisible(document.getElementById('newsDescriptionToggle')) || $(window).width() < 500) {
+                    document.getElementById('newsDescriptionToggle').scrollIntoView();
+                }
+            }, 501);
+        }
         $('#newsDescriptionMarker').toggleClass("fa-eye").toggleClass("fa-eye-slash");
         $(".news-description").toggle(500);
     });
