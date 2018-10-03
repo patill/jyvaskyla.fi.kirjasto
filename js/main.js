@@ -670,11 +670,17 @@ $(document).ready(function() {
             var altText = i18n.get("Kuva kirjastolta") + ' (' + altCount  + '/' + data.pictures.length + ')';
             $( ".rslides" ).append( '<li><img src="'+ data.pictures[i].files.medium + '" alt="' + altText + '"></li>');
         }
-        $('#currentSlide').html(1);
-        $('.top-left').append('/' + data.pictures.length);
-        $(".rslides").responsiveSlides({
-            navContainer: "#sliderBox" // Selector: Where controls should be appended to, default is after the 'ul'
-        });
+        // If no pictures found, hide the slider...
+        if(data.pictures.length === 0) {
+            $('#sliderBox').css('display', 'none');
+        }
+        else {
+            $('#currentSlide').html(1);
+            $('.top-left').append('/' + data.pictures.length);
+            $(".rslides").responsiveSlides({
+                navContainer: "#sliderBox" // Selector: Where controls should be appended to, default is after the 'ul'
+            });
+        }
     });
 
     // Social media links

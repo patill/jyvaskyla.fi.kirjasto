@@ -190,12 +190,8 @@ var dict = {
         fi: "Tilat",
         en: "Rooms",
     },
-    "Tilat": {
-        fi: "Tilat",
-        en: "Rooms",
-    },
     "Ei palveluita": {
-        fi: "Kirjaston tietoihin ei ole lisätty palveluita",
+        fi: "Kirjaston tietoihin ei ole lisätty palveluita.",
         en: "Library has not listed any services.",
     },
     "Hintatiedot": {
