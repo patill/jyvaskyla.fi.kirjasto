@@ -35,6 +35,10 @@ var i18n = $('body').translate({lang: lang, t: dict}); // Use the correct langua
 function toggleFullScreen(target) {
     // if already full screen; exit
     // else go fullscreen
+    // If slider, toggle small-slider class.
+    if(target === "#sliderBox") {
+        $('#sliderBox').toggleClass("small-slider");
+    }
     if (
       document.fullscreenElement ||
       document.webkitFullscreenElement ||
@@ -108,19 +112,19 @@ function getWeekSchelude(direction) {
         weekCounter = 0;
         return;
     }
+    // Set moment locale
+    moment.locale(lang);
     // Display week number.
     $( "#weekNumber" ).html( i18n.get("Viikko") + ' ' + moment().add(weekCounter, 'weeks').format('W'));
-    // If week counter == 0 & lang == en, add 1 week. Otherwise last week will be shown... but why?
-    if(weekCounter == 0 && lang == "en") {
-        weekCounter = weekCounter + 1;
-    }
     $.getJSON(jsonp_url + "&with=schedules&period.start=" + weekCounter + "w&period.end=" + weekCounter + "w", function(data) {
-        //  Week adjustment
-        moment.locale(lang);
         var format = 'hh:mm';
-        moment().add(weekCounter, 'weeks');
         var date = moment().add(weekCounter, 'weeks');
+        begin = moment(date).startOf('week').isoWeekday(1);
+        // If lang == en, add 1 week. Otherwise last week will be shown... but why?
+        if(lang == "en") {
+            date = moment().add(weekCounter  + 1, 'weeks');
             begin = moment(date).startOf('week').isoWeekday(1);
+        }
         var str = '';
         for (var i=0; i<7; i++) {
                 // If today, add some colourfull classes!
@@ -654,13 +658,14 @@ $(document).ready(function() {
     $.getJSON(jsonp_url + "&with=pictures", function(data) {
         for (var i=0; i<data.pictures.length; i++) {
             var altCount = i + 1;
+            // Use medium image size, large scales smaller images a lot...
             var altText = i18n.get("Kuva kirjastolta") + ' (' + altCount  + '/' + data.pictures.length + ')';
-            $( ".rslides" ).append( '<li><img src="'+ data.pictures[i].files.large + '" alt="' + altText + '"></li>');
+            $( ".rslides" ).append( '<li><img src="'+ data.pictures[i].files.medium + '" alt="' + altText + '"></li>');
         }
         $('#currentSlide').html(1);
         $('.top-left').append('/' + data.pictures.length);
         $(".rslides").responsiveSlides({
-            navContainer: "#sliderBox"  // Selector: Where controls should be appended to, default is after the 'ul'
+            navContainer: "#sliderBox" // Selector: Where controls should be appended to, default is after the 'ul'
         });
     });
 

@@ -8,32 +8,63 @@
   margin: 0;
   }
 
+.rslides ul {
+  list-style-type: none;
+}
+
 .rslides li {
   -webkit-backface-visibility: hidden;
   position: absolute;
   display: none;
   left: 0;
   top: 0;
-  }
+}
 
-.rslides li:first-child {
-  position: relative;
-  display: block;
-  float: left;
-  }
+.rslides1 {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  background: black;
+}
 
 .rslides img {
   display: block;
-  height: auto;
-  float: left;
-  width: 100%;
-  border: 0;
-  }
+  object-position: 50% 50%; /* default value: image is centered*/
+  object-fit: contain;
+  max-width: 100%;
+  max-height: 100%;
+}
 
-
-#sliderBox{
+#sliderBox {
   position: relative;
   z-index: 99;
+}
+
+.small-slider {
+  height: 250px;
+}
+
+.small-slider .rslides1 {
+  border: solid 2px #025BA9;
+}
+
+/* Scale image width up to 140% on 'small' slider, thus cropping sides in order to fill vertically (eq. 16:9 images). */
+.small-slider img {
+  max-width: 140%;
+}
+
+/* Media query for IE 10-11. Since object-fit: contain; is not supported in IE, set width to avoid silly scaling in IE. */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .small-slider img {
+    width: 430px;
+  }
 }
 
 #map-container {
@@ -42,7 +73,7 @@
   z-index: 99;
 }
 
-/* Top right text */
+/* Top right (full screen toggler) */
 .top-right {
   position: absolute;
   top: 8%;
@@ -50,6 +81,10 @@
   z-index: 98;
   padding-top: 6px;
   padding-bottom: 6px;
+}
+
+.top-right:hover {
+  cursor: pointer;
 }
 
 .top-left {
@@ -61,11 +96,11 @@
   padding-bottom: 6px;
 }
 
-/* Note: centered left and right are 15 px too much to the left by default. */
+/* Note: centered left and right are about 25px too much to the left by default. */
 .centered-left {
   position: absolute;
   top: 50%;
-  left: 25px;
+  left: 35px;
   transform: translate(-50%, -50%);
   z-index: 97;
 }

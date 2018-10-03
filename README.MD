@@ -4,6 +4,23 @@ This repository contains pages (published as GitHub pages) to be implemented as 
 
 Library data is pulled from the kirkanta-api: https://github.com/libraries-fi/kirkanta-api and the UI is heavily inspired by kirjastohakemisto.fi https://github.com/libraries-fi/kirjastohakemisto
 
+Since the api does not support fetching accessibility details, they are fetched from ”Lisätiedot” fields instead. Example: https://imgur.com/a/Nr7EpfU
+
+**saavutettavuus-info** – Accessibility description, this may contain HTML or just text. 
+
+**saavutettavuus-palvelut** – the accessibility listing and icons, one  item per row.
+
+Currently the following saavutettavuus-palvelut are shown as accessibility icons and translated to English:
+
+- Esteetön sisäänpääsy
+- Invapysäköinti
+-  Esteetön wc
+-  Hissi
+-  Induktiosilmukka
+-  Suuren kirjasinkoon kokoelma  (only translation, no icon)
+
+Other rows are displayed in the list as they are.
+
 
 
 **Library list**
