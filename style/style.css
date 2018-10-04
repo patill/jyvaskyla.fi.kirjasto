@@ -208,9 +208,9 @@
 }
 
 .schedules-widget {
+  background:rgba(0,0,0,0)!important;
   zoom: 0.9;
-  -moz-transform: scale(0.9);
-  background: none!important;
+  -moz-transform: scale(0.8);
 }
 
 .schedules-weekly {
