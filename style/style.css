@@ -203,6 +203,15 @@
   margin-right: 5px;
 }
 
+.schedules-container {
+  background:rgba(0,0,0,0)!important;
+}
+
+.schedules-widget {
+  zoom: 0.9;
+  -moz-transform: scale(0.9);
+}
+
 .schedules-weekly {
   position: relative;
   margin-top: 0.5rem; }
