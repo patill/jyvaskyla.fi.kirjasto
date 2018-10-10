@@ -26,6 +26,14 @@
   </header>
   <div class="row esittely">
     <div class="col-sm-7 col-xl-8">
+		<!--Slogan -->
+		<div id="blockquote"></div>
+		<!--Tähän siirretään kuva -->
+		  <section id="sliderBox" class="slider">
+          <ul class="rslides"></ul>
+          <i id="expandSlider" onclick="toggleFullScreen('#sliderBox')" class="fa fa-expand top-right" title="Toggle full-screen"></i>
+          <i class="top-left"><span id="currentSlide"></span></i>
+          </section>
       <article>
         <div id="blockquote"></div>
         <nav class="details">
@@ -81,11 +89,11 @@
             </tbody>
           </table>
         </section>
-        <section id="sliderBox" class="small-slider">
+         <!-- <section id="sliderBox" class="small-slider">
           <ul class="rslides"></ul>
           <i id="expandSlider" onclick="toggleFullScreen('#sliderBox')" class="fa fa-expand top-right" title="Toggle full-screen"></i>
           <i class="top-left"><span id="currentSlide"></span></i>
-        </section>
+        </section> -->
         <section class="building-details" style="margin-top: 25px;">
           <table class="table table-sm">
             <tbody id="buildingDetails">

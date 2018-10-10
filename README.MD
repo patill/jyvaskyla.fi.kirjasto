@@ -27,7 +27,7 @@ Other rows are displayed in the list as they are.
 
 | ID        	|     Alias     | URL  | On pori.fi | Iframe |
 | :-------------: |:-------------:| :-----: | --------------- | --------------- |
-| 85142       | Porin pääkirjasto | https://hakemisto.kirjastot.fi/|  | <iframe allowfullscreen="" frameborder="0" height="2000px" src="https://patill.github.io/pori.fi.kirjasto/pages/library.html?lib=85142&lang=fi#" width="100%"></iframe> |
+| 85142       | Porin pääkirjasto | https://hakemisto.kirjastot.fi/pori/pori_paakirjasto | https://www.pori.fi/kirjasto/aukioloajat-ja-yhteystiedot/paakirjasto | <iframe allowfullscreen="" frameborder="0" height="2000px" src="https://patill.github.io/pori.fi.kirjasto/pages/library.html?lib=85142&lang=fi#" width="100%"></iframe> |
 
 
 

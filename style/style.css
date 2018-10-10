@@ -51,7 +51,7 @@
   height: 250px;
 }
 
-.small-slider .rslides1 {
+.small-slider .rslides1, .slider {
   border: solid 2px #025BA9;
 }
 
