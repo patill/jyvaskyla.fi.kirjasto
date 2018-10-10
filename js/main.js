@@ -168,10 +168,15 @@ function fetchInformation(language) {
             }
         }
         if (isEmpty($('#genericTransit'))) {
-            if (data.extra.transit.transit_directions != null && data.extra.transit.transit_directions.length != 0) {
+            if (data.extra.transit.transit_directions != null && data.extra.transit.transit_directions.length !== 0) {
                 $('.transit-details').css('display', 'block');
                 $('#genericTransit').append('<h4>' + i18n.get("Ohjeita liikenteeseen") + '</h4><p>' + data.extra.transit.transit_directions.replace(/(<a )+/g, '<a target="_blank" ') + '</p>')
-            }
+            } else {
+			//if empty, hide transit toggle:
+			$('#transitAccessibilityToggle').css('visibility', 'hidden');
+
+			
+			}
             if (data.extra.transit.buses != null && data.extra.transit.buses !== "") {
                 $('.transit-details').css('display', 'block');
                 $('#genericTransit').append('<h4>' + i18n.get("Linja-autot") + ':</h4><p>' + data.extra.transit.buses + '</p>')
