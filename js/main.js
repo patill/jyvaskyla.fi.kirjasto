@@ -174,17 +174,23 @@ function getWeekSchelude(direction) {
                         rowspanCount = rowspanCount + 1;
                         // Get scheludes and check if starts before or at the same time staff is present.
                         selfServiceStart = data.schedules[i].sections.selfservice.times[0].opens;
-                        selfServiceEnd = data.schedules[i].sections.selfservice.times[0].closes;
+						selfServiceEnd = data.schedules[i].sections.selfservice.times[0].closes;
+						//need to know if staff comes after some time
+						if (moment(staffPresentStart, format).isBefore(moment(selfServiceEnd, format)) ||
+							(moment(staffPresentStart, format).isSame(moment(selfServiceEnd, format)))) {
+							selfServiceEnd = data.schedules[i].opens
+							}
                         if (moment(selfServiceStart, format).isBefore(moment(staffPresentStart, format)) ||
                             (moment(selfServiceStart, format).isSame(moment(staffPresentStart, format)))) {
                             selfServiceBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
                                 '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") +' </td>' +
                                 '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
                                 '</tr>';
-                            // Set dayStart to match selfServiceStart, if dayEnd is '', set it too.
+                            // Set dayStart and dayEnd to match selfServiceStart, if dayEnd is '', set it too.
                             dayStart = selfServiceStart;
+							dayEnd = data.schedules[i].sections.selfservice.times[0].closes;
                             if (dayEnd === '') {
-                                dayEnd = selfServiceEnd;
+                                dayEnd = data.schedules[i].sections.selfservice.times[0].closes;
                             }
                             // Check if there is secondary entry for self-service (service afterwards)
                             if (data.schedules[i].sections.selfservice.times[1] != null) {

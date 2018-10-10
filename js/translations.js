@@ -83,7 +83,7 @@ var dict = {
         en: "Week",
     },
     "Henkilökunta paikalla": {
-        fi: "Palveluaika",
+        fi: "Henkilökunta paikalla",
         en: "Service time",
     },
     "Omatoimiaika": {
