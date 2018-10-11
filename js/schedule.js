@@ -133,6 +133,18 @@ function getWeekSchelude(direction) {
                                     '</tr>';
                                 dayEnd = selfServiceEnd;
                             }
+							// check if selfservice closes after general opening times
+							if (moment(staffPresentEnd, format).isBefore(moment(dayEnd, format))){
+								rowspanCount = rowspanCount +1;
+                                selfServiceStart = staffPresentEnd;
+                                selfServiceEnd = dayEnd;
+                                selfServiceAfter = '<tr class="time--sub time isTodayClass time--no-staff">' +
+                                    '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") + ' </td>' +
+                                    '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
+                                    '</tr>';
+                               
+							}
+							
                             isClosed = false;
                         }
                         // If self does not start before staff is present or no staff is present at all.
