@@ -314,14 +314,26 @@ function fetchInformation(language) {
             }
         });
     }
+	//sorting function
+	function compare(el1, el2, index) {
+	return el1[index] == el2[index] ? 0 : (el1[index] < el2[index] ? -1 : 1);
+	}
     // Staff list
     if (isEmpty($('#staffMembers'))) {
         $.getJSON(jsonp_url + "&with=persons", function (data) {
+			//sort staff by last name
+			data.persons.sort(function(el1,el2){
+			return compare(el1, el2, "last_name")
+			});
             for (var i = 0; i < data.persons.length; i++) {
+				var phoneNb = '';
+					if (data.persons[i].phone != null) {
+						phoneNb = data.persons[i].phone ;
+					};
                 $("#staffMembers").append('<tr>' +
                     '<td>' + data.persons[i].first_name + ' ' + data.persons[i].last_name + '</td>' +
                     '<td>' + data.persons[i].job_title + '</td>' +
-                    '<td>' + data.persons[i].email + '</td>' +
+					'<td>' + phoneNb + '</td>' +
                     '</tr>');
             }
         });

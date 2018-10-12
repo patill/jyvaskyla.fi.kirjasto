@@ -159,7 +159,7 @@ var dict = {
         en: "Number",
     },
     "Henkilökunta": {
-        fi: "Henkilökunta",
+        fi: "Henkilökunta (sähköposti: etunimi.sukunimi@pori.fi)",
         en: "Staff",
     },
     "Nimi": {
