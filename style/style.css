@@ -3157,7 +3157,7 @@ input[type="button"].btn-block {
 .nav-link {
   display: block;
   padding: 0.5rem 1rem; 
-  color: black;}
+  color: #4f4e4e;}
   .nav-link:hover, .nav-link:focus {
     text-decoration: none; 
 	color: white;}

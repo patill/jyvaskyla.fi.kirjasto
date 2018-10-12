@@ -32,7 +32,8 @@
 		<!--Tähän siirretään kuva -->
 		  <section id="sliderBox" class="slider">
           <ul class="rslides"></ul>
-          <i id="expandSlider" onclick="toggleFullScreen('#sliderBox')" class="fa fa-expand top-right" title="Toggle full-screen"></i>
+		  <!--Don't want full screen-->
+          <!--<i id="expandSlider" onclick="toggleFullScreen('#sliderBox')" class="fa fa-expand top-right" title="Toggle full-screen"></i>-->
           <i class="top-left"><span id="currentSlide"></span></i>
           </section>
       <article>
@@ -137,6 +138,9 @@
             </div>
           </div>
         </section>
+		<section>
+		<div class="row">
+		<div class="col-md-5">
         <!-- Phone numbers -->
         <section class="phone-numbers">
           <h2 id="phonesTitle"><i class="fa fa-phone" aria-hidden="true"></i> </h2>
@@ -153,7 +157,9 @@
             </table>
           </div>
         </section>
+		</div>
         <!-- Staff -->
+		<div class="col-md-7">
         <section class="staff">
           <h2 id="staffTitle"><i class="fa fa-address-card-o" aria-hidden="true"></i> </h2>
           <div class="responsive-table">
@@ -170,6 +176,9 @@
             </table>
           </div>
         </section>
+		</div>
+		</div>
+	</section>
       </div>
     </div> <!-- Yhteystiedot -->
     <div class="row palvelut" style="display: none">
