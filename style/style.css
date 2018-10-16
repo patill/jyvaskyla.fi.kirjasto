@@ -9390,8 +9390,8 @@ ul.cols {
   background-color: rgba(0, 0, 0, 0.3); }
 
 .nav-pills .nav-link {
-  border-top-left-radius: 0.1rem;
-  border-top-right-radius: 0.1rem; }
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem; }
 
 .navbar .navbar-toggler, .kifibar .navbar-toggler {
   color: #fff;
