@@ -83,63 +83,66 @@ function getWeekSchelude(direction) {
                 var dayName = begin.format("dddd");
                 dayName = dayName[0].toUpperCase() + dayName.substr(1);
                 // If main schelude is not null (staff is present)
-                if (data.schedules[i].opens != null) {
-                    // Increase rowspanCount to be used with DD.M. for each open section.
-                    rowspanCount = rowspanCount + 1;
-                    staffPresentStart = data.schedules[i].opens;
-                    staffPresentEnd = data.schedules[i].closes;
-                    dayStart = staffPresentStart;
-                    dayEnd = staffPresentEnd;
-                    // Store the row as a variable.
-                    staffToday = '<tr class="time--sub time isTodayClass time--with-staff">' +
-                    '<td class="trn"><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Henkilökunta paikalla") + '</td>' +
-                    '<td>' + staffPresentStart + ' – ' + staffPresentEnd + '</td>' +
-                    '</tr>';
-                    // Set isClosed to false.
-                    isClosed = false;
+                if(data.schedules[i] != null) {
+                    if (data.schedules[i].opens != null) {
+                        // Increase rowspanCount to be used with DD.M. for each open section.
+                        rowspanCount = rowspanCount + 1;
+                        staffPresentStart = data.schedules[i].opens;
+                        staffPresentEnd = data.schedules[i].closes;
+                        dayStart = staffPresentStart;
+                        dayEnd = staffPresentEnd;
+                        // Store the row as a variable.
+                        staffToday = '<tr class="time--sub time isTodayClass time--with-staff">' +
+                            '<td class="trn"><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Henkilökunta paikalla") + '</td>' +
+                            '<td>' + staffPresentStart + ' – ' + staffPresentEnd + '</td>' +
+                            '</tr>';
+                        // Set isClosed to false.
+                        isClosed = false;
+                    }
                 }
                 // Self service times.
+            if(data.schedules[i] != null) {
+                // selfservice times
                 if(data.schedules[i].sections.selfservice != null) {
                     if(data.schedules[i].sections.selfservice.times[0] != null) {
-                        rowspanCount = rowspanCount + 1;
-                        // Get scheludes and check if starts before or at the same time staff is present.
+                        // Get scheludes and check if starts before staff is present.
                         selfServiceStart = data.schedules[i].sections.selfservice.times[0].opens;
                         selfServiceEnd = data.schedules[i].sections.selfservice.times[0].closes;
                         if (moment(selfServiceStart, format).isBefore(moment(staffPresentStart, format)) ||
                             (moment(selfServiceStart, format).isSame(moment(staffPresentStart, format)))) {
+                            rowspanCount = rowspanCount + 1;
+                            isClosed = false;
                             selfServiceBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                                '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") +' </td>' +
+                                '<td class=""><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") + '</td>' +
                                 '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
                                 '</tr>';
-                            // Set dayStart to match selfServiceStart, if dayEnd is '', set it too.
                             dayStart = selfServiceStart;
                             if (dayEnd === '') {
                                 dayEnd = selfServiceEnd;
                             }
-                            // Check if there is secondary entry for self-service (service afterwards)
                             if (data.schedules[i].sections.selfservice.times[1] != null) {
                                 rowspanCount = rowspanCount +1;
                                 selfServiceStart = data.schedules[i].sections.selfservice.times[1].opens;
                                 selfServiceEnd = data.schedules[i].sections.selfservice.times[1].closes;
                                 selfServiceAfter = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                                    '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") + ' </td>' +
+                                    '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") + '</td>' +
                                     '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
                                     '</tr>';
                                 dayEnd = selfServiceEnd;
                             }
-                            isClosed = false;
                         }
-                        // If self does not start before staff is present or no staff is present at all.
+                        // If selfservice does not start before staff is present or no staff is present at all.
                         else {
+                            rowspanCount = rowspanCount + 1;
                             isClosed = false;
-                            if(dayStart === '') {
-                                dayStart = selfServiceStart;
-                            }
-                            dayEnd = selfServiceEnd;
                             selfServiceAfter = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                            '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") + '</td>' +
-                            '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
-                            '</tr>';
+                                '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") + '</td>' +
+                                '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
+                                '</tr>';
+                            dayStart = selfServiceStart;
+                            if (dayEnd === '') {
+                                dayEnd = selfServiceEnd;
+                            }
                         }
                     }
                 }
@@ -164,16 +167,16 @@ function getWeekSchelude(direction) {
                             if (data.schedules[i].sections.magazines.times[1] != null) {
                                 rowspanCount = rowspanCount +1;
                                 magazinesStart = data.schedules[i].sections.magazines.times[1].opens;
-                                magazinesStart = data.schedules[i].sections.magazines.times[1].closes;
+                                magazinesEnd = data.schedules[i].sections.magazines.times[1].closes;
                                 magazinesAfter = '<tr class="time--sub time isTodayClass time--no-staff">' +
                                     '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Lehtilukusali") + '</td>' +
-                                    '<td>' + selfServiceStart + ' – ' + magazinesEnd + '</td>' +
+                                    '<td>' + magazinesStart + ' – ' + magazinesEnd + '</td>' +
                                     '</tr>';
                                 dayEnd = magazinesEnd;
                             }
                         }
                         // If magazines does not start before staff is present or no staff is present at all.
-                         else {
+                        else {
                             rowspanCount = rowspanCount + 1;
                             isClosed = false;
                             magazinesAfter = '<tr class="time--sub time isTodayClass time--no-staff">' +
@@ -187,6 +190,7 @@ function getWeekSchelude(direction) {
                         }
                     }
                 }
+            }
                 // If today, apply 'today' -class.
                 if(moment(begin).isSame(moment(), 'day')) {
                     var isTodayClass =  "is-closed";
@@ -223,12 +227,15 @@ function getWeekSchelude(direction) {
                     }
                 }
                 // Info row.
-                if (data.schedules[i].info != null && data.schedules[i].info.length != 0) {
-                    rowspanCount = rowspanCount +1;
-                    dayInfo = '<tr class="time--sub ' + isTodayClass + '">' +
-                    '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span style="float: left; margin-left: 10px;"> ' +  data.schedules[i].info + '</span></td>' +
-                    '</tr>';
+                if (data.schedules[i] != null) {
+                    if (data.schedules[i].info != null && data.schedules[i].info.length != 0) {
+                        rowspanCount = rowspanCount +1;
+                        dayInfo = '<tr class="time--sub ' + isTodayClass + '">' +
+                            '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span style="float: left; margin-left: 10px;"> ' +  data.schedules[i].info + '</span></td>' +
+                            '</tr>';
+                    }
                 }
+
                 if (isClosed) {
                     scheludeRow = '<tr class="time ' + isTodayClass + '">' +
                     '<th scope="row">' +
