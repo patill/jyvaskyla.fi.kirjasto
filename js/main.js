@@ -55,16 +55,23 @@ function toggleFullScreen(target) {
         document.msExitFullscreen();
       }
     } else {
-      element = $( target ).get(0);
-      if (element.requestFullscreen) {
-        element.requestFullscreen();
-      } else if (element.mozRequestFullScreen) {
-        element.mozRequestFullScreen();
-      } else if (element.webkitRequestFullscreen) {
-        element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-      } else if (element.msRequestFullscreen) {
-        element.msRequestFullscreen();
-      }
+        element = $(target).get(0);
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+        }
+        else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        }
+        else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen()
+        }
+        // Safari  has a bug where fullscreen does not work with ALLOW_KEYBOARD_INPUT
+        // https://stackoverflow.com/questions/8427413/webkitrequestfullscreen-fails-when-passing-element-allow-keyboard-input-in-safar
+        if ( /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+            element.webkitRequestFullscreen();
+        } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
     }
 }
 

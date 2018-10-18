@@ -75,6 +75,9 @@
   width: 100%;
   height: 100%;
   z-index: 99;
+  /* Prevent IOS tabloids from getting stuck in fullscreen
+  https://css-tricks.com/forums/topic/safari-for-ios-z-index-ordering-bug-while-scrolling-a-page-with-a-fixed-element/ */
+  -webkit-transform: translate3d(0,0,0) !important;
 }
 
 /* Top right (full screen toggler) */
@@ -82,7 +85,7 @@
   position: absolute;
   top: 8%;
   right: 20px;
-  z-index: 98;
+  z-index: 100;
   padding-top: 6px;
   padding-bottom: 6px;
 }
