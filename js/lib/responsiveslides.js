@@ -330,8 +330,8 @@ function rebindClickPreventation() {
         // Navigation
         if (settings.nav) {
           var navMarkup =
-            "<a href='#' class='centered-left " + navClass + " prev'>" + settings.prevText + "</a>" +
-            "<a href='#' class='centered-right " + navClass + " next'>" + settings.nextText + "</a>";
+            "<a href='#'id='navigateBack' class='centered-left " + navClass + " prev'>" + settings.prevText + "</a>" +
+            "<a href='#' id='navigateForward' class='centered-right " + navClass + " next'>" + settings.nextText + "</a>";
 
           // Inject navigation
           if (options.navContainer) {
@@ -425,8 +425,28 @@ function rebindClickPreventation() {
           widthSupport();
         });
       }
-
     });
 
   };
 })(jQuery, this, 0);
+
+// Detect left/right and move backwards/forwards if in fullscreen mode.
+$(document).keydown(function(e) {
+    switch(e.which) {
+        case 37: // left
+            if(!$("#sliderBox").hasClass("small-slider")) {
+                // Go to slide
+                $("#navigateBack").focus();
+                $("#navigateBack").click();
+            }
+            break;
+        case 39: // right
+            if(!$("#sliderBox").hasClass("small-slider")) {
+                // Go to slide
+                $("#navigateForward").focus();
+                $("#navigateForward").click();
+            }
+            break;
+        default: return; // exit this handler for other keys
+    }
+});
