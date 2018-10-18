@@ -189,6 +189,15 @@
   margin: 15px;
 }
 
+/* Scale down the navigation on smaller screens to fit one row */
+@media screen and (max-width: 350px) {
+  .nav-pills {
+    zoom: 0.76;
+    -moz-transform: scale(0.76);
+    min-width: 300px;
+  }
+}
+
 .library-slogan {
 }
 
@@ -219,7 +228,8 @@
   .schedules-weekly th:not([scope="row"]), .schedules-weekly .btn, .schedules-weekly .details .details-toggle, .details .schedules-weekly .details-toggle {
     line-height: 1.5;
     padding: 0.3rem 0.75rem;
-    font-size: 1.25rem; }
+    font-size: 1.25rem;
+  }
   .schedules-weekly .btn, .schedules-weekly .details .details-toggle, .details .schedules-weekly .details-toggle {
     width: 3rem;
     height: calc(1px + 2.61rem);
@@ -282,7 +292,6 @@
 
 .schedules-weekly[data-paged-table] .time--sub td:first-child:before {
   content: "\27A5"; }
-
 
 
 /*!
