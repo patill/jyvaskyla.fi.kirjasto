@@ -113,7 +113,7 @@ function getWeekSchelude(direction) {
                             rowspanCount = rowspanCount + 1;
                             isClosed = false;
                             selfServiceBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                                '<td class=""><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") + '</td>' +
+                                '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") + '</td>' +
                                 '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
                                 '</tr>';
                             dayStart = selfServiceStart;
@@ -157,7 +157,7 @@ function getWeekSchelude(direction) {
                             rowspanCount = rowspanCount + 1;
                             isClosed = false;
                             magazinesBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                                '<td class=""><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Lehtilukusali") + '</td>' +
+                                '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Lehtilukusali") + '</td>' +
                                 '<td>' + magazinesStart + ' – ' + magazinesEnd + '</td>' +
                                 '</tr>';
                             dayStart = magazinesStart;
