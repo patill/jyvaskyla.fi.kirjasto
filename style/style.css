@@ -216,7 +216,24 @@
   background:rgba(0,0,0,0);
 }
 
+/* Scale down the schedules on widget & mobile */
+@media screen and (max-width: 500px) {
+  .library-schedules {
+    zoom: 0.9;
+    -moz-transform: scale(0.9);
+  }
+}
+
+/* Scale down the schedules on widget & mobile */
+@media screen and (max-width: 375px) {
+  .library-schedules, .schedules-widget {
+    zoom: 0.8;
+    -moz-transform: scale(0.8);
+  }
+}
+
 .schedules-widget {
+  /* Use target page background */
   background:rgba(0,0,0,0)!important;
   zoom: 0.87;
   -moz-transform: scale(0.87);
