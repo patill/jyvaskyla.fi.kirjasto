@@ -796,9 +796,10 @@ pre {
   overflow-y: scroll; }
 
 .container {
-  width: 100%;
-  padding-right: 15px;
-  padding-left: 5px;
+  /* Setting width to 97% vs 100 fixes scrolling to right on mobile. To DO: better fix. */
+  width: 97%;
+  padding-right: 5px;
+  padding-left: 2px;
   margin-right: auto;
   margin-left: 5px; }
   @media (min-width: 576px) {
@@ -813,6 +814,9 @@ pre {
   @media (min-width: 1200px) {
     .container {
       max-width: 1140px; } }
+  @media (min-width: 1350px) {
+    .container {
+      max-width: 1250px; } }
 
 .container-fluid {
   width: 100%;
@@ -1581,6 +1585,18 @@ pre {
     -ms-overflow-style: -ms-autohiding-scrollbar; }
     .table-responsive-sm > .table-bordered {
       border: 0; } }
+
+@media (max-width: 350px) {
+  .table-responsive-sm {
+    zoom: 0.8;
+    -moz-transform: scale(0.8);
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar; }
+  .table-responsive-sm > .table-bordered {
+    border: 0; } }
 
 @media (max-width: 767.98px) {
   .table-responsive-md {
