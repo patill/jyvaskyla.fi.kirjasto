@@ -67,6 +67,7 @@ function toggleFullScreen(target) {
         }
         // Safari  has a bug where fullscreen does not work with ALLOW_KEYBOARD_INPUT
         // https://stackoverflow.com/questions/8427413/webkitrequestfullscreen-fails-when-passing-element-allow-keyboard-input-in-safar
+        // Apparently IOS does not support Fullscreen API? https://github.com/googlevr/vrview/issues/112
         if ( /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
             element.webkitRequestFullscreen();
         } else if (element.webkitRequestFullscreen) {
@@ -143,6 +144,7 @@ var accessibilityIsEmpty = true;
 var transitIsEmpty = true;
 var descriptionIsEmpty = true;
 var yhteystiedotIsEmpty = true;
+var transitAccessibilityTextSet = false;
 function fetchInformation(language) {
     // jsonp_url base
     jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + language;
@@ -190,6 +192,7 @@ function fetchInformation(language) {
                 $('#genericTransit').append('<h4>' + i18n.get("Ohjeita liikenteeseen") + '</h4><p>' + data.extra.transit.transit_directions.replace(/(<a )+/g, '<a target="_blank" ') + '</p>')
             }
             if (data.extra.transit.buses != null && data.extra.transit.buses !== "") {
+                transitIsEmpty = false;
                 $('.transit-details').css('display', 'block');
                 $('#genericTransit').append('<h4>' + i18n.get("Linja-autot") + ':</h4><p>' + data.extra.transit.buses + '</p>')
             }
@@ -301,6 +304,19 @@ function fetchInformation(language) {
         });
 
         if(!transitIsEmpty || !accessibilityIsEmpty) {
+            // Display the UI Text based on if transit/accessibility details are available.
+            if(!transitIsEmpty && !accessibilityIsEmpty && !transitAccessibilityTextSet) {
+                $('#transitAccessibilityToggle').append(i18n.get("Liikenneyhteydet ja saavutettavuus"));
+                transitAccessibilityTextSet = true;
+            }
+            else if(!transitIsEmpty && accessibilityIsEmpty && !transitAccessibilityTextSet) {
+                $('#transitAccessibilityToggle').append(i18n.get("Liikenneyhteydet"));
+                transitAccessibilityTextSet = true;
+            }
+            else if(!transitAccessibilityTextSet) {
+                $('#transitAccessibilityToggle').append(i18n.get("Saavutettavuus"));
+                transitAccessibilityTextSet = true;
+            }
             $("#transitAccessibilityToggle").addClass("always-visible");
             if(!descriptionIsEmpty) {
                 $("#newsDescriptionToggle").addClass("always-visible");
@@ -313,7 +329,7 @@ function fetchInformation(language) {
             }
         }
         // If no content is provided for the left collumn.
-        if(descriptionIsEmpty && transitIsEmpty && accessibilityIsEmpty && lang === "fi") {
+        if(descriptionIsEmpty && transitIsEmpty && accessibilityIsEmpty && language === "fi") {
             // Hide the content on left, make the sidebar 100% in width.
             $(".details").css("display", "none");
             $("#introductionSidebar").addClass("col-md-12");
@@ -570,9 +586,28 @@ $(document).ready(function() {
                     }
                 }
             });
-            // Ignore clicks on selected image. We re-do this in responsiveslides.js every time the image is changed.
+            // Ignore clicks on selected image && add hover class.
+            // We re-do this in responsiveslides.js every time the image is changed.
             $(".rslides1_on").click(function(event){
                 event.stopPropagation();
+                $("#sliderBox").addClass('hovering');
+            });
+            // Activate arrow navigation when hovering over the small slider.
+            // To DO: a) hovering is sometimes removed incorrectly. b) If we click the slider after navigation, focus is lost.
+            $("#sliderBox, .rslides1, #expandSlider, #currentSlide, .rslides_nav").hover (function(){
+                if(!$("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
+                    // If element is never focused, navigation may not work.
+                    $("#sliderBox").addClass('hovering');
+                    $("#navigateForward").focus();
+                    // If we blur instantly, arrow navigation won't work unless something has been clicked in the document.
+                    setTimeout(function(){ $("#navigateForward").blur(); }, 5);
+                    //$("#navigateForward").blur();
+                }
+            });
+            $( "#sliderBox" ).mouseout(function() {
+                if($("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
+                    $("#sliderBox").removeClass('hovering');
+                }
             });
         }
     });
@@ -688,7 +723,6 @@ $(document).ready(function() {
     $('#navEsittely').append(i18n.get("Esittely"));
     $('#navYhteystiedot').append(i18n.get("Yhteystiedot"));
     $('#navPalvelut').append(i18n.get("Palvelut"));
-    $('#transitAccessibilityToggle').append(i18n.get("Liikenneyhteydet ja saavutettavuus"));
     $('#newsDescriptionToggle').append(i18n.get("Ajankohtaista ja esittely"));
     $('#transitTitle').append(i18n.get("Liikenneyhteydet"));
     $('#accessibilityTitle').append(i18n.get("Saavutettavuus"));

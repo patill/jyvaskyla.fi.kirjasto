@@ -11,7 +11,8 @@
 /* Modifications by Olli Suutari 
 - Custom styling for prev/next buttons.
 - Current slide is displayed in top left corner
-- Added clickevent preventation for selected image (close fullscreen when clicking background).
+- Added clickevent preventation for selected image (close fullscreen when clicking background)
+- Added right/left navigation events for slider in fullscreen
 - Modified default settings:
   - speed: 0
   - timeout: 6000
@@ -25,6 +26,7 @@ function rebindClickPreventation() {
     // Ignore clicks on selected image.
     $(".rslides1_on").click(function(event){
       event.stopPropagation();
+      $("#sliderBox").addClass('hovering');
     });
 }
 
@@ -430,18 +432,20 @@ function rebindClickPreventation() {
   };
 })(jQuery, this, 0);
 
-// Detect left/right and move backwards/forwards if in fullscreen mode.
+// Detect left/right and move backwards/forwards if in fullscreen mode or when hovering small slider..
 $(document).keydown(function(e) {
     switch(e.which) {
         case 37: // left
-            if(!$("#sliderBox").hasClass("small-slider")) {
+            if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
+            || $("#navigateBack").is(":focus") || $("#navigateForward").is(":focus")) {
                 // Go to slide
                 $("#navigateBack").focus();
                 $("#navigateBack").click();
             }
             break;
         case 39: // right
-            if(!$("#sliderBox").hasClass("small-slider")) {
+            if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
+                || $("#navigateBack").is(":focus") || $("#navigateForward").is(":focus")) {
                 // Go to slide
                 $("#navigateForward").focus();
                 $("#navigateForward").click();
@@ -450,3 +454,4 @@ $(document).keydown(function(e) {
         default: return; // exit this handler for other keys
     }
 });
+
