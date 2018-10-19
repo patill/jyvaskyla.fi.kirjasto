@@ -411,7 +411,10 @@ body {
   line-height: 1.5;
   color: #212529;
   text-align: left;
-  background-color: #fff; }
+  background-color: #fff;
+  /* Stop horizontal scrollbars from appearing in Iframes? */
+  overflow-x:hidden;
+}
 
 [tabindex="-1"]:focus {
   outline: 0 !important; }
