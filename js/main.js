@@ -110,6 +110,10 @@ function isEmpty( el ){
     return !$.trim(el.html())
 }
 
+function isNotEmpty( el ){
+	return $.trim(el.html())
+}
+
 var isInfoBoxVisible = false;
 // Togles the visibility of the popover modal.
 function toggleInfoBox(delay) {
@@ -138,7 +142,9 @@ function fetchInformation(language) {
     // Generic details
     $.getJSON(jsonp_url + "&with=extra", function(data) {
         if ($("#blockquote").is(':empty')) {
+			if (data.extra.slogan != null && data.extra.slogan.length !== 0) {
             $("#blockquote").append(' <blockquote class="blockquote library-slogan">' + data.extra.slogan + '</blockquote>');
+			}
         }
         if (isEmpty($('#intro-content'))) {
             var description = data.extra.description;
@@ -192,9 +198,12 @@ function fetchInformation(language) {
         }
         // Table "Rakennuksen tiedot".
         if (isEmpty($('#buildingDetails'))) {
+			if (data.address.street != null || data.extra.founded != null || data.extra.building.building_name != null || 
+			data.extra.building.construction_year != null || data.extra.building_architect != null || data.extra.building.interior_designer != null) {
             $('#buildingDetails').append('<tr class="thead-light" style="text-align: center"> ' +
                 '<th colspan="3" >' + i18n.get("Tietoa kirjastosta") + '</th>' +
                 '</tr>');
+			}
             if (data.address.street != null) {
                 $("#buildingDetails").append('<tr><td><strong>' + i18n.get("Osoite") + ': </strong></td>' +
                     '<td>' + data.address.street + ', ' + data.address.zipcode + ', ' + data.address.city + '</td></tr>');
@@ -269,6 +278,7 @@ function fetchInformation(language) {
                 }
             }
         });
+		
     });
     /*
      Yhteystiedot
@@ -276,8 +286,10 @@ function fetchInformation(language) {
     // Generic details
     $.getJSON(jsonp_url + "&with=mail_address", function(data) {
         if (isEmpty($('#streetAddress'))) {
+			if (data.address != null) {
             $( "#streetAddress" ).append( data.name  + '<br>' + data.address.street + '<br>' + data.address.zipcode + ' ' + data.address.city);
         }
+		}
         if (isEmpty($('#postalAddress'))) {
             if (data.mail_address != null){
                 var boxNumber = '';
@@ -606,7 +618,7 @@ $(document).ready(function() {
     $('#navPalvelut').append(i18n.get("Palvelut"));
     $('#transitAccessibilityToggle').append(i18n.get("Liikenneyhteydet ja saavutettavuus"));
     $('#newsDescriptionToggle').append(i18n.get("Ajankohtaista ja esittely"));
-    $('#transitTitle').append(i18n.get("Liikenneyhteydet"));
+	$('#transitTitle').append(i18n.get("Liikenneyhteydet"));
     $('#accessibilityTitle').append(i18n.get("Saavutettavuus"));
     $('#socialMediaSr').append(i18n.get("Sosiaalinen media"));
     $('#scheludesSr').append(i18n.get("Aikataulut"));
