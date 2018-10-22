@@ -59,19 +59,14 @@ function toggleFullScreen(target) {
         if (element.requestFullscreen) {
             element.requestFullscreen();
         }
+        else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
         else if (element.mozRequestFullScreen) {
             element.mozRequestFullScreen();
         }
         else if (element.msRequestFullscreen) {
             element.msRequestFullscreen()
-        }
-        // Safari  has a bug where fullscreen does not work with ALLOW_KEYBOARD_INPUT
-        // https://stackoverflow.com/questions/8427413/webkitrequestfullscreen-fails-when-passing-element-allow-keyboard-input-in-safar
-        // Apparently IOS does not support Fullscreen API? https://github.com/googlevr/vrview/issues/112
-        if ( /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
-            element.webkitRequestFullscreen();
-        } else if (element.webkitRequestFullscreen) {
-            element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
         }
     }
 }
@@ -744,4 +739,18 @@ $(document).ready(function() {
     $('#nameTh').append(i18n.get("Nimi"));
     $('#titleTh').append(i18n.get("Työnimike"));
     $('#contactDetailsTh').append(i18n.get("Yhteystiedot"));
+    // Apparently IOS does not support Full screen API:  https://github.com/googlevr/vrview/issues/112
+    // Hide fullscreen toggler & increase slider/map sizes a bit on larger screens to compensate the lack of full screen.
+    if ( /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+        $('#expandSlider').css('display', 'none');
+        $('#expandMap').css('display', 'none');
+        if($(window).width() > 767) {
+            $('.small-slider').css('height', '330px');
+            $('#contactsFirstCol').addClass("col-md-12");
+            $('#contactsFirstCol').removeClass("col-md-8");
+            $('#contactsMapCol').addClass("col-md-12");
+            $('#contactsMapCol').removeClass("col-md-col-md-4");
+            $('#contactsMapCol').css('height', '500px');
+        }
+    }
 }); // OnReady

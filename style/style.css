@@ -48,7 +48,7 @@
 }
 
 .small-slider {
-  height: 250px;
+  height: 280px;
 }
 
 .small-slider .rslides1 {
@@ -68,6 +68,22 @@
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   .small-slider img {
     width: 430px;
+  }
+}
+
+/* Optimize slider/map sizes for mobile & tablets. */
+@media screen and (min-width: 590px) and (max-width: 768px) {
+    .small-slider {
+      height: 500px;
+    }
+    #contactsMapCol {
+      height: 400px;
+    }
+}
+
+@media screen and (max-width: 589px) {
+  .small-slider, #contactsMapCol {
+    height: 300px;
   }
 }
 
