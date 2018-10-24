@@ -83,8 +83,12 @@
 
 @media screen and (max-width: 589px) {
   .small-slider, #contactsMapCol {
-    height: 300px;
+    height: 280px;
   }
+}
+
+.details, #blockquote  {
+  margin-bottom: 0.75rem;
 }
 
 #map-container {
@@ -221,9 +225,6 @@
   }
 }
 
-.library-slogan {
-}
-
 .always-visible {
     display: block!important;
     margin-bottom: 5px;
@@ -253,6 +254,10 @@
     zoom: 0.8;
     -moz-transform: scale(0.8);
   }
+}
+
+#lastWeek:focus, #nextWeek:focus {
+  border: solid 2px #025BA9;
 }
 
 .schedules-widget {

@@ -432,26 +432,3 @@ function rebindClickPreventation() {
   };
 })(jQuery, this, 0);
 
-// Detect left/right and move backwards/forwards if in fullscreen mode or when hovering small slider..
-$(document).keydown(function(e) {
-    switch(e.which) {
-        case 37: // left
-            if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
-            || $("#navigateBack").is(":focus") || $("#navigateForward").is(":focus")) {
-                // Go to slide
-                $("#navigateBack").focus();
-                $("#navigateBack").click();
-            }
-            break;
-        case 39: // right
-            if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
-                || $("#navigateBack").is(":focus") || $("#navigateForward").is(":focus")) {
-                // Go to slide
-                $("#navigateForward").focus();
-                $("#navigateForward").click();
-            }
-            break;
-        default: return; // exit this handler for other keys
-    }
-});
-

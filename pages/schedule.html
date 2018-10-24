@@ -15,16 +15,16 @@
 </head>
 <body style="background:rgba(0,0,0,0)!important;">
     <!-- Scheludes -->
-    <section class="library-schedules schedules-widget col-lg-4 col-xl-3">
+    <section id="schedules" class="library-schedules schedules-widget col-lg-4 col-xl-3">
       <h3 class="sr-only" id="scheludesSr"></h3>
       <table class="table table-sm">
         <thead class="thead-light">
         <td colspan="3">
-          <button type="button" class="btn btn-sm btn-light btn-back btn-arrow" aria-hidden="true" onclick="getWeekSchelude(-1)">
+          <button type="button" id="lastWeek" class="btn btn-sm btn-light btn-back btn-arrow" aria-hidden="true" onclick="getWeekSchelude(-1)">
             ❮
           </button>
           <span id="weekNumber"></span>
-          <button type="button" class="btn btn-sm btn-light btn-next btn-arrow" aria-hidden="true" onclick="getWeekSchelude(1)">
+          <button type="button" id="nextWeek" class="btn btn-sm btn-light btn-next btn-arrow" aria-hidden="true" onclick="getWeekSchelude(1)">
             ❯
           </button>
         </td>

@@ -589,7 +589,7 @@ $(document).ready(function() {
             });
             // Activate arrow navigation when hovering over the small slider.
             // To DO: a) hovering is sometimes removed incorrectly. b) If we click the slider after navigation, focus is lost.
-            $("#sliderBox, .rslides1, #expandSlider, #currentSlide, .rslides_nav").hover (function(){
+            $("#sliderBox").mouseenter (function(){
                 if(!$("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
                     // If element is never focused, navigation may not work.
                     $("#sliderBox").addClass('hovering');
@@ -599,7 +599,7 @@ $(document).ready(function() {
                     //$("#navigateForward").blur();
                 }
             });
-            $( "#sliderBox" ).mouseout(function() {
+            $( "#sliderBox" ).mouseleave(function() {
                 if($("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
                     $("#sliderBox").removeClass('hovering');
                 }
@@ -758,4 +758,5 @@ $(document).ready(function() {
             $('#contactsMapCol').css('height', '500px');
         }
     }
+
 }); // OnReady

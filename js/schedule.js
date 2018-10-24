@@ -37,9 +37,13 @@ var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + la
 function getWeekSchelude(direction) {
     // +1 or -1;
     weekCounter = weekCounter + direction;
-    // Do not allow going past current week.
+    // Do not allow going past current week or for more than 51 weeks.
     if(weekCounter < 0) {
         weekCounter = 0;
+        return;
+    }
+    if(weekCounter > 51) {
+        weekCounter = 51;
         return;
     }
     // Set moment locale
@@ -265,4 +269,63 @@ $(document).ready(function() {
     getWeekSchelude(0);
     // UI texts.
     $('#scheludesSr').append(i18n.get("Aikataulut"));
+
+    // This prevents the page from jumping to "nextWeek", when hovering over the schedules.
+    const element = document.getElementById('nextWeek');
+    element.focus({
+        preventScroll: false
+    });
+    // Blur, since the previous thing would leave focus to the element by default.
+    $("#nextWeek").blur();
+
+    // Activate arrow navigation when hovering over the schedules.
+    $("#schedules").mouseenter (function(){
+        if(!$(".library-schedules").hasClass('hovering')) {
+            $(".library-schedules").addClass('hovering');
+            // If we blur instantly, arrow navigation won't work unless something has been clicked in the document.
+            setTimeout(function(){ $("#nextWeek").blur(); }, 5);
+        }
+    });
+
+    $( "#schedules" ).mouseleave(function() {
+        $(".library-schedules").removeClass('hovering');
+    });
+
+    // Detect left/right on schedules or move backwards/forwards in slider if in fullscreen mode or when hovering small slider..
+    $(document).keydown(function(e) {
+        switch(e.which) {
+            case 37: // left
+                if($(".library-schedules").hasClass("hovering")
+                    || $("#lastWeek").is(":focus") || $("#nextWeek").is(":focus")) {
+                    $("#lastWeek").focus();
+                    $("#lastWeek").click();
+                }
+                // Slider hovering is not really used with schedules, but it's better to do it here instead of adding another $(document).keydown(function(e) {
+                else if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
+                    || $("#navigateBack").is(":focus") || $("#navigateForward").is(":focus")) {
+                    $("#navigateBack").focus();
+                    $("#navigateBack").click();
+                }
+                break;
+            case 39: // right
+                if($(".library-schedules").hasClass("hovering")
+                    || $("#lastWeek").is(":focus") || $("#nextWeek").is(":focus")) {
+                    // Go to slide
+                    // Go to slide
+                    $("#nextWeek").focus();
+                    $("#nextWeek").click();
+                }
+                // Slider hovering is not really used with schedules, but it's better to do it here instead of adding another $(document).keydown(function(e) {
+                else if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
+                    || $("#navigateBack").is(":focus") || $("#navigateForward").is(":focus")) {
+                    // Go to slide
+                    $("#navigateForward").focus();
+                    $("#navigateForward").click();
+                }
+                break;
+            default: return; // exit this handler for other keys
+        }
+    });
+
+
 }); // OnReady
