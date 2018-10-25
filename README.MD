@@ -59,5 +59,4 @@ Other rows are displayed in the list as they are.
 - Adjust font sizes to match jyvaskyla.fi
 - Cleanup css
 - Naming conventions, code standards
-- https://github.com/googlevr/vrview/issues/112 Fullscreen does not work in Ipads?
 - Other improvments

@@ -741,6 +741,7 @@ $(document).ready(function() {
     $('#contactDetailsTh').append(i18n.get("Yhteystiedot"));
     // Apparently IOS does not support Full screen API:  https://github.com/googlevr/vrview/issues/112
     // Hide fullscreen toggler & increase slider/map sizes a bit on larger screens to compensate the lack of full screen.
+    // Since navigation buttons on slider do not apparently work either, hide them too... we got swiping after all!
     // https://stackoverflow.com/questions/7944460/detect-safari-browser
     var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
         navigator.userAgent &&
@@ -749,6 +750,8 @@ $(document).ready(function() {
     if(isSafari || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
         $('#expandSlider').css('display', 'none');
         $('#expandMap').css('display', 'none');
+        $("#navigateBack").css('display', 'none');
+        $("#navigateForward").css('display', 'none');
         if($(window).width() > 767) {
             $('.small-slider').css('height', '330px');
             $('#contactsFirstCol').addClass("col-md-12");
