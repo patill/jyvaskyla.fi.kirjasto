@@ -158,17 +158,13 @@ function fetchInformation(language) {
                 description = description.replace("<p><h2>Ajankohtaista</h2></p>", "<h2>Ajankohtaista</h2>");
                 description = description.replace("<strong>Tervetuloa kirjastoon!</strong>", "<h2>Tervetuloa kirjastoon!</h2>");
                 description = description.replace("<p><h2>Tervetuloa kirjastoon!</h2></p>", "<h2>Tervetuloa kirjastoon!</h2>");
-                // Remove <br> if after new <p>, remove double br.
-                description = description.replace(/(<p><br \/>)+/g, "<p>");
-                description = description.replace(/(<br \/>(\n)<br \/>)+/g, "<p>");
-                // Remove multiple spaces & row splits.
-                description = description.replace(/^(&nbsp;|<br>)+/, '');
-                description = description.replace(/^(&nbsp;|<br>)+/, '');
+                // Remove <br> and it's variations since everything is inside <p> anyways...
+                // https://stackoverflow.com/questions/4184272/remove-all-br-from-a-string
+                description = description.replace(/(<|&lt;)br\s*\/*(>|&gt;)/g,' ');
+                // Remove multiple spaces
+                description = description.replace(/^(&nbsp;)+/g, '');
                 // Remove empty paragraphs
-                description = description.replace(/(<br \/>&nbsp;)+/g, "");
-                // Match <br> or h2 after new line, this does not apparently work.
-                description = description.replace(/(<br \/><br \/>)+/g, "<p>");
-                description = description.replace(/(<br \/>(\n)<h2>)+/g, "<h2>");
+                description = description.replace(/(<p>&nbsp;<\/p>)+/g, "");
                 // Add target="_blank" to links. Same url links would open inside Iframe, links to outside  wouldn't work.
                 description = description.replace(/(<a )+/g, '<a target="_blank" ');
                 $("#intro-content").append(description);
@@ -750,8 +746,6 @@ $(document).ready(function() {
     if(isSafari || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
         $('#expandSlider').css('display', 'none');
         $('#expandMap').css('display', 'none');
-        $("#navigateBack").css('display', 'none');
-        $("#navigateForward").css('display', 'none');
         if($(window).width() > 767) {
             $('.small-slider').css('height', '330px');
             $('#contactsFirstCol').addClass("col-md-12");

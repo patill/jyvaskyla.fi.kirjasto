@@ -445,9 +445,13 @@ hr {
   height: 0;
   overflow: visible; }
 
-h1, h2, h3, h4, h5, h6 {
-  margin-top: 0;
-  margin-bottom: 0.8rem; }
+h1, h2 {
+  margin-top: 0.2rem;
+  padding-bottom: 0.6rem; }
+
+h3, h4, h5, h6 {
+  margin-top: 0.05rem;
+  padding-bottom: 0.3rem; }
 
 p {
   margin-top: 0;
@@ -673,31 +677,35 @@ template {
 
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
+  margin-top: 0.15rem;
   font-family: "Verdana", sans-serif;
   font-weight: 400;
   line-height: 1.2;
   color: inherit; }
 
 h1, .h1 {
-  font-size: xx-large; }
+  font-size: 1.75em;
+}
 
 h2, .h2 {
-  font-size: x-large; }
+  font-size: 1.45em;
+  margin-top: 10px;
+}
 
 h3, .h3 {
-  font-size: 1.3em;
+  font-size: 1.25em;
   margin-bottom: 10px;
 }
 
 h4, .h4 {
-  font-size: large; }
+  font-size: 1.15em; }
 
 h5, .h5 {
-  font-size: medium; }
+  font-size: 1.1em; }
 
 h6, .h6 {
-  font-size: small; }
+  font-size: 1em; }
 
 .lead {
   font-size: 1.25rem;
@@ -758,7 +766,7 @@ mark,
 
 .blockquote {
   margin-bottom: 1rem;
-  font-size: 1.25rem; }
+  font-size: 1.15rem; }
 
 .blockquote-footer {
   display: block;
