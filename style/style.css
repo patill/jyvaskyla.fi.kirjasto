@@ -259,6 +259,13 @@
   }
 }
 
+@media screen and (max-width: 350px) {
+  .library-schedules {
+    zoom: 0.8;
+    -moz-transform: scale(0.8);
+  }
+}
+
 /* Scale down the schedules on widget & mobile */
 @media screen and (max-width: 375px) {
   .library-schedules, .schedules-widget {
