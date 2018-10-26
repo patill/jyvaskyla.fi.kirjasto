@@ -37,13 +37,13 @@ var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + la
 function getWeekSchelude(direction) {
     // +1 or -1;
     weekCounter = weekCounter + direction;
-    // Do not allow going past current week or for more than 51 weeks.
-    if(weekCounter < 0) {
-        weekCounter = 0;
+    // Do not allow going more than 10 weeks to the past or for more than 26 weeks.
+    if(weekCounter < -10) {
+        weekCounter = -10;
         return;
     }
-    if(weekCounter > 51) {
-        weekCounter = 51;
+    if(weekCounter > 26) {
+        weekCounter = 26;
         return;
     }
     // Set moment locale
@@ -64,6 +64,8 @@ function getWeekSchelude(direction) {
                 // If today, add some colourfull classes!
                 var isTodayClass = '';
                 var dayInfo = '';
+                var selfServiceInfo = '';
+                var magazineInfo = '';
                 var rowspanCount = 1;
                 // Scheludes for: combined, selfServiceBefore, MagazinesBefore,  staffToday, selfServiceAfter & magazinesAfter
                 var isClosed = true;
@@ -102,6 +104,13 @@ function getWeekSchelude(direction) {
                             '</tr>';
                         // Set isClosed to false.
                         isClosed = false;
+                    }
+                    // Info row.
+                    if (data.schedules[i].info != null && data.schedules[i].info.length != 0) {
+                        rowspanCount = rowspanCount +1;
+                        dayInfo = '<tr class="time--sub isTodayClass">' +
+                            '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span style="float: left; margin-left: 10px;"> ' +  data.schedules[i].info + '</span></td>' +
+                            '</tr>';
                     }
                 }
                 // Self service times.
@@ -149,6 +158,13 @@ function getWeekSchelude(direction) {
                             }
                         }
                     }
+                    // Info row.
+                    if (data.schedules[i].sections.selfservice.info != null && data.sections.selfservice.info .length != 0) {
+                        rowspanCount = rowspanCount +1;
+                        selfServiceInfo = '<tr class="time--sub isTodayClass">' +
+                            '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span style="float: left; margin-left: 10px;"> ' +  data.schedules[i].sections.selfService.info + '</span></td>' +
+                            '</tr>';
+                    }
                 }
                 // Magazines dep
                 if(data.schedules[i].sections.magazines != null) {
@@ -193,6 +209,12 @@ function getWeekSchelude(direction) {
                             }
                         }
                     }
+                    if (data.schedules[i].sections.magazines.info != null && data.schedules[i].sections.magazines.info.length != 0) {
+                        rowspanCount = rowspanCount +1;
+                        magazineInfo = '<tr class="time--sub isTodayClass">' +
+                            '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span style="float: left; margin-left: 10px;"> ' +  data.schedules[i].sections.magazines.info + '</span></td>' +
+                            '</tr>';
+                    }
                 }
             }
                 // If today, apply 'today' -class.
@@ -222,21 +244,15 @@ function getWeekSchelude(direction) {
                     staffToday = staffToday.replace("isTodayClass", isTodayClass);
                     selfServiceAfter = selfServiceAfter.replace("isTodayClass", isTodayClass);
                     magazinesAfter = magazinesAfter.replace("isTodayClass", isTodayClass);
+                    dayInfo = dayInfo.replace("isTodayClass", isTodayClass);
+                    selfServiceInfo = selfServiceInfo.replace("isTodayClass", isTodayClass);
+                    magazineInfo = magazineInfo.replace("isTodayClass", isTodayClass);
                 }
                 // If no selfService or magazines, don't display a separate row for "Staff present".
                 if(selfServiceBefore.length == 0 && magazinesBefore.length == 0 && selfServiceAfter.length == 0 && magazinesAfter.length == 0 ) {
                     if(staffToday.length != 0) {
                         staffToday = '';
                         rowspanCount = rowspanCount -1;
-                    }
-                }
-                // Info row.
-                if (data.schedules[i] != null) {
-                    if (data.schedules[i].info != null && data.schedules[i].info.length != 0) {
-                        rowspanCount = rowspanCount +1;
-                        dayInfo = '<tr class="time--sub ' + isTodayClass + '">' +
-                            '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span style="float: left; margin-left: 10px;"> ' +  data.schedules[i].info + '</span></td>' +
-                            '</tr>';
                     }
                 }
 
@@ -255,7 +271,7 @@ function getWeekSchelude(direction) {
                     '</th>' +
                         '<td>' + dayName + '</td>' +
                         '<td><time datetime="' + dayStart + '">' + dayStart + '</time> – <time datetime="' + dayEnd + '">' + dayEnd + '</time></td>' +
-                    '</tr>' + selfServiceBefore + magazinesBefore + staffToday + selfServiceAfter + magazinesAfter + dayInfo;
+                    '</tr>' + selfServiceBefore + magazinesBefore + staffToday + selfServiceAfter + magazinesAfter + dayInfo + selfServiceInfo + magazineInfo;
                 }
             str += scheludeRow;
             begin.add(1, 'd');
@@ -302,9 +318,9 @@ $(document).ready(function() {
                 }
                 // Slider hovering is not really used with schedules, but it's better to do it here instead of adding another $(document).keydown(function(e) {
                 else if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
-                    || $("#navigateBack").is(":focus") || $("#navigateForward").is(":focus")) {
-                    $("#navigateBack").focus();
-                    $("#navigateBack").click();
+                    || $("#sliderPrevious").is(":focus") || $("#sliderForward").is(":focus")) {
+                    $("#sliderPrevious").focus();
+                    $("#sliderPrevious").click();
                 }
                 break;
             case 39: // right
@@ -317,10 +333,10 @@ $(document).ready(function() {
                 }
                 // Slider hovering is not really used with schedules, but it's better to do it here instead of adding another $(document).keydown(function(e) {
                 else if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
-                    || $("#navigateBack").is(":focus") || $("#navigateForward").is(":focus")) {
+                    || $("#sliderPrevious").is(":focus") || $("#sliderForward").is(":focus")) {
                     // Go to slide
-                    $("#navigateForward").focus();
-                    $("#navigateForward").click();
+                    $("#sliderForward").focus();
+                    $("#sliderForward").click();
                 }
                 break;
             default: return; // exit this handler for other keys
@@ -383,11 +399,11 @@ $(document).ready(function() {
         }
         else if(el === "sliderBox") {
             if(d === "r") {
-                $("#navigateBack").focus();
-                $("#navigateBack").click();
+                $("#sliderPrevious").focus();
+                $("#sliderPrevious").click();
             } else if (d === "l") {
-                $("#navigateForward").focus();
-                $("#navigateForward").click();
+                $("#sliderForward").focus();
+                $("#sliderForward").click();
             }
         }
     }

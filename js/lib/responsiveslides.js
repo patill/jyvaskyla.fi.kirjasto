@@ -332,8 +332,8 @@ function rebindClickPreventation() {
         // Navigation
         if (settings.nav) {
           var navMarkup =
-            "<a href='#'id='navigateBack' class='centered-left " + navClass + " prev'>" + settings.prevText + "</a>" +
-            "<a href='#' id='navigateForward' class='centered-right " + navClass + " next'>" + settings.nextText + "</a>";
+            "<a href='#'id='sliderPrevious' class='centered-left " + navClass + " prev'>" + settings.prevText + "</a>" +
+            "<a href='#' id='sliderForward' class='centered-right " + navClass + " next'>" + settings.nextText + "</a>";
 
           // Inject navigation
           if (options.navContainer) {

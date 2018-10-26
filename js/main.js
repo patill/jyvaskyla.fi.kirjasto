@@ -589,10 +589,10 @@ $(document).ready(function() {
                 if(!$("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
                     // If element is never focused, navigation may not work.
                     $("#sliderBox").addClass('hovering');
-                    $("#navigateForward").focus();
+                    $("#sliderForward").focus();
                     // If we blur instantly, arrow navigation won't work unless something has been clicked in the document.
-                    setTimeout(function(){ $("#navigateForward").blur(); }, 5);
-                    //$("#navigateForward").blur();
+                    setTimeout(function(){ $("#sliderForward").blur(); }, 5);
+                    //$("#sliderForward").blur();
                 }
             });
             $( "#sliderBox" ).mouseleave(function() {
