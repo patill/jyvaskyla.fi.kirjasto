@@ -109,7 +109,7 @@ function getWeekSchelude(direction) {
                     if (data.schedules[i].info != null && data.schedules[i].info.length != 0) {
                         rowspanCount = rowspanCount +1;
                         dayInfo = '<tr class="time--sub isTodayClass">' +
-                            '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span style="float: left; margin-left: 10px;"> ' +  data.schedules[i].info + '</span></td>' +
+                            '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span class="info-text"> ' +  data.schedules[i].info + '</span></td>' +
                             '</tr>';
                     }
                 }
@@ -162,7 +162,7 @@ function getWeekSchelude(direction) {
                     if (data.schedules[i].sections.selfservice.info != null && data.sections.selfservice.info .length != 0) {
                         rowspanCount = rowspanCount +1;
                         selfServiceInfo = '<tr class="time--sub isTodayClass">' +
-                            '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span style="float: left; margin-left: 10px;"> ' +  data.schedules[i].sections.selfService.info + '</span></td>' +
+                            '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span class="info-text"> ' +  data.schedules[i].sections.selfService.info + '</span></td>' +
                             '</tr>';
                     }
                 }
@@ -212,7 +212,7 @@ function getWeekSchelude(direction) {
                     if (data.schedules[i].sections.magazines.info != null && data.schedules[i].sections.magazines.info.length != 0) {
                         rowspanCount = rowspanCount +1;
                         magazineInfo = '<tr class="time--sub isTodayClass">' +
-                            '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span style="float: left; margin-left: 10px;"> ' +  data.schedules[i].sections.magazines.info + '</span></td>' +
+                            '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span class="info-text"> ' +  data.schedules[i].sections.magazines.info + '</span></td>' +
                             '</tr>';
                     }
                 }

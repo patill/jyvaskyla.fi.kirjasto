@@ -64,10 +64,14 @@
   max-width: 140%;
 }
 
-/* Media query for IE 10-11. Since object-fit: contain; is not supported in IE, set width to avoid silly scaling in IE. */
+/* Media query for IE 10-11. Since object-fit: contain; is not supported in IE, set width to avoid silly scaling in IE.
+   Also float schedule infos to left. */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   .small-slider img {
     width: 430px;
+  }
+  .info-text {
+    float: left;
   }
 }
 
@@ -234,6 +238,13 @@
 .visibility-marker {
   font-size: 3.5rem;
   margin-right: 5px;
+}
+
+.info-text {
+  margin-top: -2px;
+  padding-left: 7px;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .schedules-container {
