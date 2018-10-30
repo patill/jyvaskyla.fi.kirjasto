@@ -249,11 +249,11 @@ function getWeekSchelude(direction) {
                     magazineInfo = magazineInfo.replace("isTodayClass", isTodayClass);
                 }
                 // If dayInfo is the same as selfServiceInfo or magazineInfo, don't show duplicated info.
-                if(dayInfo === selfServiceInfo) {
+                if(dayInfo !== "" && dayInfo === selfServiceInfo) {
                     selfServiceInfo = '';
                     rowspanCount = rowspanCount -1;
                 }
-                if(dayInfo === magazineInfo) {
+                if(dayInfo !== "" && dayInfo === magazineInfo) {
                     magazineInfo = '';
                     rowspanCount = rowspanCount -1;
                 }
@@ -296,7 +296,6 @@ $(document).ready(function() {
     getWeekSchelude(0);
     // UI texts.
     $('#scheludesSr').append(i18n.get("Aikataulut"));
-
     // This prevents the page from jumping to "nextWeek", when hovering over the schedules.
     const element = document.getElementById('nextWeek');
     element.focus({
@@ -304,7 +303,6 @@ $(document).ready(function() {
     });
     // Blur, since the previous thing would leave focus to the element by default.
     $("#nextWeek").blur();
-
     // Activate arrow navigation when hovering over the schedules.
     $("#schedules").mouseenter (function(){
         if(!$(".library-schedules").hasClass('hovering')) {
@@ -313,11 +311,9 @@ $(document).ready(function() {
             setTimeout(function(){ $("#nextWeek").blur(); }, 5);
         }
     });
-
     $( "#schedules" ).mouseleave(function() {
         $(".library-schedules").removeClass('hovering');
     });
-
     // Detect left/right on schedules or move backwards/forwards in slider if in fullscreen mode or when hovering small slider..
     $(document).keydown(function(e) {
         switch(e.which) {
@@ -337,8 +333,6 @@ $(document).ready(function() {
             case 39: // right
                 if($(".library-schedules").hasClass("hovering")
                     || $("#lastWeek").is(":focus") || $("#nextWeek").is(":focus")) {
-                    // Go to slide
-                    // Go to slide
                     $("#nextWeek").focus();
                     $("#nextWeek").click();
                 }
