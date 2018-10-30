@@ -59,9 +59,9 @@
   transition: opacity 2s ease-in-out 0s!important;
 }
 
-/* Scale image width up to 140% on 'small' slider, thus cropping sides in order to fill vertically (eq. 16:9 images). */
+/* Scale image width up to 145% on 'small' slider, thus cropping sides in order to fill vertically (eq. 16:9 images). */
 .small-slider img {
-  max-width: 140%;
+  max-width: 145%;
 }
 
 /* Media query for IE 10-11. Since object-fit: contain; is not supported in IE, set width to avoid silly scaling in IE.

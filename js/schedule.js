@@ -248,31 +248,42 @@ function getWeekSchelude(direction) {
                     selfServiceInfo = selfServiceInfo.replace("isTodayClass", isTodayClass);
                     magazineInfo = magazineInfo.replace("isTodayClass", isTodayClass);
                 }
-                // If no selfService or magazines, don't display a separate row for "Staff present".
-                if(selfServiceBefore.length == 0 && magazinesBefore.length == 0 && selfServiceAfter.length == 0 && magazinesAfter.length == 0 ) {
-                    if(staffToday.length != 0) {
-                        staffToday = '';
-                        rowspanCount = rowspanCount -1;
-                    }
+                // If dayInfo is the same as selfServiceInfo or magazineInfo, don't show duplicated info.
+                if(dayInfo === selfServiceInfo) {
+                    selfServiceInfo = '';
+                    rowspanCount = rowspanCount -1;
+                }
+                if(dayInfo === magazineInfo) {
+                    magazineInfo = '';
+                    rowspanCount = rowspanCount -1;
                 }
 
-                if (isClosed) {
-                    scheludeRow = '<tr class="time ' + isTodayClass + '">' +
-                    '<th scope="row">' +
-                        '<time datetime="' + begin.format('YYYY-MM-DD') + '">' + begin.format('D.M.') + '</time>' +
-                    '</th>' +
-                        '<td>' + dayName + '</td>' +
-                        '<td>' + i18n.get("Suljettu") + '</td>' +
-                    '</tr>'
-                } else {
-                    scheludeRow = '<tr class="time ' + isTodayClass + '">' +
-                    '<th scope="row" rowspan="' + rowspanCount + '">' +
-                        '<time datetime="' + begin.format('YYYY-MM-DD') + '">' + begin.format('D.M.') + '</time>' +
-                    '</th>' +
-                        '<td>' + dayName + '</td>' +
-                        '<td><time datetime="' + dayStart + '">' + dayStart + '</time> – <time datetime="' + dayEnd + '">' + dayEnd + '</time></td>' +
-                    '</tr>' + selfServiceBefore + magazinesBefore + staffToday + selfServiceAfter + magazinesAfter + dayInfo + selfServiceInfo + magazineInfo;
+            // If no selfService or magazines, don't display a separate row for "Staff present".
+            if(selfServiceBefore.length == 0 && magazinesBefore.length == 0 &&
+                selfServiceAfter.length == 0 && magazinesAfter.length == 0 ) {
+                if(staffToday.length != 0) {
+                    staffToday = '';
+                    rowspanCount = rowspanCount -1;
                 }
+            }
+            if (isClosed) {
+                scheludeRow = '<tr class="time ' + isTodayClass + '">' +
+                '<th scope="row">' +
+                    '<time datetime="' + begin.format('YYYY-MM-DD') + '">' + begin.format('D.M.') + '</time>' +
+                '</th>' +
+                    '<td>' + dayName + '</td>' +
+                    '<td>' + i18n.get("Suljettu") + '</td>' +
+                '</tr>'
+            } else {
+                scheludeRow = '<tr class="time ' + isTodayClass + '">' +
+                '<th scope="row" rowspan="' + rowspanCount + '">' +
+                    '<time datetime="' + begin.format('YYYY-MM-DD') + '">' + begin.format('D.M.') + '</time>' +
+                '</th>' +
+                    '<td>' + dayName + '</td>' +
+                    '<td><time datetime="' + dayStart + '">' + dayStart + '</time> – <time datetime="' + dayEnd + '">'
+                    + dayEnd + '</time></td></tr>' + selfServiceBefore + magazinesBefore + staffToday +
+                    selfServiceAfter + magazinesAfter + dayInfo + selfServiceInfo + magazineInfo;
+            }
             str += scheludeRow;
             begin.add(1, 'd');
         }

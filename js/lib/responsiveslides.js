@@ -13,6 +13,7 @@
 - Current slide is displayed in top left corner
 - Added clickevent preventation for selected image (close fullscreen when clicking background)
 - Added right/left navigation events for slider in fullscreen
+- Navigation now always resets the slider timeout/automatic advancing.
 - Modified default settings:
   - speed: 0
   - timeout: 6000
@@ -398,6 +399,11 @@ function rebindClickPreventation() {
             if (!settings.pauseControls) {
               restartCycle();
             }
+            // Restart the timer.
+            // Stop
+            clearInterval(rotate);
+            // Restart
+            startCycle();
           });
 
           // Pause when hovering navigation
