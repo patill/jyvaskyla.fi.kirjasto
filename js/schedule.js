@@ -288,6 +288,12 @@ function getWeekSchelude(direction) {
             begin.add(1, 'd');
         }
         $( "#weekSchelude" ).html( str );
+        // If document has no title, set it to Library name.
+        if(document.title === '') {
+            if(data.name != null) {
+                document.title = data.name;
+            }
+        }
     });
 }
 
