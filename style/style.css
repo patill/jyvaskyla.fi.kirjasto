@@ -48,29 +48,60 @@
 }
 
 .small-slider {
-  height: 250px;
+  height: 270px;
 }
 
 .small-slider .rslides1, .slider {
   border: solid 2px #025BA9;
 }
 
-/* Scale image width up to 140% on 'small' slider, thus cropping sides in order to fill vertically (eq. 16:9 images). */
-.small-slider img {
-  max-width: 140%;
+.small-slider li {
+  transition: opacity 2s ease-in-out 0s!important;
 }
 
-/* Media query for IE 10-11. Since object-fit: contain; is not supported in IE, set width to avoid silly scaling in IE. */
+/* Scale image width up to 145% on 'small' slider, thus cropping sides in order to fill vertically (eq. 16:9 images). */
+.small-slider img {
+  max-width: 145%;
+}
+
+/* Media query for IE 10-11. Since object-fit: contain; is not supported in IE, set width to avoid silly scaling in IE.
+   Also float schedule infos to left. */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   .small-slider img {
     width: 430px;
   }
+  .info-text {
+    float: left;
+  }
+}
+
+/* Optimize slider/map sizes for mobile & tablets. */
+@media screen and (min-width: 590px) and (max-width: 768px) {
+    .small-slider {
+      height: 500px;
+    }
+    #contactsMapCol {
+      height: 400px;
+    }
+}
+
+@media screen and (max-width: 589px) {
+  .small-slider, #contactsMapCol {
+    height: 280px;
+  }
+}
+
+.details, #blockquote  {
+  margin-bottom: 0.75rem;
 }
 
 #map-container {
   width: 100%;
   height: 100%;
   z-index: 99;
+  /* Prevent IOS tabloids from getting stuck in fullscreen
+  https://css-tricks.com/forums/topic/safari-for-ios-z-index-ordering-bug-while-scrolling-a-page-with-a-fixed-element/ */
+  -webkit-transform: translate3d(0,0,0) !important;
 }
 
 /* Top right (full screen toggler) */
@@ -78,7 +109,7 @@
   position: absolute;
   top: 8%;
   right: 20px;
-  z-index: 98;
+  z-index: 100;
   padding-top: 6px;
   padding-bottom: 6px;
 }
@@ -189,7 +220,13 @@
   margin: 15px;
 }
 
-.library-slogan {
+/* Scale down the navigation on smaller screens to fit one row */
+@media screen and (max-width: 350px) {
+  .nav-pills {
+    zoom: 0.76;
+    -moz-transform: scale(0.76);
+    min-width: 300px;
+  }
 }
 
 .always-visible {
@@ -203,11 +240,46 @@
   margin-right: 5px;
 }
 
+.info-text {
+  margin-top: -2px;
+  padding-left: 7px;
+  display: flex;
+  justify-content: flex-start;
+}
+
 .schedules-container {
   background:rgba(0,0,0,0);
 }
 
+/* Scale down the schedules on widget & mobile */
+@media screen and (max-width: 500px) {
+  .library-schedules {
+    zoom: 0.9;
+    -moz-transform: scale(0.9);
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .library-schedules {
+    zoom: 0.8;
+    -moz-transform: scale(0.8);
+  }
+}
+
+/* Scale down the schedules on widget & mobile */
+@media screen and (max-width: 375px) {
+  .library-schedules, .schedules-widget {
+    zoom: 0.8;
+    -moz-transform: scale(0.8);
+  }
+}
+
+#lastWeek:focus, #nextWeek:focus {
+  border: solid 2px #025BA9;
+}
+
 .schedules-widget {
+  /* Use target page background */
   background:rgba(0,0,0,0)!important;
   zoom: 0.87;
   -moz-transform: scale(0.87);
@@ -219,7 +291,8 @@
   .schedules-weekly th:not([scope="row"]), .schedules-weekly .btn, .schedules-weekly .details .details-toggle, .details .schedules-weekly .details-toggle {
     line-height: 1.5;
     padding: 0.3rem 0.75rem;
-    font-size: 1.25rem; }
+    font-size: 1.25rem;
+  }
   .schedules-weekly .btn, .schedules-weekly .details .details-toggle, .details .schedules-weekly .details-toggle {
     width: 3rem;
     height: calc(1px + 2.61rem);
@@ -282,7 +355,6 @@
 
 .schedules-weekly[data-paged-table] .time--sub td:first-child:before {
   content: "\27A5"; }
-
 
 
 /*!
@@ -378,7 +450,10 @@ body {
   line-height: 1.5;
   color: #212529;
   text-align: left;
-  background-color: #fff; }
+  background-color: #fff;
+  /* Stop horizontal scrollbars from appearing in Iframes? */
+  overflow-x:hidden;
+}
 
 [tabindex="-1"]:focus {
   outline: 0 !important; }
@@ -388,9 +463,13 @@ hr {
   height: 0;
   overflow: visible; }
 
-h1, h2, h3, h4, h5, h6 {
-  margin-top: 0;
-  margin-bottom: 0.8rem; }
+h1, h2 {
+  margin-top: 0.2rem;
+  padding-bottom: 0.6rem; }
+
+h3, h4, h5, h6 {
+  margin-top: 0.05rem;
+  padding-bottom: 0.3rem; }
 
 p {
   margin-top: 0;
@@ -616,31 +695,35 @@ template {
 
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
+  margin-top: 0.15rem;
   font-family: "Verdana", sans-serif;
   font-weight: 400;
   line-height: 1.2;
   color: inherit; }
 
 h1, .h1 {
-  font-size: xx-large; }
+  font-size: 1.75em;
+}
 
 h2, .h2 {
-  font-size: x-large; }
+  font-size: 1.45em;
+  margin-top: 10px;
+}
 
 h3, .h3 {
-  font-size: 1.3em;
+  font-size: 1.25em;
   margin-bottom: 10px;
 }
 
 h4, .h4 {
-  font-size: large; }
+  font-size: 1.15em; }
 
 h5, .h5 {
-  font-size: medium; }
+  font-size: 1.1em; }
 
 h6, .h6 {
-  font-size: small; }
+  font-size: 1em; }
 
 .lead {
   font-size: 1.25rem;
@@ -701,7 +784,7 @@ mark,
 
 .blockquote {
   margin-bottom: 1rem;
-  font-size: 1.25rem; }
+  font-size: 1.15rem; }
 
 .blockquote-footer {
   display: block;
@@ -763,9 +846,10 @@ pre {
   overflow-y: scroll; }
 
 .container {
-  width: 100%;
-  padding-right: 15px;
-  padding-left: 5px;
+  /* Setting width to 97% vs 100 fixes scrolling to right on mobile. To DO: better fix. */
+  width: 97%;
+  padding-right: 5px;
+  padding-left: 2px;
   margin-right: auto;
   margin-left: 5px; }
   @media (min-width: 576px) {
@@ -780,6 +864,9 @@ pre {
   @media (min-width: 1200px) {
     .container {
       max-width: 1140px; } }
+  @media (min-width: 1350px) {
+    .container {
+      max-width: 1250px; } }
 
 .container-fluid {
   width: 100%;
@@ -1548,6 +1635,18 @@ pre {
     -ms-overflow-style: -ms-autohiding-scrollbar; }
     .table-responsive-sm > .table-bordered {
       border: 0; } }
+
+@media (max-width: 350px) {
+  .table-responsive-sm {
+    zoom: 0.8;
+    -moz-transform: scale(0.8);
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar; }
+  .table-responsive-sm > .table-bordered {
+    border: 0; } }
 
 @media (max-width: 767.98px) {
   .table-responsive-md {

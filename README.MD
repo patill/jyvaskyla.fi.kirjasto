@@ -52,9 +52,6 @@ Other rows are displayed in the list as they are.
 
 **TO DO**
 
-- Improve the image slider
-- Get html formatted stuff to show correctly in serviceInfo box
-- Adjust font sizes to match pori.fi
 - Cleanup css
 - Naming conventions, code standards
 - Other improvments

@@ -11,8 +11,11 @@
 /* Modifications by Olli Suutari 
 - Custom styling for prev/next buttons.
 - Current slide is displayed in top left corner
+- Added clickevent preventation for selected image (close fullscreen when clicking background)
+- Added right/left navigation events for slider in fullscreen
+- Navigation now always resets the slider timeout/automatic advancing.
 - Modified default settings:
-  - speed: 1000
+  - speed: 0
   - timeout: 6000
   - nav: true
   - pause: true
@@ -20,6 +23,13 @@
   - nextText: >
 */
 
+function rebindClickPreventation() {
+    // Ignore clicks on selected image.
+    $(".rslides1_on").click(function(event){
+      event.stopPropagation();
+      $("#sliderBox").addClass('hovering');
+    });
+}
 
 (function ($, window, i) {
   $.fn.responsiveSlides = function (options) {
@@ -27,7 +37,7 @@
     // Default settings
     var settings = $.extend({
       "auto": true,             // Boolean: Animate automatically, true or false
-      "speed": 2000,             // Integer: Speed of the transition, in milliseconds
+      "speed": 0,             // Integer: Speed of the transition, in milliseconds
       "timeout": 6000,          // Integer: Time between slide transitions, in milliseconds
       "pager": false,           // Boolean: Show pager, true or false
       "nav": true,              // Boolean: Show navigation, true or false
@@ -241,8 +251,8 @@
         // Auto cycle
         if (settings.auto) {
 
-          startCycle = function () {
-            rotate = setInterval(function () {
+                startCycle = function () {
+                    rotate = setInterval(function () {
 
               // Clear the event queue
               $slide.stop(true, true);
@@ -253,8 +263,10 @@
               if (settings.pager || settings.manualControls) {
                 selectTab(idx);
               }
+              $(".rslides1_on").off("click");
               slideTo(idx);
-              $('#currentSlide').html(idx + 1)
+              $('#currentSlide').html(idx + 1);
+              rebindClickPreventation();
             }, waitTime);
           };
 
@@ -321,8 +333,8 @@
         // Navigation
         if (settings.nav) {
           var navMarkup =
-            "<a href='#' class='centered-left " + navClass + " prev'>" + settings.prevText + "</a>" +
-            "<a href='#' class='centered-right " + navClass + " next'>" + settings.nextText + "</a>";
+            "<a href='#'id='sliderPrevious' class='centered-left " + navClass + " prev'>" + settings.prevText + "</a>" +
+            "<a href='#' id='sliderForward' class='centered-right " + navClass + " next'>" + settings.nextText + "</a>";
 
           // Inject navigation
           if (options.navContainer) {
@@ -361,19 +373,24 @@
 
             // Go to slide
             if ($(this)[0] === $prev[0]) {
+              $(".rslides1_on").off("click");
               slideTo(prevIdx);
               if(prevIdx == -1) {
                 // If we move from 0 to previous (last slide), ui text would be -1.
                 // $slide.length is the amount of slides.
-                $('#currentSlide').html($slide.length)
+                $('#currentSlide').html($slide.length);
+                rebindClickPreventation();
               }
               else {
-                $('#currentSlide').html(prevIdx + 1)
+                $('#currentSlide').html(prevIdx + 1);
+                rebindClickPreventation();
               }
             }
             else {
+              $(".rslides1_on").off("click");
               slideTo(nextIdx);
-              $('#currentSlide').html(nextIdx + 1)
+              $('#currentSlide').html(nextIdx + 1);
+              rebindClickPreventation();
             }
             if (settings.pager || settings.manualControls) {
               selectTab($(this)[0] === $prev[0] ? prevIdx : nextIdx);
@@ -382,6 +399,11 @@
             if (!settings.pauseControls) {
               restartCycle();
             }
+            // Restart the timer.
+            // Stop
+            clearInterval(rotate);
+            // Restart
+            startCycle();
           });
 
           // Pause when hovering navigation
@@ -411,8 +433,8 @@
           widthSupport();
         });
       }
-
     });
 
   };
 })(jQuery, this, 0);
+

@@ -3,30 +3,31 @@
 <!-- This template is to be used with iframe, eq: <iframe allowfullscreen="" frameborder="0" height="1500px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85159&lang=fi" width="100%"></iframe> -->
 <html lang="fi">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link rel="stylesheet" href="../style/style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="../js/lib/jquery-3.3.1.min.js"></script>
-<script src="../js/lib/jquery.translate.js"></script>
-<script src="../js/lib/moment-with-locales.min.js"></script>
-<script src="../js/lib/responsiveslides.js"></script>
-<script src="../js/translations.js"></script>
-<script src="../js/main.js" type="text/javascript"></script>
-<script src="../js/schedule.js" type="text/javascript"></script>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="../style/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="../js/lib/jquery-3.3.1.min.js"></script>
+  <script src="../js/lib/jquery.translate.js"></script>
+  <script src="../js/translations.js"></script>
+  <script src="../js/lib/moment.min.js"></script>
+  <script src="../js/lib/moment-fi.js"></script>
+  <script src="../js/lib/responsiveslides.js"></script>
+  <script src="../js/main.js" type="text/javascript"></script>
+  <script src="../js/schedule.js" type="text/javascript"></script>
 </head>
 <body>
-<div class="container" id="page-container">
+<div class="container">
 <main class="container main content">
   <header>
     <nav class="nav nav-pills nav-library-page">
-      <a id="navEsittely" class="nav-item nav-link active" href="#"></a>
-      <a id="navYhteystiedot" class="nav-item nav-link" href="#"></a><br>
-      <a id="navPalvelut" class="nav-item nav-link" href="#"></a>
+      <a id="navEsittely" class="nav-item nav-link active" style="display: none" href="#"></a>
+      <a id="navYhteystiedot" class="nav-item nav-link" style="display: none" href="#"></a><br>
+      <a id="navPalvelut" class="nav-item nav-link" style="display: none" href="#"></a>
     </nav>
   </header>
   <div class="row esittely">
-    <div class="col-md-7 col-xl-8">
+    <div class="col-sm-12 col-md-7 col-lg-7 col-xl-8">
 		<!--Slogan -->
 		<div id="blockquote"></div>
 		<!--Tähän siirretään kuva -->
@@ -38,17 +39,19 @@
       <article>
         <div id="blockquote"></div>
         <nav class="details">
-          <a id="transitAccessibilityToggle"href="#public-transport" class="details-toggle always-visible" role="button" aria-expanded="false" aria-controls="public-transport"><i id="transitAccessibilityMarker" class="visibility-marker fa fa-eye"></i> </a>
+          <a id="transitAccessibilityToggle"href="#public-transport" class="details-toggle" style="display: none"
+             role="button" aria-expanded="false" aria-controls="public-transport">
+            <i id="transitAccessibilityMarker" class="visibility-marker fa fa-eye"></i> </a>
         </nav>
         <div class="transit-accessibility" style="display: none">
           <div class="details-content" id="public-transport">
             <section class="transit-details" style="display: none;">
-              <h3 id="transitTitle"></h3>
+              <h2 id="transitTitle"></h2>
               <div id="genericTransit"></div>
               <div id="parkingDetails"></div>
             </section>
-            <section class="accessibility-details">
-              <h3 id="accessibilityTitle"></h3>
+            <section class="accessibility-details" style="display: none">
+              <h2 id="accessibilityTitle"></h2>
               <div style="margin: 10px 0 10px 0" class="accessibility-images"></div>
               <div id="accessibility-list"></div>
               <div style="margin: 10px 0 10px 0" id="accessibilityDetails"></div>
@@ -56,7 +59,7 @@
           </div>
         </div><!-- col-lg-8 -->
         <nav class="details">
-          <a id="newsDescriptionToggle" href="#introduction" class="details-toggle always-visible"
+          <a id="newsDescriptionToggle" href="#introduction" class="details-toggle" style="display: none"
              role="button" aria-expanded="false" aria-controls="intro-content">
             <i id="newsDescriptionMarker" class="visibility-marker fa fa-eye-slash"></i> </a>
         </nav>
@@ -66,22 +69,22 @@
           </div>
         </article>
       </div><!-- col-lg-8 -->
-      <div class="col-md-5 col-xl-4 order-2 sidebar">
+      <div class="col-sm-12 col-md-5 col-lg-5 col-xl-4 order-2 sidebar" id="introductionSidebar">
         <!-- Some links -->
         <section class="some-links">
           <h3 class="sr-only" id="socialMediaSr">Social media</h3>
         </section>
         <!-- Scheludes -->
-        <section class="library-schedules">
+        <section id="schedules" class="library-schedules">
           <h3 class="sr-only" id="scheludesSr"></h3>
           <table class="table table-sm">
             <thead class="thead-light">
             <td colspan="3">
-              <button type="button" class="btn btn-sm btn-light btn-back btn-arrow" aria-hidden="true" onclick="getWeekSchelude(-1)">
+              <button type="button" id="lastWeek" class="btn btn-sm btn-light btn-back btn-arrow" aria-hidden="true" onclick="getWeekSchelude(-1)">
                 ❮
               </button>
               <span id="weekNumber"></span>
-              <button type="button" class="btn btn-sm btn-light btn-next btn-arrow" aria-hidden="true" onclick="getWeekSchelude(1)">
+              <button type="button" id="nextWeek" class="btn btn-sm btn-light btn-next btn-arrow" aria-hidden="true" onclick="getWeekSchelude(1)">
                 ❯
               </button>
             </td>
@@ -96,7 +99,7 @@
           <i class="top-left"><span id="currentSlide"></span></i>
         </section> -->
         <section class="building-details" style="margin-top: 25px;">
-          <table class="table table-sm">
+          <table class="table table-sm table-responsive-sm">
             <tbody id="buildingDetails">
             </tbody>
           </table>
@@ -108,7 +111,7 @@
       <div class="col-sm-12">
         <section class="contact-details">
           <div class="row">
-            <div class="col-md-8">
+            <div id="contactsFirstCol" class="col-md-8">
               <h2 id="contactsTitle"><i class="fa fa-map-o" aria-hidden="true"></i> </h2>
               <div class="responsive-table">
                 <table class="table table-sm table-inverse contact">
@@ -130,7 +133,7 @@
               </div>
             </div>
             <!-- Map -->
-            <div class="col-md-4">
+            <div id="contactsMapCol" class="col-md-4">
               <div id="map-container">
                 <i id="expandMap" onclick="toggleFullScreen('#map-container')" class="fa fa-expand top-right" title=""></i>
               </div>
