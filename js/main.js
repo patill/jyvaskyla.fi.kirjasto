@@ -1,4 +1,3 @@
-
 // Get global library/lang parameters from the script.
 var library = '';
 var lang = '';
@@ -27,8 +26,6 @@ if(lang == undefined && library == undefined){
     library = scriptName.getAttribute('data-library'),
         lang = scriptName.getAttribute('data-lang')
 }
-
-$("html").attr("lang", lang);
 
 var i18n = $('body').translate({lang: lang, t: dict}); // Use the correct language
 
@@ -104,9 +101,6 @@ function addItem(item, listElement) {
     }
 }
 
-// jsonp_url base
-var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang;
-
 // Function for checking if element is empty.
 function isEmpty( el ){
     return !$.trim(el.html())
@@ -133,24 +127,35 @@ var lonBoxStart;
 var lonBoxEnd;
 var latBoxStart;
 var latBoxEnd;
-var isReFetching = false;
 // Used for hiding sections if null....
 var accessibilityIsEmpty = true;
 var transitIsEmpty = true;
 var descriptionIsEmpty = true;
-var yhteystiedotIsEmpty = true;
 var transitAccessibilityTextSet = false;
-function fetchInformation(language) {
-    // jsonp_url base
-    jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + language;
+var isReFetching = false;
+var mapLoaded = false;
+var contactsIsEmpty = true;
+var noServices = true;
+var indexItemClicked = false;
+// divClone & active tab are used with consortium.js
+// Active tab: 0 = info, 1 = contact details, 3 = services.
+var divClone = '';
+var activeTab = 0;
+
+var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang;
+function fetchInformation(language, lib) {
+    if (lib === undefined) {
+        lib = library;
+    }
+    jsonp_url = "https://api.kirjastot.fi/v3/library/" + lib + "?lang=" + language;
     // Generic details
-    $.getJSON(jsonp_url + "&with=extra", function(data) {
+    $.getJSON(jsonp_url + "&with=extra", function (data) {
         if ($("#blockquote").is(':empty')) {
-            if(data.extra.slogan !== null && data.extra.slogan.length !== 0) {
+            if (data.extra.slogan !== null && data.extra.slogan.length !== 0) {
                 $("#blockquote").append(' <blockquote class="blockquote library-slogan">' + data.extra.slogan + '</blockquote>');
             }
         }
-        if (isEmpty($('#intro-content'))) {
+        if (isEmpty($('#introContent'))) {
             var description = data.extra.description;
             if (description != null && description.length !== 0) {
                 // Turn bolded Ajankohtaista/Tervetuloa to <h2>
@@ -160,18 +165,18 @@ function fetchInformation(language) {
                 description = description.replace("<p><h2>Tervetuloa kirjastoon!</h2></p>", "<h2>Tervetuloa kirjastoon!</h2>");
                 // Remove <br> and it's variations since everything is inside <p> anyways...
                 // https://stackoverflow.com/questions/4184272/remove-all-br-from-a-string
-                description = description.replace(/(<|&lt;)br\s*\/*(>|&gt;)/g,' ');
+                description = description.replace(/(<|&lt;)br\s*\/*(>|&gt;)/g, ' ');
                 // Remove multiple spaces
                 description = description.replace(/^(&nbsp;)+/g, '');
                 // Remove empty paragraphs
                 description = description.replace(/(<p>&nbsp;<\/p>)+/g, "");
                 // Add target="_blank" to links. Same url links would open inside Iframe, links to outside  wouldn't work.
                 description = description.replace(/(<a )+/g, '<a target="_blank" ');
-                $("#intro-content").append(description);
+                $("#introContent").append(description);
                 descriptionIsEmpty = false;
             } else {
                 // If no description, display the transit & accessibility details (if hidden)
-                if($( "#transitAccessibilityMarker" ).hasClass( "fa-eye" ) && language === "fi") {
+                if ($("#transitAccessibilityMarker").hasClass("fa-eye") && language === "fi") {
                     $("#transitAccessibilityToggle").click();
                 }
             }
@@ -236,91 +241,96 @@ function fetchInformation(language) {
                 $("#buildingDetails").append('<tr><td><strong>' + i18n.get("Sisustus") + ': </strong></td>' +
                     '<td>' + data.extra.building.interior_designer + '</td></tr>');
             }
-            if(triviaIsEmpty) {
+            if (triviaIsEmpty) {
                 $("#triviaThead").css("display", "none");
             }
         }
         // Accessibility details from extras.
-        data.extra.data.forEach(function(element) {
-            if(element.id == "saavutettavuus-info") {
+        data.extra.data.forEach(function (element) {
+            if (element.id == "saavutettavuus-info") {
                 if (isEmpty($('#accessibilityDetails'))) {
-                    if(element.value != null & element.value.length != 0) {
+                    if (element.value != null & element.value.length != 0) {
                         accessibilityIsEmpty = false;
                         $(".accessibility-details").css("display", "block");
                         $("#accessibilityDetails").append('<p>' + element.value.replace(/(<a )+/g, '<a target="_blank" ') + '</p>');
                     }
                 }
             }
-            if(element.id == "saavutettavuus-palvelut") {
-                if (isEmpty($('#accessibility-images')) && isEmpty($('#accessibility-list'))) {
+            if (element.id == "saavutettavuus-palvelut") {
+                if (isEmpty($('#accessibility-images')) && isEmpty($('#accessibilityList'))) {
                     accessibilityIsEmpty = false;
                     $(".accessibility-details").css("display", "block");
                     var splittedValues = element.value.split("\r\n");
                     $.each(splittedValues, function (index, value) {
                         if (value == "Esteetön sisäänpääsy") {
                             $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön sisäänpääsy") + '" src="../images/accessibility/Esteetön_kulku_saavutettavuus.png" /> ');
-                            $("#accessibility-list").append('<li>' + i18n.get("Esteetön sisäänpääsy") + '</li>');
+                            $("#accessibilityList").append('<li>' + i18n.get("Esteetön sisäänpääsy") + '</li>');
                         }
                         else if (value == "Invapysäköinti") {
                             $(".accessibility-images").append(' <img alt="' + i18n.get("Invapysäköinti") + '" src="../images/accessibility/Esteetön_parkki.png" /> ');
-                            $("#accessibility-list").append('<li>' + i18n.get("Invapysäköinti") + '</li>');
+                            $("#accessibilityList").append('<li>' + i18n.get("Invapysäköinti") + '</li>');
                         }
                         else if (value == "Esteetön wc") {
                             $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön wc") + '" src="../images/accessibility/Esteetön_wc.png" /> ');
-                            $("#accessibility-list").append('<li>' + i18n.get("Esteetön wc") + '</li>');
+                            $("#accessibilityList").append('<li>' + i18n.get("Esteetön wc") + '</li>');
                         }
                         else if (value == "Hissi") {
                             $(".accessibility-images").append(' <img alt="' + i18n.get("Hissi") + '" src="../images/accessibility/Esteetön_hissi.png" /> ');
-                            $("#accessibility-list").append('<li>' + i18n.get("Hissi") + '</li>');
+                            $("#accessibilityList").append('<li>' + i18n.get("Hissi") + '</li>');
                         }
                         else if (value == "Pyörätuoliluiska") {
                             $(".accessibility-images").append(' <img alt="' + i18n.get("Ramppi") + '" src="../images/accessibility/Esteetön_ramppi.png" /> ');
-                            $("#accessibility-list").append('<li>' + i18n.get("Ramppi") + '</li>');
+                            $("#accessibilityList").append('<li>' + i18n.get("Ramppi") + '</li>');
                         }
                         else if (value == "Induktiosilmukka") {
                             $(".accessibility-images").append(' <img alt="' + i18n.get("Induktiosilmukka") + '" src="../images/accessibility/Esteetön_induktiosilmukka.png" /> ');
-                            $("#accessibility-list").append('<li>' + i18n.get("Induktiosilmukka") + '</li>');
+                            $("#accessibilityList").append('<li>' + i18n.get("Induktiosilmukka") + '</li>');
                         }
                         else if (value == "Suuren kirjasinkoon kokoelma") {
-                            $("#accessibility-list").append('<li>' + i18n.get("Suuren kirjasinkoon kokoelma") + '</li>');
+                            $("#accessibilityList").append('<li>' + i18n.get("Suuren kirjasinkoon kokoelma") + '</li>');
                         }
                         else {
-                            if(value != null && value.length != 0) {
-                                $("#accessibility-list").append('<li>' + value + '</li>');
+                            if (value != null && value.length != 0) {
+                                $("#accessibilityList").append('<li>' + value + '</li>');
                             }
                         }
                     });
                 }
             }
         });
-
-        if(!transitIsEmpty || !accessibilityIsEmpty) {
+        if (!transitIsEmpty || !accessibilityIsEmpty) {
             // Display the UI Text based on if transit/accessibility details are available.
-            if(!transitIsEmpty && !accessibilityIsEmpty && !transitAccessibilityTextSet) {
-                $('#transitAccessibilityToggle').append(i18n.get("Liikenneyhteydet ja saavutettavuus"));
-                transitAccessibilityTextSet = true;
+            if (!transitIsEmpty && !accessibilityIsEmpty && !transitAccessibilityTextSet ) {
+                if(language === "fi") {
+                    $('#transitAccessibilityToggle').append(i18n.get("Liikenneyhteydet ja saavutettavuus"));
+                    transitAccessibilityTextSet = true;
+                }
             }
-            else if(!transitIsEmpty && accessibilityIsEmpty && !transitAccessibilityTextSet) {
-                $('#transitAccessibilityToggle').append(i18n.get("Liikenneyhteydet"));
-                transitAccessibilityTextSet = true;
+            else if (!transitIsEmpty && accessibilityIsEmpty && !transitAccessibilityTextSet) {
+                if(language === "fi") {
+                    $('#transitAccessibilityToggle').append(i18n.get("Liikenneyhteydet"));
+                    transitAccessibilityTextSet = true;
+                }
             }
-            else if(!transitAccessibilityTextSet) {
-                $('#transitAccessibilityToggle').append(i18n.get("Saavutettavuus"));
-                transitAccessibilityTextSet = true;
+            else if (!transitAccessibilityTextSet) {
+                if(language === "fi") {
+                    $('#transitAccessibilityToggle').append(i18n.get("Saavutettavuus"));
+                    transitAccessibilityTextSet = true;
+                }
             }
             $("#transitAccessibilityToggle").addClass("always-visible");
-            if(!descriptionIsEmpty) {
+            if (!descriptionIsEmpty) {
                 $("#newsDescriptionToggle").addClass("always-visible");
             }
         }
         // Hide news/description toggler if no transit/accessibility details && not on mobile.
-        else if(lang === "fi" && $(window).width() < 500) {
-            if(!descriptionIsEmpty) {
+        else if (lang === "fi" && $(window).width() < 500) {
+            if (!descriptionIsEmpty) {
                 $("#newsDescriptionToggle").css("display", "block");
             }
         }
         // If no content is provided for the left collumn.
-        if(descriptionIsEmpty && transitIsEmpty && accessibilityIsEmpty && language === "fi") {
+        if (descriptionIsEmpty && transitIsEmpty && accessibilityIsEmpty && language === "fi") {
             // Hide the content on left, make the sidebar 100% in width.
             $(".details").css("display", "none");
             $("#introductionSidebar").addClass("col-md-12");
@@ -331,26 +341,26 @@ function fetchInformation(language) {
      Yhteystiedot
      */
     // Generic details
-    $.getJSON(jsonp_url + "&with=mail_address", function(data) {
+    $.getJSON(jsonp_url + "&with=mail_address", function (data) {
         if (data.address != null) {
-            yhteystiedotIsEmpty = false;
+            contactsIsEmpty = false;
             if (isEmpty($('#streetAddress'))) {
-                    if (data.address.street != null && data.address.zipcode != null && data.address.city != null) {
-                        $("#streetAddress").append(data.name + '<br>' + data.address.street + '<br>' + data.address.zipcode + ' ' + data.address.city);
-                    }
+                if (data.address.street != null && data.address.zipcode != null && data.address.city != null) {
+                    $("#streetAddress").append(data.name + '<br>' + data.address.street + '<br>' + data.address.zipcode + ' ' + data.address.city);
                 }
+            }
             if (isEmpty($('#postalAddress'))) {
-                if (data.mail_address != null){
+                if (data.mail_address != null) {
                     var boxNumber = '';
-                    if(data.mail_address.box_number != null) {
+                    if (data.mail_address.box_number != null) {
                         boxNumber = 'PL ' + data.mail_address.box_number + '<br>';
                     }
-                    $( "#postalAddress" ).append( data.name  + '<br>' + boxNumber + data.mail_address.zipcode + ' ' + data.mail_address.area);
+                    $("#postalAddress").append(data.name + '<br>' + boxNumber + data.mail_address.zipcode + ' ' + data.mail_address.area);
                 }
             }
             // Get coordinates to be used in loadMap function.
             // Map coordinates (marker)
-            if(data.address.coordinates != null) {
+            if (data.address.coordinates != null) {
                 lon = data.address.coordinates.lon;
                 lat = data.address.coordinates.lat;
                 // Position, 5 decimal degrees
@@ -364,13 +374,13 @@ function fetchInformation(language) {
             }
         }
         if (isEmpty($('#email'))) {
-            if(data.email != null) {
-                yhteystiedotIsEmpty = false;
-                $( "#email" ).append( data.email );
+            if (data.email != null) {
+                contactsIsEmpty = false;
+                $("#email").append(data.email);
             }
         }
         // Show navigation if content.
-        if (!yhteystiedotIsEmpty) {
+        if (!contactsIsEmpty) {
             $('#navEsittely').css('display', 'block');
             $('#navYhteystiedot').css('display', 'block');
         }
@@ -411,7 +421,7 @@ function fetchInformation(language) {
     /*
      Palvelut
     */
-    $.getJSON(jsonp_url + "&with=services", function(data) {
+    $.getJSON(jsonp_url + "&with=services", function (data) {
         var collectionCount = 0;
         var hardwareCount = 0;
         var roomCount = 0;
@@ -432,132 +442,142 @@ function fetchInformation(language) {
         if (isEmpty($('#serviceItems'))) {
             servicesAdded = false;
         }
-        for (var i=0; i<data.services.length; i++) {
+        for (var i = 0; i < data.services.length; i++) {
             // Collections
-            if(data.services[i].name != null && data.services[i].name.length != 0 || data.services[i].custom_name != null) {
+            if (data.services[i].name != null && data.services[i].name.length != 0 || data.services[i].custom_name != null) {
                 if (data.services[i].type == "collection") {
-                    if(!collectionsAdded) {
-                        collectionCount = collectionCount +1;
+                    if (!collectionsAdded) {
+                        collectionCount = collectionCount + 1;
                         addItem(data.services[i], '#collectionItems');
                     }
                 }
                 // Hardware
                 else if (data.services[i].type == "hardware") {
-                    if(!hardwareAdded) {
+                    if (!hardwareAdded) {
                         hardwareCount = hardwareCount + 1;
                         addItem(data.services[i], '#hardwareItems');
                     }
                 }
                 // Rooms
                 else if (data.services[i].type == "room") {
-                    if(!roomsAdded) {
-                        roomCount = roomCount +1;
+                    if (!roomsAdded) {
+                        roomCount = roomCount + 1;
                         addItem(data.services[i], '#roomItems');
                     }
                 }
                 // Services
                 else if (data.services[i].type == "service") {
-                    if(!servicesAdded) {
+                    if (!servicesAdded) {
                         serviceCount = serviceCount + 1;
                         addItem(data.services[i], '#serviceItems');
                     }
                 }
             }
         }
-        var noServices = true;
         // Show titles & counts if found.
         if (collectionCount != 0) {
-            $( "#collection" ).css('display', 'block');
-            $( "#collectionsTitle" ).prepend(i18n.get("Kokoelmat"));
-            $( "#collectionBadge" ).append('(' + collectionCount + ')');
+            $("#collection").css('display', 'block');
+            $("#collectionsTitle").prepend(i18n.get("Kokoelmat"));
+            $("#collectionBadge").append('(' + collectionCount + ')');
             noServices = false;
         }
         if (hardwareCount != 0) {
-            $( "#hardware" ).css('display', 'block');
-            $( "#hardwareTitle" ).prepend(i18n.get("Laitteisto"));
-            $( "#hardwareBadge" ).append('(' + hardwareCount + ')');
+            $("#hardware").css('display', 'block');
+            $("#hardwareTitle").prepend(i18n.get("Laitteisto"));
+            $("#hardwareBadge").append('(' + hardwareCount + ')');
             noServices = false;
         }
         if (roomCount != 0) {
-            $( "#room" ).css('display', 'block');
-            $( "#roomTitle" ).prepend(i18n.get("Tilat"));
-            $( "#roomBadge" ).append('(' + roomCount + ')');
+            $("#room").css('display', 'block');
+            $("#roomTitle").prepend(i18n.get("Tilat"));
+            $("#roomBadge").append('(' + roomCount + ')');
             noServices = false;
         }
         if (serviceCount != 0) {
-            $( "#service" ).css('display', 'block');
-            $( "#serviceTitle" ).prepend(i18n.get("Palvelut"));
-            $( "#serviceBadge" ).append('(' + serviceCount + ')');
+            $("#service").css('display', 'block');
+            $("#serviceTitle").prepend(i18n.get("Palvelut"));
+            $("#serviceBadge").append('(' + serviceCount + ')');
             noServices = false;
         }
-        if(!collectionsAdded || !hardwareAdded || !roomsAdded || !servicesAdded) {
-            if(noServices) {
-                if(lang == "fi") {
+        if (!collectionsAdded || !hardwareAdded || !roomsAdded || !servicesAdded) {
+            if (noServices) {
+                if (lang == "fi") {
                     //$('#servicesInfo').append(i18n.get("Ei palveluita"));
                     // Hide the whole navigation if no contact details are listed either...
-                    if(yhteystiedotIsEmpty && isEmpty($('#staffMembers')) && isEmpty($('#phoneNumbers'))) {
+                    if (contactsIsEmpty && isEmpty($('#staffMembers')) && isEmpty($('#phoneNumbers'))) {
                         $('.nav-pills').css('display', 'none');
                     }
                 }
             } else {
                 $('#navEsittely').css('display', 'block');
                 $('#navPalvelut').css('display', 'block');
-                $('#servicesInfo').append(i18n.get("Palvelun lisätiedot"));
-                $('#closeInfoBtn').append(i18n.get("Sulje"));
                 // Add event listener for clicking links.
-                var indexItemClicked = false;
-                // When item link is clicked.
-                $( ".index-item" ).on('click', function () {
-                    if(!indexItemClicked) {
+                $(".index-item").on('click', function () {
+                    if (!indexItemClicked) {
                         indexItemClicked = true;
                         // If infobox already visible, hide it instantly to avoid wonky animations.
-                        if(isInfoBoxVisible) {
+                        if (isInfoBoxVisible) {
                             toggleInfoBox(0);
                         }
                         // Get element position
                         var posX = $(this).offset().left,
                             // Set top to be slightly under the element
                             posY = $(this).offset().top + 20;
+
+
                         // Set popup position & content, toggle visibility.
-                        $( "#infoPopup" ).css ('transform', 'translate3d(' + posX + 'px,' + posY + 'px, 0px');
-                        $( "#popover-content" ).html( '<p id="popover-content">' + $(this).data('message') + '</p>');
+                        $("#infoPopup").css('transform', 'translate3d(' + posX + 'px,' + posY + 'px, 0px');
+                        $("#popoverContent").html('<p id="popoverContent">' + $(this).data('message') + '</p>');
                         // If website is not null and contains stuff. Sometimes empty website is shown unless lenght is checked.
                         if ($(this).data('website') != null && $(this).data('website').length > 5) {
                             // Use _blank, because iframes don't like moving to new pages.
-                            $( "#link-to-info" ).html( '<p id="link-to-info"><a target="_blank" href="' + $(this).data('website') +
+                            $("#linkToInfo").html('<p id="linkToInfo"><a target="_blank" href="' + $(this).data('website') +
                                 '" class="external-link">' + i18n.get("Lisätietoja") + '</a></p>');
                         } else {
-                            $( "#link-to-info" ).html( '<p id="link-to-info"></p>');
+                            $("#linkToInfo").html('<p id="linkToInfo"></p>');
                         }
                         toggleInfoBox(100);
-                        indexItemClicked = false;
+                        // Add timeout. This prevents duplicated click events if we have changed library.
+                        setTimeout(function(){
+                            indexItemClicked = false;
+                        }, 30);
                     }
                 });
             }
         }
     }); // Palvelut
     // If lang is english, do this again with Finnish to add missing infos.
-    if(language == "en") {
+    if (language == "en") {
         isReFetching = true;
-        setTimeout(function(){
-                fetchInformation("fi");
-                $("header").append('<small>Note: If information is missing in English, Finnish version is used where available.</small>');
-                }, 400);
+        setTimeout(function () {
+            fetchInformation("fi", lib);
+            $("header").append('<small>Note: If information is missing in English, Finnish version is used where available.</small>');
+        }, 400);
     }
 }
 
-$(document).ready(function() {
-    fetchInformation(lang);
+function fetchImagesAndSocialMedia(lib) {
     // Images
-    $.getJSON(jsonp_url + "&with=pictures", function(data) {
-        for (var i=0; i<data.pictures.length; i++) {
+    if(lib !== undefined) {
+        jsonp_url = "https://api.kirjastot.fi/v3/library/" + lib + "?lang=" + lang;
+        $('#sliderBox').replaceWith('<section id="sliderBox" class="small-slider">' +
+            '<ul class="rslides"></ul>' +
+            '<i id="expandSlider" class="fa fa-expand top-right" title="Toggle full-screen"></i>' +
+            '<i class="top-left"><span id="currentSlide"></span></i>' +
+            '</section>')
+        $('.some-links').replaceWith('<section class="some-links">' +
+            '<h3 class="sr-only" id="socialMediaSr">Social media</h3>' +
+            '</section>')
+    }
+    $.getJSON(jsonp_url + "&with=pictures", function (data) {
+        for (var i = 0; i < data.pictures.length; i++) {
             var altCount = i + 1;
             // Use medium image size, large scales smaller images a lot...
-            var altText = i18n.get("Kuva kirjastolta") + ' (' + altCount  + '/' + data.pictures.length + ')';
-            $( ".rslides" ).append( '<li><img src="'+ data.pictures[i].files.medium + '" alt="' + altText + '"></li>');
+            var altText = i18n.get("Kuva kirjastolta") + ' (' + altCount + '/' + data.pictures.length + ')';
+            $(".rslides").append('<li><img src="' + data.pictures[i].files.medium + '" alt="' + altText + '"></li>');
         }
         // If no pictures found, hide the slider...
-        if(data.pictures.length === 0) {
+        if (data.pictures.length === 0) {
             $('#sliderBox').css('display', 'none');
         }
         else {
@@ -568,9 +588,9 @@ $(document).ready(function() {
             });
             // Exit fullscreen if clicking the .rslides and not within 75px range from the center.
             $('.rslides').on('click', function () {
-                if(!$( "#sliderBox" ).hasClass( "small-slider" )) {
+                if (!$("#sliderBox").hasClass("small-slider")) {
                     var centerPos = $(window).scrollTop() + $(window).height() / 2;
-                    if(event.clientY >= centerPos -75 && event.clientY <= centerPos +75) {
+                    if (event.clientY >= centerPos - 75 && event.clientY <= centerPos + 75) {
                         return
                     } else {
                         toggleFullScreen("#sliderBox");
@@ -579,57 +599,65 @@ $(document).ready(function() {
             });
             // Ignore clicks on selected image && add hover class.
             // We re-do this in responsiveslides.js every time the image is changed.
-            $(".rslides1_on").click(function(event){
+            $(".rslides1_on").click(function (event) {
                 event.stopPropagation();
                 $("#sliderBox").addClass('hovering');
             });
             // Activate arrow navigation when hovering over the small slider.
-            // To DO: a) hovering is sometimes removed incorrectly. b) If we click the slider after navigation, focus is lost.
-            $("#sliderBox").mouseenter (function(){
-                if(!$("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
+            $("#sliderBox").mouseenter(function () {
+                if (!$("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
                     // If element is never focused, navigation may not work.
                     $("#sliderBox").addClass('hovering');
                     $("#sliderForward").focus();
                     // If we blur instantly, arrow navigation won't work unless something has been clicked in the document.
-                    setTimeout(function(){ $("#sliderForward").blur(); }, 5);
+                    setTimeout(function () {
+                        $("#sliderForward").blur();
+                    }, 5);
                     //$("#sliderForward").blur();
                 }
             });
-            $( "#sliderBox" ).mouseleave(function() {
-                if($("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
+            $("#sliderBox").mouseleave(function () {
+                if ($("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
                     $("#sliderBox").removeClass('hovering');
                 }
+            });
+            $( "#expandSlider" ).on('click', function () {
+                toggleFullScreen('#sliderBox');
             });
         }
     });
 
     // Social media links
-    $.getJSON(jsonp_url + "&with=link_groups", function(data) {
+    $.getJSON(jsonp_url + "&with=link_groups", function (data) {
         // Loop the links of group category [0].
-        data.link_groups[0].links.forEach(function(element) {
+        data.link_groups[0].links.forEach(function (element) {
             // Get url.
             var url = element.url;
             if (url.indexOf("facebook") !== -1) {
-                $( ".some-links" ).append('<a target="_blank" ' +
-                    'href="' + url +'" title="' + element.name + '"> <img src="../images/icons/facebook.svg" alt="' + i18n.get("Kirjaston") + ' Facebook"/>' +
+                $(".some-links").append('<a target="_blank" ' +
+                    'href="' + url + '" title="' + element.name + '"> <img src="../images/icons/facebook.svg" alt="' +
+                    i18n.get("Kirjaston") + ' Facebook"/>' +
                     '</a>');
             }
             else if (url.indexOf("instagram") !== -1) {
-                $( ".some-links" ).append('<a target="_blank" ' +
-                    'href="' + url +'" title="' + element.name + '"> <img src="../images/icons/instagram.svg" alt="' + i18n.get("Kirjaston") + ' Instagram"/>' +
+                $(".some-links").append('<a target="_blank" ' +
+                    'href="' + url + '" title="' + element.name + '"> <img src="../images/icons/instagram.svg" alt="' +
+                    i18n.get("Kirjaston") + ' Instagram"/>' +
                     '</a>');
             }
         });
     });
+}
 
-    // Check if element is visible on screen. If this is not used, visibility togglers are lost on mobile when sections are shown.
-    // https://stackoverflow.com/questions/5353934/check-if-element-is-visible-on-screen
-    function checkVisible(elm) {
-        var rect = elm.getBoundingClientRect();
-        var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
-        return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
-    }
+// Check if element is visible on screen. If this is not used, visibility togglers are lost on mobile when sections are shown.
+// https://stackoverflow.com/questions/5353934/check-if-element-is-visible-on-screen
+function checkVisible(elm) {
+    var rect = elm.getBoundingClientRect();
+    var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+    return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+}
 
+function bindActions() {
     $( "#transitAccessibilityToggle" ).on('click', function () {
         setTimeout(function(){
             // Scroll to navigation if not visible.
@@ -670,9 +698,9 @@ $(document).ready(function() {
         if(isInfoBoxVisible) {
             toggleInfoBox();
         }
+        activeTab = 0;
     });
 
-    var mapLoaded = false;
     $( "#navYhteystiedot" ).on('click', function () {
         // Hide other sections & active nav styles.
         $("#navEsittely").removeClass( "active" );
@@ -686,11 +714,12 @@ $(document).ready(function() {
         if(isInfoBoxVisible) {
             toggleInfoBox();
         }
+        activeTab = 1;
         // Map zoom gets messed if the map is loaded before hiding the map div.
         if(!mapLoaded && latBoxEnd != null) {
             setTimeout(function(){
-                $("#map-container").append('<iframe id="map-frame" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=' + lonBoxStart + '%2C' + latBoxStart + '%2C' + lonBoxEnd + '%2C' + latBoxEnd + '&amp;layer=mapnik&amp;marker=' + lat + '%2C' + lon + '" style="border: 1px solid black"></iframe>')
-            }, 700);
+                $("#mapContainer").append('<iframe id="map-frame" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=' + lonBoxStart + '%2C' + latBoxStart + '%2C' + lonBoxEnd + '%2C' + latBoxEnd + '&amp;layer=mapnik&amp;marker=' + lat + '%2C' + lon + '" style="border: 1px solid #026FCF"></iframe>')
+            }, 750);
             mapLoaded = true;
         }
     });
@@ -704,13 +733,74 @@ $(document).ready(function() {
         // Show selected section + add active to nav.
         $("#navPalvelut").addClass( "active" );
         $(".palvelut").show(600);
+        activeTab = 2;
     });
 
+    // Activate arrow navigation when hovering over the navigation.
+    $(".nav-pills").mouseenter(function () {
+        if (!$(".nav-pills").hasClass('hovering')) {
+            // If element is never focused, navigation may not work.
+            $(".nav-pills").addClass('hovering');
+            $(".nav-pills").focus();
+            // If we blur instantly, arrow navigation won't work unless something has been clicked in the document.
+            setTimeout(function () {
+                $(".nav-pills").blur();
+            }, 5);
+            //$("#sliderForward").blur();
+        }
+    });
+    $(".nav-pills").mouseleave(function () {
+        if ($(".nav-pills").hasClass('hovering')) {
+            $(".nav-pills").removeClass('hovering');
+        }
+    });
+
+    if(activeTab === 1 && !contactsIsEmpty) {
+        $("#navEsittely").removeClass( "active" );
+        $("#navPalvelut").removeClass( "active" );
+        $(".esittely").hide(0);
+        $(".palvelut").hide(0);
+        // Show selected section + add active to nav.
+        $("#navYhteystiedot").addClass( "active" );
+        $(".yhteystiedot").show(0);
+        if(!mapLoaded && latBoxEnd != null) {
+            setTimeout(function(){
+                $("#mapContainer").append('<iframe id="map-frame" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=' + lonBoxStart + '%2C' + latBoxStart + '%2C' + lonBoxEnd + '%2C' + latBoxEnd + '&amp;layer=mapnik&amp;marker=' + lat + '%2C' + lon + '" style="border: 1px solid #026FCF"></iframe>')
+            }, 700);
+            mapLoaded = true;
+        }
+        // Hide infobox if visible.
+        if(isInfoBoxVisible) {
+            toggleInfoBox();
+        }
+    }
+
+    // Use this command if you want to keep divClone as a copy of "#some_div"
+    if(activeTab === 2 && !noServices) {
+        // Hide other sections & active nav styles.
+        $("#navEsittely").removeClass( "active" );
+        $("#navYhteystiedot").removeClass( "active" );
+        $(".esittely").hide(0);
+        $(".yhteystiedot").hide(0);
+        // Show selected section + add active to nav.
+        $("#navPalvelut").addClass( "active" );
+        $(".palvelut").show(0);
+        // Hide infobox if visible.
+        if(isInfoBoxVisible) {
+            toggleInfoBox();
+        }
+    }
+}
+
+$(document).ready(function() {
+    bindActions();
     $( "#closeInfoBtn" ).on('click', function () {
         toggleInfoBox(200);
     });
-
     // UI texts.
+    if($('#librarySelectorTitle')) {
+        $('#librarySelectorTitle').append(i18n.get("Kirjaston valinta"));
+    }
     $('#navEsittely').append(i18n.get("Esittely"));
     $('#navYhteystiedot').append(i18n.get("Yhteystiedot"));
     $('#navPalvelut').append(i18n.get("Palvelut"));
@@ -735,6 +825,9 @@ $(document).ready(function() {
     $('#nameTh').append(i18n.get("Nimi"));
     $('#titleTh').append(i18n.get("Työnimike"));
     $('#contactDetailsTh').append(i18n.get("Yhteystiedot"));
+    // Services
+    $('#servicesInfo').append(i18n.get("Palvelun lisätiedot"));
+    $('#closeInfoBtn').append(i18n.get("Sulje"));
     // Apparently IOS does not support Full screen API:  https://github.com/googlevr/vrview/issues/112
     // Hide fullscreen toggler & increase slider/map sizes a bit on larger screens to compensate the lack of full screen.
     // Since navigation buttons on slider do not apparently work either, hide them too... we got swiping after all!
@@ -755,5 +848,10 @@ $(document).ready(function() {
             $('#contactsMapCol').css('height', '500px');
         }
     }
+    // Clone page, to be restored if library selector is used.
+    divClone = $("#pageContainer").clone();
+    // Fetch details.
+    fetchInformation(lang);
+    fetchImagesAndSocialMedia(library);
 
 }); // OnReady

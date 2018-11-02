@@ -27,14 +27,44 @@ if(lang == undefined && library == undefined){
         lang = scriptName.getAttribute('data-lang')
 }
 
+// Set html lang, init translations & moment locale
 $("html").attr("lang", lang);
-
 var i18n = $('body').translate({lang: lang, t: dict}); // Use the correct language
+moment.locale(lang);
+var HHmmFormat = 'HH:mm';
+
+
+function isBefore(timeOne, timeTwo) {
+    if(moment(timeOne, HHmmFormat).isBefore(moment(timeTwo, HHmmFormat))) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function isSame(timeOne, timeTwo) {
+    if(moment(timeOne, HHmmFormat).isSame(moment(timeTwo, HHmmFormat))) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function isSameOrBefore(timeOne, timeTwo) {
+    if(moment(timeOne, HHmmFormat).isBefore(moment(timeTwo, HHmmFormat)) ||
+        (moment(timeOne, HHmmFormat).isSame(moment(timeTwo, HHmmFormat)))) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 var weekCounter = 0;
-// jsonp_url base
-var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang;
-function getWeekSchelude(direction) {
+function getWeekSchelude(direction, lib) {
+    // If no library is provided, use the default option.
+    if(lib === undefined) {
+        lib = library;
+    }
     // +1 or -1;
     weekCounter = weekCounter + direction;
     // Do not allow going more than 10 weeks to the past or for more than 26 weeks.
@@ -46,12 +76,10 @@ function getWeekSchelude(direction) {
         weekCounter = 26;
         return;
     }
-    // Set moment locale
-    moment.locale(lang);
     // Display week number.
     $( "#weekNumber" ).html( i18n.get("Viikko") + ' ' + moment().add(weekCounter, 'weeks').format('W'));
-    $.getJSON(jsonp_url + "&with=schedules&period.start=" + weekCounter + "w&period.end=" + weekCounter + "w", function(data) {
-        var format = 'hh:mm';
+    $.getJSON("https://api.kirjastot.fi/v3/library/" + lib + "?lang=" + lang +
+        "&with=schedules&period.start=" + weekCounter + "w&period.end=" + weekCounter + "w", function(data) {
         var date = moment().add(weekCounter, 'weeks');
         begin = moment(date).startOf('week').isoWeekday(1);
         // If lang == en, add 1 week. Otherwise last week will be shown... but why?
@@ -121,16 +149,45 @@ function getWeekSchelude(direction) {
                         // Get scheludes and check if starts before staff is present.
                         selfServiceStart = data.schedules[i].sections.selfservice.times[0].opens;
                         selfServiceEnd = data.schedules[i].sections.selfservice.times[0].closes;
-                        if (moment(selfServiceStart, format).isBefore(moment(staffPresentStart, format)) ||
-                            (moment(selfServiceStart, format).isSame(moment(staffPresentStart, format)))) {
-                            rowspanCount = rowspanCount + 1;
-                            isClosed = false;
-                            selfServiceBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                                '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") + '</td>' +
-                                '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
-                                '</tr>';
-                            dayStart = selfServiceStart;
-                            if (dayEnd === '') {
+                        if (isSameOrBefore(selfServiceStart, staffPresentStart)) {
+                            // check if selfservice closes after general opening times
+                            if (isSameOrBefore(staffPresentEnd, selfServiceEnd) ||
+                                isSame(staffPresentStart, selfServiceStart)) {
+                                if(!isSame(staffPresentStart, selfServiceStart)) {
+                                    rowspanCount = rowspanCount + 1;
+                                    isClosed = false;
+                                    selfServiceBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
+                                        '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") + '</td>' +
+                                        '<td>' + selfServiceStart + ' – ' + staffPresentStart + '</td>' +
+                                        '</tr>';
+                                }
+                                // If selfService does not close at the same time as the main opening time.
+                                if(!isSame(staffPresentEnd, selfServiceEnd)) {
+                                    if (!isBefore(selfServiceEnd, staffPresentEnd)) {
+                                        if(isBefore(selfServiceStart, staffPresentEnd)) {
+                                            selfServiceStart = staffPresentEnd;
+                                        }
+                                        rowspanCount = rowspanCount +1;
+                                        isClosed = false;
+                                        selfServiceAfter = '<tr class="time--sub time isTodayClass time--no-staff">' +
+                                            '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") + ' </td>' +
+                                            '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
+                                            '</tr>';
+                                    }
+                                }
+                            }
+                            else {
+                                rowspanCount = rowspanCount + 1;
+                                isClosed = false;
+                                selfServiceBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
+                                    '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") + '</td>' +
+                                    '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
+                                    '</tr>';
+                            }
+                            if (dayStart === '' || !isBefore(dayStart, selfServiceStart)) {
+                                dayStart = selfServiceStart;
+                            }
+                            if (dayEnd === '' || isBefore(dayEnd, selfServiceEnd)) {
                                 dayEnd = selfServiceEnd;
                             }
                             if (data.schedules[i].sections.selfservice.times[1] != null) {
@@ -141,10 +198,12 @@ function getWeekSchelude(direction) {
                                     '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") + '</td>' +
                                     '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
                                     '</tr>';
-                                dayEnd = selfServiceEnd;
+                                if (dayEnd === '' || isBefore(dayEnd, selfServiceEnd)) {
+                                    dayEnd = selfServiceEnd;
+                                }
                             }
                         }
-                        // If selfservice does not start before staff is present or no staff is present at all.
+                        // If selfService does not start before staff is present or no staff is present at all.
                         else {
                             rowspanCount = rowspanCount + 1;
                             isClosed = false;
@@ -152,19 +211,27 @@ function getWeekSchelude(direction) {
                                 '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Omatoimiaika") + '</td>' +
                                 '<td>' + selfServiceStart + ' – ' + selfServiceEnd + '</td>' +
                                 '</tr>';
-                            dayStart = selfServiceStart;
-                            if (dayEnd === '') {
+                            if (dayStart === '' || !isBefore(dayStart, selfServiceStart)) {
+                                dayStart = selfServiceStart;
+                            }
+                            if (dayEnd === '' || isBefore(dayEnd, selfServiceEnd)) {
                                 dayEnd = selfServiceEnd;
                             }
                         }
                     }
                     // Info row.
-                    if (data.schedules[i].sections.selfservice.info != null && data.sections.selfservice.info .length != 0) {
-                        rowspanCount = rowspanCount +1;
-                        selfServiceInfo = '<tr class="time--sub isTodayClass">' +
-                            '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span class="info-text"> ' +  data.schedules[i].sections.selfService.info + '</span></td>' +
-                            '</tr>';
+                    if(data.schedules[i].sections.selfservice != null) {
+                        if (data.schedules[i].sections.selfservice.info != null &&
+                            data.schedules[i].sections.selfservice.info !== undefined) {
+                            if(data.schedules[i].sections.selfservice.info.length != 0) {
+                                rowspanCount = rowspanCount +1;
+                                selfServiceInfo = '<tr class="time--sub isTodayClass">' +
+                                    '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span class="info-text"> ' +  data.schedules[i].sections.selfService.info + '</span></td>' +
+                                    '</tr>';
+                            }
+                        }
                     }
+
                 }
                 // Magazines dep
                 if(data.schedules[i].sections.magazines != null) {
@@ -172,16 +239,31 @@ function getWeekSchelude(direction) {
                         // Get scheludes and check if starts before staff is present.
                         magazinesStart = data.schedules[i].sections.magazines.times[0].opens;
                         magazinesEnd = data.schedules[i].sections.magazines.times[0].closes;
-                        if (moment(magazinesStart, format).isBefore(moment(staffPresentStart, format)) ||
-                            (moment(magazinesStart, format).isSame(moment(staffPresentStart, format)))) {
-                            rowspanCount = rowspanCount + 1;
-                            isClosed = false;
-                            magazinesBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
+                        if (isSameOrBefore(magazinesStart, staffPresentStart)) {
+                            // If magazines don't close at the same time as the main opening time.
+                            if(isSameOrBefore(staffPresentEnd, magazinesEnd)) {
+                                // Don't show the row if same starting time with the main times (9-9)
+                                if(!isSame(staffPresentStart, magazinesStart)) {
+                                    rowspanCount = rowspanCount + 1;
+                                    isClosed = false;
+                                    magazinesBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
+                                        '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Lehtilukusali") + '</td>' +
+                                        '<td>' + magazinesStart + ' – ' + staffPresentStart + '</td>' +
+                                        '</tr>';
+                                }
+                            }
+                             else {
+                                rowspanCount = rowspanCount + 1;
+                                isClosed = false;
+                                magazinesBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
                                 '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Lehtilukusali") + '</td>' +
                                 '<td>' + magazinesStart + ' – ' + magazinesEnd + '</td>' +
                                 '</tr>';
-                            dayStart = magazinesStart;
-                            if (dayEnd === '') {
+                            }
+                            if (dayStart === '' || !isBefore(dayStart, magazinesStart)) {
+                                dayStart = magazinesStart;
+                            }
+                            if (dayEnd === '' || isBefore(dayEnd, magazinesEnd)) {
                                 dayEnd = magazinesEnd;
                             }
                             if (data.schedules[i].sections.magazines.times[1] != null) {
@@ -192,7 +274,9 @@ function getWeekSchelude(direction) {
                                     '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Lehtilukusali") + '</td>' +
                                     '<td>' + magazinesStart + ' – ' + magazinesEnd + '</td>' +
                                     '</tr>';
-                                dayEnd = magazinesEnd;
+                                if (dayEnd === '' || isBefore(dayEnd, magazinesEnd)) {
+                                    dayEnd = magazinesEnd;
+                                }
                             }
                         }
                         // If magazines does not start before staff is present or no staff is present at all.
@@ -203,8 +287,10 @@ function getWeekSchelude(direction) {
                                 '<td><i class="fa fa-long-arrow-right"></i> ' + i18n.get("Lehtilukusali") + '</td>' +
                                 '<td>' + magazinesStart + ' – ' + magazinesEnd + '</td>' +
                                 '</tr>';
-                            dayStart = magazinesStart;
-                            if (dayEnd === '') {
+                            if (dayStart === '' || !isBefore(dayStart, magazinesStart)) {
+                                dayStart = magazinesStart;
+                            }
+                            if (dayEnd === '' || isBefore(dayEnd, magazinesEnd)) {
                                 dayEnd = magazinesEnd;
                             }
                         }
@@ -220,20 +306,19 @@ function getWeekSchelude(direction) {
                 // If today, apply 'today' -class.
                 if(moment(begin).isSame(moment(), 'day')) {
                     var isTodayClass =  "is-closed";
-                    var format = 'hh:mm';
                     // var time = moment() gives you current time. no format required.
-                    var time = moment(moment(), format),
-                        openingTime = moment(staffPresentStart, format),
-                        closingTime = moment(staffPresentEnd, format);
+                    var time = moment(moment(), HHmmFormat),
+                        openingTime = moment(staffPresentStart, HHmmFormat),
+                        closingTime = moment(staffPresentEnd, HHmmFormat);
                     // Check if staff is present.
                     if (time.isBetween(openingTime, closingTime)) {
                         isTodayClass = "is-open";
                     }
                     // If not, check if self service time.
                     else {
-                        var time = moment(moment(), format),
-                            openingTime = moment(dayStart, format),
-                            closingTime = moment(dayEnd, format);
+                        var time = moment(moment(), HHmmFormat),
+                            openingTime = moment(dayStart, HHmmFormat),
+                            closingTime = moment(dayEnd, HHmmFormat);
                         if (time.isBetween(openingTime, closingTime)) {
                             isTodayClass = "is-self-service";
                         }
@@ -259,9 +344,9 @@ function getWeekSchelude(direction) {
                 }
 
             // If no selfService or magazines, don't display a separate row for "Staff present".
-            if(selfServiceBefore.length == 0 && magazinesBefore.length == 0 &&
-                selfServiceAfter.length == 0 && magazinesAfter.length == 0 ) {
-                if(staffToday.length != 0) {
+            if(selfServiceBefore.length === 0 && magazinesBefore.length === 0 &&
+                selfServiceAfter.length === 0 && magazinesAfter.length === 0 ) {
+                if(staffToday.length !== 0) {
                     staffToday = '';
                     rowspanCount = rowspanCount -1;
                 }
@@ -297,13 +382,9 @@ function getWeekSchelude(direction) {
     });
 }
 
-$(document).ready(function() {
-    // Scheludes
-    getWeekSchelude(0);
-    // UI texts.
-    $('#scheludesSr').append(i18n.get("Aikataulut"));
+function bindScheduleKeyNavigation() {
     // This prevents the page from jumping to "nextWeek", when hovering over the schedules.
-    const element = document.getElementById('nextWeek');
+    var element = document.getElementById('nextWeek');
     element.focus({
         preventScroll: false
     });
@@ -320,6 +401,14 @@ $(document).ready(function() {
     $( "#schedules" ).mouseleave(function() {
         $(".library-schedules").removeClass('hovering');
     });
+}
+
+$(document).ready(function() {
+    // Scheludes
+    getWeekSchelude(0, library);
+    // UI texts.
+    $('#scheludesSr').append(i18n.get("Aikataulut"));
+    bindScheduleKeyNavigation();
     // Detect left/right on schedules or move backwards/forwards in slider if in fullscreen mode or when hovering small slider..
     $(document).keydown(function(e) {
         switch(e.which) {
@@ -335,6 +424,17 @@ $(document).ready(function() {
                     $("#sliderPrevious").focus();
                     $("#sliderPrevious").click();
                 }
+                else if($(".nav-pills").hasClass("hovering")
+                    || $("#navEsittely").is(":focus") || $("#navYhteystiedot").is(":focus")|| $("#navPalvelut").is(":focus")) {
+                    if(activeTab === 1) {
+                        $("#navEsittely").focus();
+                        $("#navEsittely").click();
+                    }
+                    else if(activeTab === 2) {
+                        $("#navYhteystiedot").focus();
+                        $("#navYhteystiedot").click();
+                    }
+                }
                 break;
             case 39: // right
                 if($(".library-schedules").hasClass("hovering")
@@ -349,11 +449,21 @@ $(document).ready(function() {
                     $("#sliderForward").focus();
                     $("#sliderForward").click();
                 }
+                else if($(".nav-pills").hasClass("hovering")
+                    || $("#navEsittely").is(":focus") || $("#navYhteystiedot").is(":focus")|| $("#navPalvelut").is(":focus")) {
+                    if(activeTab === 0) {
+                        $("#navYhteystiedot").focus();
+                        $("#navYhteystiedot").click();
+                    }
+                    else if(activeTab === 1) {
+                        $("#navPalvelut").focus();
+                        $("#navPalvelut").click();
+                    }
+                }
                 break;
             default: return; // exit this handler for other keys
         }
     });
-
 
     // Swiping for schedules & image slider. https://stackoverflow.com/questions/15084675/how-to-implement-swipe-gestures-for-mobile-devices
     function detectswipe(el,func) {
@@ -422,6 +532,5 @@ $(document).ready(function() {
     detectswipe("schedules", swipeNavigation);
     if(document.getElementById("sliderBox") != null) {
         detectswipe("sliderBox", swipeNavigation);
-
     }
 }); // OnReady

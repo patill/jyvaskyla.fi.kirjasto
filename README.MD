@@ -21,6 +21,11 @@ Currently the following saavutettavuus-palvelut are shown as accessibility icons
 
 Other rows are displayed in the list as they are.
 
+**If city/consortium parameters are provided, Library selector will be shown** according to those parameters (mobile libraries are ignored). Following listings are supported:
+A) Libraries of city, that belong to the same consortium ([https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?city=jyväskylä&lib=85159&consortium=2113&lang=fi)](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?city=jyväskylä&lib=85159&consortium=2113&lang=fi) 
+B) Libraries of city ([https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?city=jyväskylä&lib=85159&lang=fi)](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?city=jyväskylä&lib=85159&lang=fi)
+C) Libraries of consortium  ([https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85159&consortium=2113&lang=fi)](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85159&consortium=2113&lang=fi)
+
 
 
 **Library list**

@@ -31,14 +31,16 @@ function rebindClickPreventation() {
     });
 }
 
+// Global variable, this will be set to true when changing the selected library.
+var sliderNeedsToRestart = false;
 (function ($, window, i) {
   $.fn.responsiveSlides = function (options) {
 
     // Default settings
     var settings = $.extend({
       "auto": true,             // Boolean: Animate automatically, true or false
-      "speed": 0,             // Integer: Speed of the transition, in milliseconds
-      "timeout": 6000,          // Integer: Time between slide transitions, in milliseconds
+      "speed": 0,               // Integer: Speed of the transition, in milliseconds
+      "timeout": 6500,          // Integer: Time between slide transitions, in milliseconds
       "pager": false,           // Boolean: Show pager, true or false
       "nav": true,              // Boolean: Show navigation, true or false
       "random": false,          // Boolean: Randomize the order of the slides, true or false
@@ -250,28 +252,33 @@ function rebindClickPreventation() {
 
         // Auto cycle
         if (settings.auto) {
-
-                startCycle = function () {
-                    rotate = setInterval(function () {
-
+          startCycle = function () {
+            rotate = setInterval(function () {
               // Clear the event queue
               $slide.stop(true, true);
-
               var idx = index + 1 < length ? index + 1 : 0;
-
+              // Check if library has changed & if there is more than one image.
+              if(sliderNeedsToRestart && $('.rslides li').length >= 2) {
+                // Clean the interval in order to avoid duplicate calls.
+                clearInterval(rotate);
+                sliderNeedsToRestart = false;
+                return;
+              }
               // Remove active state and set new if pager is set
               if (settings.pager || settings.manualControls) {
                 selectTab(idx);
               }
-              $(".rslides1_on").off("click");
-              slideTo(idx);
-              $('#currentSlide').html(idx + 1);
-              rebindClickPreventation();
+              if($('.rslides li').length >= 2) {
+                $(".rslides1_on").off("click");
+                slideTo(idx);
+                $('#currentSlide').html(idx + 1);
+                rebindClickPreventation();
+              }
             }, waitTime);
           };
 
           // Init cycle
-          startCycle();
+            startCycle();
         }
 
         // Restarting cycle
