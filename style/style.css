@@ -20,7 +20,7 @@
   top: 0;
 }
 
-.rslides1 {
+.rslides {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -51,7 +51,7 @@
   height: 270px;
 }
 
-.small-slider .rslides1, .slider {
+.small-slider .rslides {
   border: solid 2px #025BA9;
 }
 
@@ -59,9 +59,9 @@
   transition: opacity 2s ease-in-out 0s!important;
 }
 
-/* Scale image width up to 145% on 'small' slider, thus cropping sides in order to fill vertically (eq. 16:9 images). */
+/* Scale image width up to 150% on 'small' slider, thus cropping sides in order to fill vertically (eq. 16:9 images). */
 .small-slider img {
-  max-width: 145%;
+  max-width: 150%;
 }
 
 /* Media query for IE 10-11. Since object-fit: contain; is not supported in IE, set width to avoid silly scaling in IE.
@@ -95,7 +95,7 @@
   margin-bottom: 0.75rem;
 }
 
-#map-container {
+#mapContainer {
   width: 100%;
   height: 100%;
   z-index: 99;
@@ -166,7 +166,7 @@
   color: skyblue;
 }
 
-#popover-content {
+#popoverContent {
   font-size: 0.9rem;
   font-weight: 500;
 }
@@ -218,6 +218,14 @@
 
 #servicesInfo {
   margin: 15px;
+}
+
+.nav-pills {
+  width: 100% !important;
+  display: flex!important;
+  justify-content: center;
+  margin-bottom: 1.7em!important;
+  border-bottom: #026FCF solid 0.07em;
 }
 
 /* Scale down the navigation on smaller screens to fit one row */
@@ -285,6 +293,14 @@
   -moz-transform: scale(0.87);
 }
 
+#librarySelectorTitle {
+  text-align: center;
+}
+
+#librarySelectorContainer {
+  margin-bottom: 2.9em;
+}
+
 .schedules-weekly {
   position: relative;
   margin-top: 0.5rem; }
@@ -331,31 +347,6 @@
   .schedules-weekly .opentime-additional-info {
     font-size: 1rem;
     display: block; }
-
-.schedules-weekly[data-paged-table] tbody {
-  width: 1px;
-  height: 1px;
-  clip: rect(0, 0, 0, 0);
-  position: absolute;
-  overflow: hidden; }
-
-.schedules-weekly[data-paged-table] tbody[data-current-page] {
-  display: table-row-group;
-  position: static;
-  width: auto;
-  height: auto;
-  clip: auto; }
-
-.schedules-weekly[data-paged-table] tbody + tbody {
-  border-top-width: 0 !important; }
-
-.schedules-weekly[data-paged-table] tbody > tr:first-child > th {
-  height: 2.61rem;
-  vertical-align: middle; }
-
-.schedules-weekly[data-paged-table] .time--sub td:first-child:before {
-  content: "\27A5"; }
-
 
 /*!
 Chosen, a Select Box Enhancer for jQuery and Prototype
@@ -9745,9 +9736,9 @@ form[data-loading] .loader {
   height: 0;
   overflow: hidden; }
 
-.map-container {
+.mapContainer {
   position: relative; }
-  .map-container .map-scroll-block {
+  .mapContainer .map-scroll-block {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -10149,7 +10140,7 @@ form[data-loading] .loader {
 .index-item a:target {
   color: unset; }
 
-#page-nearest-libraries .map-container {
+#page-nearest-libraries .mapContainer {
   width: 100%;
   height: 600px;
   border: 1px solid #888; }
@@ -10172,7 +10163,7 @@ form[data-loading] .loader {
   #page--library-details .building-details dt {
     font-weight: 400; }
 
-#page--library-details .map-container {
+#page--library-details .mapContainer {
   width: 100%;
   height: 600px;
   border: 1px solid #888; }
@@ -10190,69 +10181,69 @@ form[data-loading] .loader {
     #page--library-details .building-details dl dd {
       padding: 0 1rem 0 0.25rem; } }
 
-#page--library-services .content-peek {
+#page--libraryServices .content-peek {
   font-size: small; }
 
-#page--library-services #library-services h2 > .badge, #page--library-services #library-services h2 > .time-open, #page--library-services #library-services h2 > .time-closed, #page--library-services #library-services h2 > .time-self-service, #page--library-services #library-services .multi-select ul.multi-select-values h2 > li, .multi-select ul.multi-select-values #page--library-services #library-services h2 > li {
+#page--libraryServices #libraryServices h2 > .badge, #page--libraryServices #libraryServices h2 > .time-open, #page--libraryServices #libraryServices h2 > .time-closed, #page--libraryServices #libraryServices h2 > .time-self-service, #page--libraryServices #libraryServices .multi-select ul.multi-select-values h2 > li, .multi-select ul.multi-select-values #page--libraryServices #libraryServices h2 > li {
   line-height: inherit;
   font-weight: unset;
   vertical-align: middle; }
 
-#page--library-services #library-services .group ul {
+#page--libraryServices #libraryServices .group ul {
   list-style-type: none;
   padding: 0; }
 
-#page--library-services #library-services .content-popup {
+#page--libraryServices #libraryServices .content-popup {
   display: none; }
 
-#page--library-services .popover-body ul {
+#page--libraryServices .popover-body ul {
   padding: 0;
   margin: 0.5rem 0;
   list-style-position: inside; }
 
-#page--contact-info .map-container {
+#pageContactInfo .mapContainer {
   height: 13rem; }
 
-#page--contact-info .contact-details {
+#pageContactInfo .contact-details {
   padding: 0;
   margin-bottom: 1rem;
   background-color: #edf1f5;
   border-radius: 0.25rem; }
-  #page--contact-info .contact-details figure {
+  #pageContactInfo .contact-details figure {
     text-align: center;
     overflow: hidden;
     max-height: 195px;
     margin: 0;
     border-top-right-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem; }
-    #page--contact-info .contact-details figure img {
+    #pageContactInfo .contact-details figure img {
       width: 100%;
       height: 100%;
       overflow: hidden; }
-  #page--contact-info .contact-details .col-md-8 {
+  #pageContactInfo .contact-details .col-md-8 {
     margin-top: 1rem; }
-  #page--contact-info .contact-details .responsive-table {
+  #pageContactInfo .contact-details .responsive-table {
     margin-left: 0.7rem; }
-  #page--contact-info .contact-details table.contact {
+  #pageContactInfo .contact-details table.contact {
     font-size: 1rem; }
-    #page--contact-info .contact-details table.contact tr.email > th,
-    #page--contact-info .contact-details table.contact tr.email > td {
+    #pageContactInfo .contact-details table.contact tr.email > th,
+    #pageContactInfo .contact-details table.contact tr.email > td {
       padding-top: 0.5rem;
       vertical-align: bottom; }
   @media (max-width: 767.98px) {
-    #page--contact-info .contact-details figure {
+    #pageContactInfo .contact-details figure {
       display: none; } }
 
-#page--contact-info .phone-numbers table.phones td:nth-child(2) {
+#pageContactInfo .phone-numbers table.phones td:nth-child(2) {
   min-width: 8rem;
   white-space: nowrap; }
 
-#page--contact-info section {
+#pageContactInfo section {
   padding-top: 1rem; }
-  #page--contact-info section h2 {
+  #pageContactInfo section h2 {
     font-size: large;
     margin-left: 1rem; }
-    #page--contact-info section h2 .fa {
+    #pageContactInfo section h2 .fa {
       background-color: #ffc314;
       margin-right: 0.25rem;
       padding: 0.25rem 0.5rem;

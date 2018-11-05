@@ -1,4 +1,8 @@
 var dict = {
+    "Kirjaston valinta": {
+        fi: "Kirjaston valinta",
+        en: "Library selector",
+    },
     "Esittely": {
         fi: "Esittely",
         en: "Info",
