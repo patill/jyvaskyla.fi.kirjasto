@@ -685,7 +685,7 @@ function bindActions() {
     });
 
     // Navigation events
-    $( "#navEsittely" ).on('click', function () {
+    function navigateToDefault() {
         // Hide other sections & active nav styles.
         $("#navYhteystiedot").removeClass( "active" );
         $("#navPalvelut").removeClass( "active" );
@@ -699,6 +699,10 @@ function bindActions() {
             toggleInfoBox();
         }
         activeTab = 0;
+    }
+
+    $( "#navEsittely" ).on('click', function () {
+        navigateToDefault();
     });
 
     $( "#navYhteystiedot" ).on('click', function () {
@@ -755,7 +759,7 @@ function bindActions() {
         }
     });
 
-    if(activeTab === 1 && !contactsIsEmpty) {
+    if(activeTab === 1) {
         $("#navEsittely").removeClass( "active" );
         $("#navPalvelut").removeClass( "active" );
         $(".esittely").hide(0);
@@ -773,10 +777,15 @@ function bindActions() {
         if(isInfoBoxVisible) {
             toggleInfoBox();
         }
-    }
+        // Navigate to default after the timeout, if tab is empty.
+        setTimeout(function(){
+            if(contactsIsEmpty) {
+                navigateToDefault();
+            }
+        }, 100);
 
-    // Use this command if you want to keep divClone as a copy of "#some_div"
-    if(activeTab === 2 && !noServices) {
+    }
+    if(activeTab === 2) {
         // Hide other sections & active nav styles.
         $("#navEsittely").removeClass( "active" );
         $("#navYhteystiedot").removeClass( "active" );
@@ -789,6 +798,12 @@ function bindActions() {
         if(isInfoBoxVisible) {
             toggleInfoBox();
         }
+        // Navigate to default after the timeout, if tab is empty.
+        setTimeout(function(){
+            if(noServices) {
+                navigateToDefault();
+            }
+        }, 100);
     }
 }
 
@@ -853,5 +868,4 @@ $(document).ready(function() {
     // Fetch details.
     fetchInformation(lang);
     fetchImagesAndSocialMedia(library);
-
 }); // OnReady

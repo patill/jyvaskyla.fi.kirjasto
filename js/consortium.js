@@ -19,6 +19,58 @@ consortium = getParamValue('consortium');
 lang = getParamValue('lang');
 
 $(document).ready(function() {
+    // Get referrer url (Iframe parent). If Library name is set, use that as the default.
+    var refUrl = (window.location != window.parent.location)
+        ? document.referrer
+        : document.location.href;
+    refUrl = refUrl.toLocaleLowerCase();
+    // We use ? to navigate right to library X, # is not passed in url.
+    // Check the libraries of JKL, by default the main library is used. (lib param from iframe)
+    if(refUrl.indexOf("?halssila") > -1) {
+        library = 85305;
+    }
+    else if(refUrl.indexOf("?huhtasuo") > -1) {
+        library = 85533;
+    }
+    else if(refUrl.indexOf("?keljo") > -1) {
+        library = 85516;
+    }
+    else if(refUrl.indexOf("?keltin") > -1) {
+        library = 85754;
+    }
+    else if(refUrl.indexOf("?korpi") > -1) {
+        library = 85116;
+    }
+    else if(refUrl.indexOf("?korte ") > -1) {
+        library = 85160;
+    }
+    else if(refUrl.indexOf("?kuokka") > -1) {
+        library = 86583;
+    }
+    else if(refUrl.indexOf("?lohi") > -1) {
+        library = 85909;
+    }
+    else if(refUrl.indexOf("?palok") > -1) {
+        library = 85732;
+    }
+    else if(refUrl.indexOf("?saynat") > -1 || refUrl.indexOf("?säynät") > -1) {
+        library = 85117;
+    }
+    else if(refUrl.indexOf("?tikka") > -1) {
+        library = 85111;
+    }
+    else if(refUrl.indexOf("?vaaja") > -1) {
+        library = 85573;
+    }
+    else if(refUrl.indexOf("?vesan") > -1) {
+        library = 85306;
+    }
+    // This is not really used, since library is set as a global variable in other files. In case this fails, define it.
+    if(library === undefined || library === null) {
+        library = 85159;
+    }
+
+
     var libraryList = [];
     function finalizeSelect() {
         // Sort alphabetically. https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
@@ -104,6 +156,11 @@ $(document).ready(function() {
         // Re-bind navigation and other stuff.
         bindActions();
         bindScheduleKeyNavigation();
+        // Add swiping detection for schedules & sliderbox if available.
+        detectswipe("schedules", swipeNavigation);
+        if(document.getElementById("sliderBox") != null) {
+            detectswipe("sliderBox", swipeNavigation);
+        }
     });
 
 }); // OnReady
