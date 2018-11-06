@@ -119,6 +119,15 @@ function toggleInfoBox(delay) {
     }
 }
 
+    $.getJSON(jsonp_url + "&with=pictures", function (data) {
+        // var to check availability of pictures
+        var picsAvailable = true
+        // If no pictures found, hide the slider...
+        if (data.pictures.length === 0) {
+            picsAvailable = false;
+        }
+	});
+
 // Map coordinates (marker)
 var lon;
 var lat;
@@ -335,7 +344,7 @@ function fetchInformation(language, lib) {
             }
         }
         // If no content is provided for the left collumn.
-        if (descriptionIsEmpty && transitIsEmpty && accessibilityIsEmpty && language === "fi") {
+        if (descriptionIsEmpty && transitIsEmpty && accessibilityIsEmpty && picsAvailable && language === "fi") {
             // Hide the content on left, make the sidebar 100% in width.
             $(".details").css("display", "none");
             $("#introductionSidebar").addClass("col-md-12");
