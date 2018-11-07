@@ -76,6 +76,7 @@ $(document).ready(function() {
         contactsIsEmpty = true;
         noServices = true;
         indexItemClicked = false;
+        isReFetching = false;
         // Set the global library parameter, so schedule switching won't mess things up.
         library = $(this).val();
         // Fetch data

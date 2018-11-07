@@ -8,6 +8,13 @@
   <link rel="stylesheet" href="../style/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="../style/nice-select.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+        integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+        crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+          integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+          crossorigin=""></script>
+  <script src="../js/lib/leaflet-providers.js"></script>
   <script src="../js/lib/jquery-3.3.1.min.js"></script>
   <script src="../js/lib/jquery.translate.js"></script>
   <script src="../js/translations.js"></script>
@@ -135,7 +142,7 @@
             </div>
             <!-- Map -->
             <div id="contactsMapCol" class="col-md-4">
-              <div id="mapContainer">
+              <div id="mapContainer" class="map-borders">
                 <i id="expandMap" onclick="toggleFullScreen('#mapContainer')" class="fa fa-expand top-right" title=""></i>
               </div>
             </div>

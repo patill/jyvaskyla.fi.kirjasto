@@ -5,6 +5,9 @@ function toggleFullScreen(target) {
     if(target === "#sliderBox") {
         $('#sliderBox').toggleClass("small-slider");
     }
+    else if(target === "#mapContainer") {
+        $('#mapContainer').toggleClass("map-borders");
+    }
     if (
       document.fullscreenElement ||
       document.webkitFullscreenElement ||
@@ -91,11 +94,6 @@ function toggleInfoBox(delay) {
 // Map coordinates (marker)
 var lon;
 var lat;
-// Generate the box around the marker by +- 0.0018 lat/long
-var lonBoxStart;
-var lonBoxEnd;
-var latBoxStart;
-var latBoxEnd;
 // Used for hiding sections if null....
 var accessibilityIsEmpty = true;
 var transitIsEmpty = true;
@@ -305,6 +303,12 @@ function fetchInformation(language, lib) {
             $("#introductionSidebar").addClass("col-md-12");
             $("#introductionSidebar").removeClass("col-lg-5 col-xl-4 order-2 sidebar");
         }
+        // Update the title to match data.name.
+        if(document.title !== data.name && !isReFetching) {
+            if(data.name != null) {
+                document.title = data.name;
+            }
+        }
     });
     /*
      Yhteystiedot
@@ -332,14 +336,6 @@ function fetchInformation(language, lib) {
             if (data.address.coordinates != null) {
                 lon = data.address.coordinates.lon;
                 lat = data.address.coordinates.lat;
-                // Position, 5 decimal degrees
-                var lonDecimal = parseFloat(lon.match(/[\d][\d][^\d][\d][\d][\d][\d][\d]/));
-                var latDecimal = parseFloat(lat.match(/[\d][\d][^\d][\d][\d][\d][\d][\d]/));
-                // Generate the box around the marker by +- 0.0018 lat/long
-                lonBoxStart = lonDecimal - 0.0018;
-                lonBoxEnd = lonDecimal + 0.0018;
-                latBoxStart = latDecimal - 0.0018;
-                latBoxEnd = latDecimal + 0.0018;
             }
         }
         if (isEmpty($('#email'))) {
@@ -517,9 +513,9 @@ function fetchInformation(language, lib) {
     }); // Palvelut
     // If lang is english, do this again with Finnish to add missing infos.
     if (language == "en") {
-        isReFetching = true;
         setTimeout(function () {
             fetchInformation("fi", lib);
+            isReFetching = true;
             $("header").append('<small>Note: If information is missing in English, Finnish version is used where available.</small>');
         }, 400);
     }
@@ -689,9 +685,17 @@ function bindActions() {
         }
         activeTab = 1;
         // Map zoom gets messed if the map is loaded before hiding the map div.
-        if(!mapLoaded && latBoxEnd != null) {
+        if(!mapLoaded && lat != null) {
             setTimeout(function(){
-                $("#mapContainer").append('<iframe id="map-frame" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=' + lonBoxStart + '%2C' + latBoxStart + '%2C' + lonBoxEnd + '%2C' + latBoxEnd + '&amp;layer=mapnik&amp;marker=' + lat + '%2C' + lon + '" style="border: 1px solid #026FCF"></iframe>')
+                var map = L.map('mapContainer').setView([lat, lon], 15.5);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(map);
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup(document.title)
+                    .openPopup();
+                // add Wikimedia map styles to the map.
+                L.tileLayer.provider('Wikimedia').addTo(map);
             }, 750);
             mapLoaded = true;
         }
@@ -736,10 +740,18 @@ function bindActions() {
         // Show selected section + add active to nav.
         $("#navYhteystiedot").addClass( "active" );
         $(".yhteystiedot").show(0);
-        if(!mapLoaded && latBoxEnd != null) {
+        if(!mapLoaded && lat != null) {
             setTimeout(function(){
-                $("#mapContainer").append('<iframe id="map-frame" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=' + lonBoxStart + '%2C' + latBoxStart + '%2C' + lonBoxEnd + '%2C' + latBoxEnd + '&amp;layer=mapnik&amp;marker=' + lat + '%2C' + lon + '" style="border: 1px solid #026FCF"></iframe>')
-            }, 700);
+                var map = L.map('mapContainer').setView([lat, lon], 15.5);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(map);
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup(document.title)
+                    .openPopup();
+                // add Wikimedia map styles to the map.
+                L.tileLayer.provider('Wikimedia').addTo(map);
+            }, 750);
             mapLoaded = true;
         }
         // Hide infobox if visible.

@@ -68,7 +68,7 @@ else if(refUrl.indexOf("?lohi") > -1) {
 else if(refUrl.indexOf("?palok") > -1) {
     library = 85732;
 }
-else if(refUrl.indexOf("?saynat") > -1 || refUrl.indexOf("?säynät") > -1) {
+else if(refUrl.indexOf("?saynat") > -1 || refUrl.indexOf("s%C3%A4yn%C3%A4t%0A") > -1 || refUrl.indexOf("?säynät") > -1) {
     library = 85117;
 }
 else if(refUrl.indexOf("?tikka") > -1) {
