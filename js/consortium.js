@@ -136,7 +136,6 @@ $(document).ready(function() {
         });
     }
 
-
     $("#librarySelector").change(function(){
         $("#pageContainer").replaceWith(divClone.clone()); // Restore main with a copy of divClone
         // Reset variables.
@@ -149,6 +148,8 @@ $(document).ready(function() {
         contactsIsEmpty = true;
         noServices = true;
         indexItemClicked = false;
+        // Set the global library parameter, so schedule switching won't mess things up.
+        library = $(this).val();
         // Fetch data
         getWeekSchelude(0, $(this).val());
         fetchInformation(lang, $(this).val());
