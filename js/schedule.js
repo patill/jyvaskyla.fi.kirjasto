@@ -1,38 +1,5 @@
-// Get global library/lang parameters from the script.
-var library = '';
-var lang = '';
-// Get parameters from iframe url.
-function getParamValue(paramName)
-{
-    var url = window.location.search.substring(1); //get rid of "?" in querystring
-    var qArray = url.split('&'); //get key-value pairs
-    for (var i = 0; i < qArray.length; i++)
-    {
-        var pArr = qArray[i].split('='); //split key and value
-        if (pArr[0] == paramName)
-            return pArr[1]; //return value
-    }
-}
-library = getParamValue('lib');
-lang = getParamValue('lang');
-/*
-
- Alternative:   <script data-library="85111" data-lang="fi" src="../../js/main.js" type="text/javascript"></script>*/
-// If lang and lib are undefined (not used in iframe)
-if(lang == undefined && library == undefined){
-    var scripts = document.getElementsByTagName('script');
-    var lastScript = scripts[scripts.length-1];
-    var scriptName = lastScript;
-    library = scriptName.getAttribute('data-library'),
-        lang = scriptName.getAttribute('data-lang')
-}
-
-// Set html lang, init translations & moment locale
-$("html").attr("lang", lang);
-var i18n = $('body').translate({lang: lang, t: dict}); // Use the correct language
 moment.locale(lang);
 var HHmmFormat = 'HH:mm';
-
 
 function isBefore(timeOne, timeTwo) {
     if(moment(timeOne, HHmmFormat).isBefore(moment(timeTwo, HHmmFormat))) {
