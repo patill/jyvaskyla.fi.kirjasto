@@ -622,6 +622,24 @@ function checkVisible(elm) {
     return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
 }
 
+function loadMap() {
+    var map = L.map('mapContainer').setView([lat, lon], 15.5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+    var greenIcon = L.icon({
+        // https://material.io/tools/icons/?style=baseline
+        iconUrl: '../images/icons/local_library.svg',
+        popupAnchor:  [-11, -5], // point from which the popup should open relative to the iconAnchor
+        iconSize:     [36, 36], // size of the icon
+    });
+    L.marker([lat, lon], {icon: greenIcon}).addTo(map)
+        .bindPopup(document.title)
+        .openPopup();
+    // add Wikimedia map styles to the map.
+    L.tileLayer.provider('Wikimedia').addTo(map);
+}
+
 function bindActions() {
     $( "#transitAccessibilityToggle" ).on('click', function () {
         setTimeout(function(){
@@ -687,15 +705,7 @@ function bindActions() {
         // Map zoom gets messed if the map is loaded before hiding the map div.
         if(!mapLoaded && lat != null) {
             setTimeout(function(){
-                var map = L.map('mapContainer').setView([lat, lon], 15.5);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                }).addTo(map);
-                L.marker([lat, lon]).addTo(map)
-                    .bindPopup(document.title)
-                    .openPopup();
-                // add Wikimedia map styles to the map.
-                L.tileLayer.provider('Wikimedia').addTo(map);
+                loadMap();
             }, 750);
             mapLoaded = true;
         }
@@ -742,15 +752,7 @@ function bindActions() {
         $(".yhteystiedot").show(0);
         if(!mapLoaded && lat != null) {
             setTimeout(function(){
-                var map = L.map('mapContainer').setView([lat, lon], 15.5);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                }).addTo(map);
-                L.marker([lat, lon]).addTo(map)
-                    .bindPopup(document.title)
-                    .openPopup();
-                // add Wikimedia map styles to the map.
-                L.tileLayer.provider('Wikimedia').addTo(map);
+                loadMap();
             }, 750);
             mapLoaded = true;
         }
