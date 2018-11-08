@@ -638,6 +638,9 @@ function loadMap() {
         .openPopup();
     // add Wikimedia map styles to the map.
     L.tileLayer.provider('Wikimedia').addTo(map);
+    // Min/max zoom levels.
+    map.options.minZoom = 6;
+    map.options.maxZoom = 17.9;
 }
 
 function bindActions() {
