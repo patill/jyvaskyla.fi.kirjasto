@@ -524,15 +524,7 @@ function fetchInformation(language, lib) {
 function fetchImagesAndSocialMedia(lib) {
     // Images
     if(lib !== undefined) {
-        jsonp_url = "https://api.kirjastot.fi/v3/library/" + lib + "?lang=" + lang;
-        $('#sliderBox').replaceWith('<section id="sliderBox" class="small-slider">' +
-            '<ul class="rslides"></ul>' +
-            '<i id="expandSlider" class="fa fa-expand top-right" title="Toggle full-screen"></i>' +
-            '<i class="top-left"><span id="currentSlide"></span></i>' +
-            '</section>')
-        $('.some-links').replaceWith('<section class="some-links">' +
-            '<h3 class="sr-only" id="socialMediaSr">Social media</h3>' +
-            '</section>')
+        jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang;
     }
     $.getJSON(jsonp_url + "&with=pictures", function (data) {
         for (var i = 0; i < data.pictures.length; i++) {
