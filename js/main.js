@@ -1,40 +1,12 @@
-// Get global library/lang parameters from the script.
-var library = '';
-var lang = '';
-// Get parameters from iframe url.
-function getParamValue(paramName)
-{
-    var url = window.location.search.substring(1); //get rid of "?" in querystring
-    var qArray = url.split('&'); //get key-value pairs
-    for (var i = 0; i < qArray.length; i++)
-    {
-        var pArr = qArray[i].split('='); //split key and value
-        if (pArr[0] == paramName)
-            return pArr[1]; //return value
-    }
-}
-library = getParamValue('lib');
-lang = getParamValue('lang');
-/*
-
- Alternative:   <script data-library="85111" data-lang="fi" src="../../js/main.js" type="text/javascript"></script>*/
-// If lang and lib are undefined (not used in iframe)
-if(lang == undefined && library == undefined){
-    var scripts = document.getElementsByTagName('script');
-    var lastScript = scripts[scripts.length-1];
-    var scriptName = lastScript;
-    library = scriptName.getAttribute('data-library'),
-        lang = scriptName.getAttribute('data-lang')
-}
-
-var i18n = $('body').translate({lang: lang, t: dict}); // Use the correct language
-
 function toggleFullScreen(target) {
     // if already full screen; exit
     // else go fullscreen
     // If slider, toggle small-slider class.
     if(target === "#sliderBox") {
         $('#sliderBox').toggleClass("small-slider");
+    }
+    else if(target === "#mapContainer") {
+        $('#mapContainer').toggleClass("map-borders");
     }
     if (
       document.fullscreenElement ||
@@ -57,7 +29,7 @@ function toggleFullScreen(target) {
             element.requestFullscreen();
         }
         else if (element.webkitRequestFullscreen) {
-            element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+            element.webkitRequestFullscreen();
         }
         else if (element.mozRequestFullScreen) {
             element.mozRequestFullScreen();
@@ -131,11 +103,6 @@ function toggleInfoBox(delay) {
 // Map coordinates (marker)
 var lon;
 var lat;
-// Generate the box around the marker by +- 0.0018 lat/long
-var lonBoxStart;
-var lonBoxEnd;
-var latBoxStart;
-var latBoxEnd;
 // Used for hiding sections if null....
 var accessibilityIsEmpty = true;
 var transitIsEmpty = true;
@@ -263,7 +230,7 @@ function fetchInformation(language, lib) {
         data.extra.data.forEach(function (element) {
             if (element.id == "saavutettavuus-info") {
                 if (isEmpty($('#accessibilityDetails'))) {
-                    if (element.value != null & element.value.length != 0) {
+                    if (element.value != null && element.value.length != 0) {
                         accessibilityIsEmpty = false;
                         $(".accessibility-details").css("display", "block");
                         $("#accessibilityDetails").append('<p>' + element.value.replace(/(<a )+/g, '<a target="_blank" ') + '</p>');
@@ -350,6 +317,12 @@ function fetchInformation(language, lib) {
             $("#introductionSidebar").addClass("col-md-12");
             $("#introductionSidebar").removeClass("col-lg-5 col-xl-4 order-2 sidebar");
         }
+        // Update the title to match data.name.
+        if(document.title !== data.name && !isReFetching) {
+            if(data.name != null) {
+                document.title = data.name;
+            }
+        }
     });
     /*
      Yhteystiedot
@@ -377,14 +350,6 @@ function fetchInformation(language, lib) {
             if (data.address.coordinates != null) {
                 lon = data.address.coordinates.lon;
                 lat = data.address.coordinates.lat;
-                // Position, 5 decimal degrees
-                var lonDecimal = parseFloat(lon.match(/[\d][\d][^\d][\d][\d][\d][\d][\d]/));
-                var latDecimal = parseFloat(lat.match(/[\d][\d][^\d][\d][\d][\d][\d][\d]/));
-                // Generate the box around the marker by +- 0.0018 lat/long
-                lonBoxStart = lonDecimal - 0.0018;
-                lonBoxEnd = lonDecimal + 0.0018;
-                latBoxStart = latDecimal - 0.0018;
-                latBoxEnd = latDecimal + 0.0018;
             }
         }
         if (isEmpty($('#email'))) {
@@ -574,9 +539,9 @@ function fetchInformation(language, lib) {
     }); // Palvelut
     // If lang is english, do this again with Finnish to add missing infos.
     if (language == "en") {
-        isReFetching = true;
         setTimeout(function () {
             fetchInformation("fi", lib);
+            isReFetching = true;
             $("header").append('<small>Note: If information is missing in English, Finnish version is used where available.</small>');
         }, 400);
     }
@@ -585,15 +550,7 @@ function fetchInformation(language, lib) {
 function fetchImagesAndSocialMedia(lib) {
     // Images
     if(lib !== undefined) {
-        jsonp_url = "https://api.kirjastot.fi/v3/library/" + lib + "?lang=" + lang;
-        $('#sliderBox').replaceWith('<section id="sliderBox" class="small-slider">' +
-            '<ul class="rslides"></ul>' +
-            '<i id="expandSlider" class="fa fa-expand top-right" title="Toggle full-screen"></i>' +
-            '<i class="top-left"><span id="currentSlide"></span></i>' +
-            '</section>')
-        $('.some-links').replaceWith('<section class="some-links">' +
-            '<h3 class="sr-only" id="socialMediaSr">Social media</h3>' +
-            '</section>')
+        jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang;
     }
     $.getJSON(jsonp_url + "&with=pictures", function (data) {
         for (var i = 0; i < data.pictures.length; i++) {
@@ -616,9 +573,7 @@ function fetchImagesAndSocialMedia(lib) {
             $('.rslides').on('click', function () {
                 if (!$("#sliderBox").hasClass("small-slider")) {
                     var centerPos = $(window).scrollTop() + $(window).height() / 2;
-                    if (event.clientY >= centerPos - 75 && event.clientY <= centerPos + 75) {
-                        return
-                    } else {
+                    if (!(event.clientY >= centerPos - 75 && event.clientY <= centerPos + 75)) {
                         toggleFullScreen("#sliderBox");
                     }
                 }
@@ -681,6 +636,27 @@ function checkVisible(elm) {
     var rect = elm.getBoundingClientRect();
     var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
     return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+}
+
+function loadMap() {
+    var map = L.map('mapContainer').setView([lat, lon], 15.5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+    var greenIcon = L.icon({
+        // https://material.io/tools/icons/?style=baseline
+        iconUrl: '../images/icons/local_library.svg',
+        popupAnchor:  [-11, -5], // point from which the popup should open relative to the iconAnchor
+        iconSize:     [36, 36], // size of the icon
+    });
+    L.marker([lat, lon], {icon: greenIcon}).addTo(map)
+        .bindPopup(document.title)
+        .openPopup();
+    // add Wikimedia map styles to the map.
+    L.tileLayer.provider('Wikimedia').addTo(map);
+    // Min/max zoom levels.
+    map.options.minZoom = 6;
+    map.options.maxZoom = 17.9;
 }
 
 function bindActions() {
@@ -746,9 +722,9 @@ function bindActions() {
         }
         activeTab = 1;
         // Map zoom gets messed if the map is loaded before hiding the map div.
-        if(!mapLoaded && latBoxEnd != null) {
+        if(!mapLoaded && lat != null) {
             setTimeout(function(){
-                $("#mapContainer").append('<iframe id="map-frame" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=' + lonBoxStart + '%2C' + latBoxStart + '%2C' + lonBoxEnd + '%2C' + latBoxEnd + '&amp;layer=mapnik&amp;marker=' + lat + '%2C' + lon + '" style="border: 1px solid #026FCF"></iframe>')
+                loadMap();
             }, 750);
             mapLoaded = true;
         }
@@ -793,10 +769,10 @@ function bindActions() {
         // Show selected section + add active to nav.
         $("#navYhteystiedot").addClass( "active" );
         $(".yhteystiedot").show(0);
-        if(!mapLoaded && latBoxEnd != null) {
+        if(!mapLoaded && lat != null) {
             setTimeout(function(){
-                $("#mapContainer").append('<iframe id="map-frame" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=' + lonBoxStart + '%2C' + latBoxStart + '%2C' + lonBoxEnd + '%2C' + latBoxEnd + '&amp;layer=mapnik&amp;marker=' + lat + '%2C' + lon + '" style="border: 1px solid #026FCF"></iframe>')
-            }, 700);
+                loadMap();
+            }, 750);
             mapLoaded = true;
         }
         // Hide infobox if visible.

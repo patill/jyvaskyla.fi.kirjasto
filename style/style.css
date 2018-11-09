@@ -104,12 +104,17 @@
   -webkit-transform: translate3d(0,0,0) !important;
 }
 
+/* Map borders, if not in fullscreen mode */
+.map-borders {
+  border: 1px solid #026fcf;
+}
+
 /* Top right (full screen toggler) */
 .top-right {
   position: absolute;
-  top: 8%;
+  top: 7%;
   right: 20px;
-  z-index: 100;
+  z-index: 9999;
   padding-top: 6px;
   padding-bottom: 6px;
 }
@@ -120,7 +125,7 @@
 
 .top-left {
   position: absolute;
-  top: 8%;
+  top: 7%;
   left: 20px;
   z-index: 91;
   padding-top: 6px;
@@ -154,11 +159,11 @@
   color: #fdfdfd;
 }
 
-.centered-left, .centered-right {
-  font-size: 2em;
+#expandMap {
+  top: 1em;
 }
 
-.top-right {
+.centered-left, .centered-right, .top-right {
   font-size: 1.6em!important;
 }
 
