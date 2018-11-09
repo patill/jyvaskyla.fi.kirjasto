@@ -547,7 +547,7 @@ function fetchImagesAndSocialMedia(lib) {
             $('.rslides').on('click', function () {
                 if (!$("#sliderBox").hasClass("small-slider")) {
                     var centerPos = $(window).scrollTop() + $(window).height() / 2;
-                    if (!event.clientY >= centerPos - 75 && !event.clientY <= centerPos + 75) {
+                    if (!(event.clientY >= centerPos - 75 && event.clientY <= centerPos + 75)) {
                         toggleFullScreen("#sliderBox");
                     }
                 }
