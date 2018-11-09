@@ -1,8 +1,8 @@
 // Get global library/lang parameters from the script.
-var library = '';
-var lang = '';
-var city = '';
-var consortium = '';
+var library;
+var lang;
+var city;
+var consortium;
 // Get parameters from iframe url.
 function getParamValue(paramName)
 {
@@ -24,8 +24,7 @@ consortium = getParamValue('consortium');
 // If lang and lib are undefined (not used in iframe)
 if(lang == undefined && library == undefined){
     var scripts = document.getElementsByTagName('script');
-    var lastScript = scripts[scripts.length-1];
-    var scriptName = lastScript;
+    var scriptName = scripts[scripts.length-1];
     library = scriptName.getAttribute('data-library'),
         lang = scriptName.getAttribute('data-lang')
 }

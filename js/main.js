@@ -29,7 +29,7 @@ function toggleFullScreen(target) {
             element.requestFullscreen();
         }
         else if (element.webkitRequestFullscreen) {
-            element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+            element.webkitRequestFullscreen();
         }
         else if (element.mozRequestFullScreen) {
             element.mozRequestFullScreen();
@@ -216,7 +216,7 @@ function fetchInformation(language, lib) {
         data.extra.data.forEach(function (element) {
             if (element.id == "saavutettavuus-info") {
                 if (isEmpty($('#accessibilityDetails'))) {
-                    if (element.value != null & element.value.length != 0) {
+                    if (element.value != null && element.value.length != 0) {
                         accessibilityIsEmpty = false;
                         $(".accessibility-details").css("display", "block");
                         $("#accessibilityDetails").append('<p>' + element.value.replace(/(<a )+/g, '<a target="_blank" ') + '</p>');
@@ -547,9 +547,7 @@ function fetchImagesAndSocialMedia(lib) {
             $('.rslides').on('click', function () {
                 if (!$("#sliderBox").hasClass("small-slider")) {
                     var centerPos = $(window).scrollTop() + $(window).height() / 2;
-                    if (event.clientY >= centerPos - 75 && event.clientY <= centerPos + 75) {
-                        return
-                    } else {
+                    if (!event.clientY >= centerPos - 75 && !event.clientY <= centerPos + 75) {
                         toggleFullScreen("#sliderBox");
                     }
                 }

@@ -2,11 +2,7 @@ moment.locale(lang);
 var HHmmFormat = 'HH:mm';
 
 function isBefore(timeOne, timeTwo) {
-    if(moment(timeOne, HHmmFormat).isBefore(moment(timeTwo, HHmmFormat))) {
-        return true;
-    } else {
-        return false;
-    }
+    return !!moment(timeOne, HHmmFormat).isBefore(moment(timeTwo, HHmmFormat));
 }
 
 function isSame(timeOne, timeTwo) {
@@ -284,7 +280,7 @@ function getWeekSchelude(direction, lib) {
                 }
                 // If today, apply 'today' -class.
                 if(moment(begin).isSame(moment(), 'day')) {
-                    var isTodayClass =  "is-closed";
+                    isTodayClass =  "is-closed";
                     // var time = moment() gives you current time. no format required.
                     var time = moment(moment(), HHmmFormat),
                         openingTime = moment(staffPresentStart, HHmmFormat),
@@ -295,7 +291,7 @@ function getWeekSchelude(direction, lib) {
                     }
                     // If not, check if self service time.
                     else {
-                        var time = moment(moment(), HHmmFormat),
+                        time = moment(moment(), HHmmFormat),
                             openingTime = moment(dayStart, HHmmFormat),
                             closingTime = moment(dayEnd, HHmmFormat);
                         if (time.isBetween(openingTime, closingTime)) {

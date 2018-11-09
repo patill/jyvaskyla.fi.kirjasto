@@ -7,10 +7,6 @@ var dict = {
         fi: "Esittely",
         en: "Info",
     },
-    "Yhteystiedot": {
-        fi: "Yhteystiedot",
-        en: "Staff present",
-    },
     "Palvelut": {
         fi: "Palvelut",
         en: "Services",
@@ -137,10 +133,6 @@ var dict = {
     "Sisustus": {
         fi: "Sisustus",
         en: "Decoration",
-    },
-    "Yhteystiedot": {
-        fi: "Yhteystiedot",
-        en: "Contacts",
     },
     "Postiosoite": {
         fi: "Postiosoite",

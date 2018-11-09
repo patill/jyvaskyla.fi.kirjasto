@@ -40,27 +40,27 @@ $(document).ready(function() {
     }
 
     // Fetch libraries of city
-    if(consortium === undefined && city !== undefined) {
+    else if(consortium === undefined && city !== undefined) {
         $.getJSON("https://api.kirjastot.fi/v3/organisation?lang=" + lang + "&city.name=" + city, function(data) {
             for (var i=0; i<data.items.length; i++) {
                 // Ignore mobile libraries
                 if(data.items[i].branch_type !== "mobile") {
                     libraryList.push({name: data.items[i].name, id: data.items[i].id});
                 }
-                finalizeSelect();
             }
+            finalizeSelect();
         });
     }
 
     // Fetch libraries of consortium
-    if(consortium !== undefined && city === undefined) {
+    else if(consortium !== undefined && city === undefined) {
         $.getJSON("https://api.kirjastot.fi/v3/organisation?lang=" + lang + "&consortium=" + consortium, function(data) {
             for (var i=0; i<data.items.length; i++) {
                 if(data.items[i].branch_type !== "mobile") {
                     libraryList.push({name: data.items[i].name, id: data.items[i].id});
                 }
-                finalizeSelect();
             }
+            finalizeSelect();
         });
     }
 
