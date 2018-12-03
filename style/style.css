@@ -429,10 +429,6 @@
     padding-top: 0.05em!important;
 }
 
-.large-schedules .fa-info-circle {
-    margin-top: 6px!important;
-}
-
 .large-schedules .fa-level-up, .large-schedules .fa-info-circle {
     margin-right: 0.4em;
     margin-left: 0.15em;
@@ -443,7 +439,7 @@
 }
 
 .large-schedules td, .large-schedules th{
-    font-size: 2em;
+    font-size: 3em;
 }
 
 .large-schedules button {
@@ -465,7 +461,7 @@
 .large-schedules .main-schedule {
     padding-top: 0.55em;
     font-weight: 600;
-    font-size: 1.8em;
+    font-size: 2.8em;
 }
 
 .large-schedules .closed {
@@ -475,12 +471,12 @@
 .large-schedules .date-container, .large-schedules .day-name {
     padding-top: 0.4em!important;
     font-weight: 600;
-    font-size: 1.9em;
+    font-size: 2.9em;
 }
 
 .large-schedules .date-container {
-    width: 27%!important;
-    padding-left: 10%!important;
+    width: 23%!important;
+    padding-left: 6%!important;
 }
 
 .large-schedules table {

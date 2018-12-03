@@ -518,8 +518,10 @@ $(document).ready(function() {
     }
     /* Large schedules are used in iDiD info screens. */
     if(large) {
-        $(".library-schedules").removeClass('col-lg-4 col-xl-3');
+        console.log("#HEY");
+        $(".library-schedules").removeClass('col-lg-4 col-xl-3 schedules-widget');
         $(".library-schedules").addClass('col-md-12');
+        // schedules-widget would mess scaling on ff.
         $('#schedules').addClass("large-schedules");
     }
     
