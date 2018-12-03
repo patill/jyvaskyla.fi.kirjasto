@@ -316,6 +316,12 @@ function getWeekSchelude(direction, lib) {
                     selfServiceInfo = selfServiceInfo.replace("isTodayClass", isTodayClass);
                     magazineInfo = magazineInfo.replace("isTodayClass", isTodayClass);
                 }
+                // Replace : with . in schedules.
+                selfServiceBefore = selfServiceBefore.replace(/:/g, ".");
+                magazinesBefore = magazinesBefore.replace(/:/g, ".");
+                staffToday = staffToday.replace(/:/g, ".");
+                selfServiceAfter = selfServiceAfter.replace(/:/g, ".");
+                magazinesAfter = magazinesAfter.replace(/:/g, ".");
                 // If dayInfo is the same as selfServiceInfo or magazineInfo, don't show duplicated infos.
                 if(dayInfo !== "" && dayInfo === selfServiceInfo) {
                     selfServiceInfo = '';
@@ -353,8 +359,8 @@ function getWeekSchelude(direction, lib) {
                     '<time datetime="' + begin.format('YYYY-MM-DD') + '">' + begin.format('D.M.') + '</time>' +
                 '</th>' +
                     '<td class="day-name">' + dayName + '</td>' +
-                    '<td class="main-schedule"><time datetime="' + dayStart + '">' + dayStart + '</time> – <time datetime="' + dayEnd + '">'
-                    + dayEnd + '</time></td></tr>' + selfServiceBefore + magazinesBefore + staffToday +
+                    '<td class="main-schedule"><time datetime="' + dayStart + '">' + dayStart.replace(/:/g, ".") + '</time> – <time datetime="' + dayEnd + '">'
+                    + dayEnd.replace(/:/g, ".") + '</time></td></tr>' + selfServiceBefore + magazinesBefore + staffToday +
                     selfServiceAfter + magazinesAfter + dayInfo + selfServiceInfo + magazineInfo;
             }
             str += scheludeRow;
@@ -522,13 +528,11 @@ $(document).ready(function() {
         detectswipe("sliderBox", swipeNavigation);
     }
     /* Large schedules are used in iDiD info screens. */
-    if(large) {
-        console.log("#HEY");
+    if(font === "l" || font === "xl") {
         $(".library-schedules").removeClass('col-lg-4 col-xl-3 schedules-widget');
-        $(".library-schedules").addClass('col-md-12');
-        // schedules-widget would mess scaling on ff.
-        $('#schedules').addClass("large-schedules");
+        $('#schedules').addClass("large-schedules col-md-12");
+        if(font === "xl") {
+            $(".library-schedules").addClass('xl-font');
+        }
     }
-    
-
 }); // OnReady

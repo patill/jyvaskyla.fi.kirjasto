@@ -413,10 +413,6 @@
     font-size: 0.88em!important;
 }
 
-.time--sub td {
-    padding-bottom: 0.5em!important;
-}
-
 .fa-info-circle {
     margin-top: 0.12em!important;
 }
@@ -438,10 +434,6 @@
     margin-left: 0.25em;
 }
 
-.large-schedules td, .large-schedules th{
-    font-size: 3em;
-}
-
 .large-schedules button {
     display: none;
 }
@@ -454,24 +446,8 @@
     margin-top: 2%;
 }
 
-.large-schedules td {
-    padding-bottom: 0.25em!important;
-}
-
-.large-schedules .main-schedule {
-    padding-top: 0.45em;
-    font-weight: 600;
-    font-size: 2.8em;
-}
-
 .large-schedules .closed {
     padding-top: 0.4em;
-}
-
-.large-schedules .date-container, .large-schedules .day-name {
-    padding-top: 0.4em!important;
-    font-weight: 600;
-    font-size: 2.9em;
 }
 
 .large-schedules .date-container {
@@ -482,6 +458,44 @@
 .large-schedules table {
     border-bottom: 1px solid #DEE2E6;
 }
+
+.large-schedules td {
+    padding-bottom: 0.17em!important;
+}
+
+/* L-font */
+.large-schedules td, .large-schedules th{
+    font-size: 2.2em;
+}
+
+.large-schedules .date-container, .large-schedules .day-name {
+    padding-top: 0.4em!important;
+    font-weight: 600;
+    font-size: 2.3em;
+}
+
+.large-schedules .main-schedule {
+    padding-top: 0.45em;
+    font-weight: 600;
+    font-size: 2.1em;
+}
+/* XL-font */
+.xl-font td,.xl-font th{
+    font-size: 3em;
+}
+
+.xl-font .date-container, .xl-font .day-name {
+    font-size: 2.9em;
+}
+
+.xl-font .main-schedule {
+    padding-top: 0.45em;
+    font-weight: 600;
+    font-size: 2.8em;
+}
+
+
+
 
 /*!
 Chosen, a Select Box Enhancer for jQuery and Prototype
