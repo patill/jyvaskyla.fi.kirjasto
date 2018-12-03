@@ -335,13 +335,18 @@ function getWeekSchelude(direction, lib) {
                 }
             }
             if (isClosed) {
+                // Add info row on closed days.
+                var closedRowSpan =  1;
+                if(dayInfo !== "" || selfServiceInfo !== "" || magazineInfo !== "") {
+                    closedRowSpan = 2;
+                }
                 scheludeRow = '<tr class="time ' + isTodayClass + '">' +
-                '<th class="date-container" scope="row">' +
+                '<th class="date-container" scope="row" rowspan="' + closedRowSpan + '">' +
                     '<time datetime="' + begin.format('YYYY-MM-DD') + '">' + begin.format('D.M.') + '</time>' +
                 '</th>' +
                     '<td class="day-name">' + dayName + '</td>' +
                     '<td class="main-schedule closed">' + i18n.get("Suljettu") + '</td>' +
-                '</tr>'
+                '</tr>' + dayInfo + selfServiceInfo + magazineInfo;
             } else {
                 scheludeRow = '<tr class="time ' + isTodayClass + '">' +
                 '<th class="date-container" scope="row" rowspan="' + rowspanCount + '">' +
