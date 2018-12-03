@@ -3,6 +3,7 @@ var library;
 var lang;
 var city;
 var consortium;
+var large = false;
 // Get parameters from iframe url.
 function getParamValue(paramName)
 {
@@ -19,6 +20,10 @@ library = getParamValue('lib');
 lang = getParamValue('lang');
 city = getParamValue('city');
 consortium = getParamValue('consortium');
+/* Large schedules are used in iDiD info screens. */
+if(getParamValue('large') == 'true') {
+    large = true;
+}
 
 /* Alternative:   <script data-library="85111" data-lang="fi" src="../../js/main.js" type="text/javascript"></script>*/
 // If lang and lib are undefined (not used in iframe)

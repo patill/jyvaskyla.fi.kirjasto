@@ -400,6 +400,92 @@
     text-align: center
 }
 
+.fa-level-up, .fa-info-circle {
+    margin-right: 0.2em;
+}
+
+.info-text {
+    font-weight: 500;
+}
+
+/* TO DO: Remove !important after finding the definition later on. */
+.time--sub {
+    font-size: 0.88em!important;
+}
+
+.time--sub td {
+    padding-bottom: 0.5em!important;
+}
+
+.fa-info-circle {
+    margin-top: 0.12em!important;
+}
+
+.large-schedules .fa-info-circle {
+    margin-top: 0.22em!important;
+}
+
+.large-schedules .info-row td {
+    padding-top: 0.05em!important;
+}
+
+.large-schedules .fa-info-circle {
+    margin-top: 6px!important;
+}
+
+.large-schedules .fa-level-up, .large-schedules .fa-info-circle {
+    margin-right: 0.4em;
+    margin-left: 0.15em;
+}
+
+.large-schedules .fa-level-up {
+    margin-left: 0.25em;
+}
+
+.large-schedules td, .large-schedules th{
+    font-size: 2em;
+}
+
+.large-schedules button {
+    display: none;
+}
+
+.large-schedules .thead-light {
+    display: none;
+}
+
+.large-schedules {
+    margin-top: 2%;
+}
+
+.large-schedules td {
+    padding-bottom: 0.25em!important;
+}
+
+.large-schedules .main-schedule {
+    padding-top: 0.55em;
+    font-weight: 600;
+    font-size: 1.8em;
+}
+
+.large-schedules .closed {
+    padding-top: 0.4em;
+}
+
+.large-schedules .date-container, .large-schedules .day-name {
+    padding-top: 0.4em!important;
+    font-weight: 600;
+    font-size: 1.9em;
+}
+
+.large-schedules .date-container {
+    width: 27%!important;
+    padding-left: 10%!important;
+}
+
+.large-schedules table {
+    border-bottom: 1px solid #DEE2E6;
+}
 
 /*!
 Chosen, a Select Box Enhancer for jQuery and Prototype
@@ -1345,7 +1431,7 @@ small {
     width: 100%;
     max-width: 100%;
     margin-bottom: 1rem;
-    background-color: transparent
+    background-color: transparent;
 }
 
 .table td,
