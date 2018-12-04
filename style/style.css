@@ -256,13 +256,6 @@
     margin-right: 5px;
 }
 
-.info-text {
-    margin-top: -2px;
-    padding-left: 7px;
-    display: flex;
-    justify-content: flex-start;
-}
-
 .schedules-container {
     background:rgba(0,0,0,0);
 }
@@ -406,6 +399,11 @@
 
 .info-text {
     font-weight: 500;
+    margin-top: -2px;
+    padding-left: 7px;
+    display: flex;
+    white-space: normal;
+    text-align: left;
 }
 
 /* TO DO: Remove !important after finding the definition later on. */
@@ -421,6 +419,7 @@
     margin-top: 0.25em!important;
 }
 
+/* Large schedules are used for iDiD info screens */
 .large-schedules .info-row td {
     padding-top: 0.05em!important;
 }
@@ -463,39 +462,63 @@
     padding-bottom: 0.17em!important;
 }
 
-/* L-font */
+/* L-font (default) */
 .large-schedules td, .large-schedules th{
-    font-size: 2.2em;
+    font-size: 1.9em;
 }
 
 .large-schedules .date-container, .large-schedules .day-name {
     padding-top: 0.4em!important;
     font-weight: 600;
-    font-size: 2.3em;
+    font-size: 1.8em;
 }
 
 .large-schedules .main-schedule {
     padding-top: 0.45em;
     font-weight: 600;
-    font-size: 2.1em;
+    font-size: 1.7em;
 }
+
+/* medium-font, used if schedule contains so many rows L-font would not fit well. */
+.m-font td,.m-font th{
+    font-size: 1.6em;
+}
+
+.m-font .date-container, .m-font .day-name {
+    font-size: 1.5em;
+}
+
+.m-font .main-schedule {
+    font-size: 1.4em;
+}
+
 /* XL-font */
 .xl-font td,.xl-font th{
-    font-size: 3em;
+    font-size: 2.2em;
 }
 
 .xl-font .date-container, .xl-font .day-name {
-    font-size: 2.9em;
+    font-size: 2.3em;
 }
 
 .xl-font .main-schedule {
+    font-size: 2.1em;
+}
+
+/* XXL-font */
+.xxl-font td,.xxl-font th{
+    font-size: 3em;
+}
+
+.xxl-font .date-container, .xxl-font .day-name {
+    font-size: 2.9em;
+}
+
+.xxl-font .main-schedule {
     padding-top: 0.45em;
     font-weight: 600;
     font-size: 2.8em;
 }
-
-
-
 
 /*!
 Chosen, a Select Box Enhancer for jQuery and Prototype

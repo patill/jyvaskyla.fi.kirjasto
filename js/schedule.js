@@ -22,6 +22,22 @@ function isSameOrBefore(timeOne, timeTwo) {
     }
 }
 
+/* Split string after the word in the middle
+* https://stackoverflow.com/questions/18087416/split-string-in-half-by-word */
+function splitString(s) {
+    var middle = Math.floor(s.length / 2);
+    var before = s.lastIndexOf(' ', middle);
+    var after = s.indexOf(' ', middle + 1);
+    if (before == -1 || (after != -1 && middle - before >= after - middle)) {
+        middle = after;
+    } else {
+        middle = before;
+    }
+    var s1 = s.substr(0, middle);
+    var s2 = s.substr(middle + 1);
+    return s1 + '<br>' + s2;
+}
+
 var weekCounter = 0;
 function getWeekSchelude(direction, lib) {
     // If no library is provided, use the default option.
@@ -51,8 +67,10 @@ function getWeekSchelude(direction, lib) {
             begin = moment(date).startOf('week').isoWeekday(1);
         }
         var str = '';
+        // totalRows is used to dynamically adjust font sizes for info-screens.
+        var totalRows = 0;
         for (var i=0; i<7; i++) {
-                // If today, add some colourfull classes!
+                // If today, add some colourful classes!
                 var isTodayClass = '';
                 var dayInfo = '';
                 var selfServiceInfo = '';
@@ -105,8 +123,28 @@ function getWeekSchelude(direction, lib) {
                     // Info row for main schedules..
                     if (data.schedules[i].info != null && data.schedules[i].info.length != 0) {
                         if(!JSON.stringify(data.schedules[i].info).includes("null")) {
+                            // Split long info strings in half, ignore longer than 60/80 chars.
+                            var infoText = data.schedules[i].info;
+                            if(largeSchedules) {
+                                if (infoText.length > 30 && infoText.length < 60) {
+                                    infoText = splitString(infoText);
+                                    totalRows = totalRows +1;
+                                }
+                                else if(infoText.length > 60) {
+                                    totalRows = totalRows +1;
+                                }
+                            }
+                            else {
+                                if (infoText.length > 40 && infoText.length < 80) {
+                                    infoText = splitString(infoText);
+                                    totalRows = totalRows +1;
+                                }
+                                else if(infoText.length > 80) {
+                                    totalRows = totalRows +1;
+                                }
+                            }
                             dayInfo = '<tr class="info-row time--sub isTodayClass">' +
-                                '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span class="info-text">' + data.schedules[i].info + '</span></td>' +
+                                '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span class="info-text">' + infoText + '</span></td>' +
                                 '</tr>';
                             increaseRowCount(true);
                         }
@@ -363,10 +401,28 @@ function getWeekSchelude(direction, lib) {
                     + dayEnd.replace(/:/g, ".") + '</time></td></tr>' + selfServiceBefore + magazinesBefore + staffToday +
                     selfServiceAfter + magazinesAfter + dayInfo + selfServiceInfo + magazineInfo;
             }
+            totalRows = totalRows + rowspanCount;
             str += scheludeRow;
             begin.add(1, 'd');
         }
         $( "#weekSchelude" ).html( str );
+        /* Large schedules are used in iDiD info screens. */
+        if(largeSchedules) {
+            $(".library-schedules").removeClass('col-lg-4 col-xl-3 schedules-widget xxl-font xl-font m-font');
+            $('#schedules').addClass("large-schedules col-md-12");
+            // If less than 16 rows, apply the xxl font.
+            if(totalRows < 16) {
+                $(".library-schedules").addClass('xxl-font');
+            }
+            // If 24 rows or less, apply the xl font.
+            else if(totalRows <= 24) {
+                $(".library-schedules").addClass('xl-font');
+            }
+            // If more than 28 rows, change to 'medium' font.
+            else if(totalRows > 28) {
+                $(".library-schedules").addClass('m-font');
+            }
+        }
         // If document has no title, set it to Library name.
         if(document.title === '') {
             if(data.name != null) {
@@ -526,13 +582,5 @@ $(document).ready(function() {
     detectswipe("schedules", swipeNavigation);
     if(document.getElementById("sliderBox") != null) {
         detectswipe("sliderBox", swipeNavigation);
-    }
-    /* Large schedules are used in iDiD info screens. */
-    if(font === "l" || font === "xl") {
-        $(".library-schedules").removeClass('col-lg-4 col-xl-3 schedules-widget');
-        $('#schedules').addClass("large-schedules col-md-12");
-        if(font === "xl") {
-            $(".library-schedules").addClass('xl-font');
-        }
     }
 }); // OnReady

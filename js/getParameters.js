@@ -3,7 +3,7 @@ var library;
 var lang;
 var city;
 var consortium;
-var font;
+var largeSchedules = false;
 // Get parameters from iframe url.
 function getParamValue(paramName)
 {
@@ -21,11 +21,12 @@ lang = getParamValue('lang');
 city = getParamValue('city');
 consortium = getParamValue('consortium');
 /* Large schedules are used in iDiD info screens. */
-if(getParamValue('font') == 'l') {
-    font = 'l';
+if(getParamValue('large') === 'true') {
+    largeSchedules = true;
 }
-else if(getParamValue('font') == 'xl') {
-    font = 'xl';
+/* Old method, to be removed */
+if(getParamValue('font') == 'l' || getParamValue('font') == 'xl') {
+    largeSchedules = true;
 }
 
 /* Alternative:   <script data-library="85111" data-lang="fi" src="../../js/main.js" type="text/javascript"></script>*/
