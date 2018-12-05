@@ -47,7 +47,6 @@ var refUrl = (window.location != window.parent.location)
     ? document.referrer
     : document.location.href;
 refUrl = refUrl.toLocaleLowerCase();
-console.log("refUrl: " + refUrl);
 // We use ? to navigate right to library X, # is not passed in url.
 // Check the libraries of JKL, by default the main library is used. (lib param from iframe)
 if(refUrl.indexOf("?halssila") > -1) {
@@ -80,7 +79,6 @@ else if(refUrl.indexOf("?palok") > -1) {
 else if(refUrl.indexOf("?saynat") > -1 || refUrl.indexOf("s%c3%a4yn%c3%a4t") > -1 ||
     refUrl.indexOf("s%C3%A4yn%C3%A4tsalo") > -1 || refUrl.indexOf("?säynät") > -1) {
     library = 85117;
-    console.log("HEY!");
 }
 else if(refUrl.indexOf("?tikka") > -1) {
     library = 85111;
