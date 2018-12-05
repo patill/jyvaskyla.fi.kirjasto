@@ -744,7 +744,6 @@ function bindActions() {
         // If no timeout is used, map may not load correctly. If if clause is not inside the timeout, map won't be loaded if contacts is the default tab.
         setTimeout(function(){
             if(!mapLoaded && lat != null) {
-            console.log("HEY!");
                 loadMap();mapLoaded = true;
             }
         }, 750);
