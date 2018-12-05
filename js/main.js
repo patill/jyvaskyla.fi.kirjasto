@@ -105,9 +105,7 @@ var contactsIsEmpty = true;
 var noServices = true;
 var indexItemClicked = false;
 // divClone & active tab are used with consortium.js
-// Active tab: 0 = info, 1 = contact details, 3 = services.
 var divClone = '';
-var activeTab = 0;
 
 var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang;
 function fetchInformation(language, lib) {

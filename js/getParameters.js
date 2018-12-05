@@ -64,7 +64,7 @@ else if(refUrl.indexOf("?keltin") > -1) {
 else if(refUrl.indexOf("?korpi") > -1) {
     library = 85116;
 }
-else if(refUrl.indexOf("?korte ") > -1) {
+else if(refUrl.indexOf("?korte") > -1) {
     library = 85160;
 }
 else if(refUrl.indexOf("?kuokka") > -1) {
@@ -76,7 +76,7 @@ else if(refUrl.indexOf("?lohi") > -1) {
 else if(refUrl.indexOf("?palok") > -1) {
     library = 85732;
 }
-else if(refUrl.indexOf("?saynat") > -1 || refUrl.indexOf("s%C3%A4yn%C3%A4t%0A") > -1 || refUrl.indexOf("?säynät") > -1) {
+else if(refUrl.indexOf("?saynat") > -1 || refUrl.indexOf("s%C3%A4yn%C3%A4tsalo") > -1 || refUrl.indexOf("?säynät") > -1) {
     library = 85117;
 }
 else if(refUrl.indexOf("?tikka") > -1) {
@@ -91,4 +91,14 @@ else if(refUrl.indexOf("?vesan") > -1) {
 // If no library parameter was provided.
 if(library === undefined || library === null || library === '') {
     library = 85159;
+}
+
+// Navigate to contacts or services, if parameter is in the url.
+// Active tab: 0 = info, 1 = contact details, 3 = services.
+var activeTab = 0;
+if(refUrl.indexOf("yhteys") > -1 || refUrl.indexOf("contact") > -1) {
+    activeTab = 1;
+}
+else if(refUrl.indexOf("palvelu") > -1 || refUrl.indexOf("service") > -1) {
+    activeTab = 2;
 }
