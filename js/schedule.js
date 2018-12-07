@@ -122,7 +122,7 @@ function getWeekSchelude(direction, lib) {
                     }
                     // Info row for main schedules..
                     if (data.schedules[i].info != null && data.schedules[i].info.length != 0) {
-                        if(!JSON.stringify(data.schedules[i].info).includes("null")) {
+                        if(JSON.stringify(data.schedules[i].info).indexOf("null") === -1) {
                             // Split long info strings in half, ignore longer than 60/80 chars.
                             var infoText = data.schedules[i].info;
                             if(largeSchedules) {
@@ -156,7 +156,7 @@ function getWeekSchelude(direction, lib) {
                             data.schedules[i].sections.selfservice.info !== undefined) {
                             if(data.schedules[i].sections.selfservice.info.length != 0) {
                                 // Apparently the API has started returning {"fi":null} in JSON if no English info is found...
-                                if(!JSON.stringify(data.schedules[i].sections.selfservice.info).includes("null")) {
+                                if(JSON.stringify(data.schedules[i].sections.selfservice.info).indexOf("null") === -1) {
                                     selfServiceInfo = '<tr class="time--sub isTodayClass">' +
                                         '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span class="info-text">' +  data.schedules[i].sections.selfService.info + '</span></td>' +
                                         '</tr>';
@@ -243,7 +243,7 @@ function getWeekSchelude(direction, lib) {
                             data.schedules[i].sections.magazines.info !== undefined) {
                             if(data.schedules[i].sections.magazines.info.length != 0) {
                                 // Apparently the API has started returning {"fi":null} in JSON if no English info is found...
-                                if(!JSON.stringify(data.schedules[i].sections.magazines.info).includes("null")) {
+                                if(JSON.stringify(data.schedules[i].sections.magazines.info).indexOf("null") === -1) {
                                     magazineInfo = '<tr class="info-row time--sub isTodayClass">' +
                                         '<td colspan="2"><i style="float: left" class="fa fa-info-circle" > </i><span class="info-text">' + data.schedules[i].sections.magazines.info + '</span></td>' +
                                         '</tr>';
