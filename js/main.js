@@ -368,10 +368,19 @@ function fetchInformation(language, lib) {
     if (isEmpty($('#staffMembers'))) {
         $.getJSON(jsonp_url + "&with=persons", function (data) {
             for (var i = 0; i < data.persons.length; i++) {
-                $("#staffMembers").append('<tr>' +
-                    '<td>' + data.persons[i].first_name + ' ' + data.persons[i].last_name + '</td>' +
-                    '<td>' + data.persons[i].job_title + '</td>' +
-                    '<td>' + data.persons[i].email + '</td>' +
+
+                var staffDetail = "";
+                if(data.persons[i].first_name !== null) {
+                    staffDetail += '<td>' + data.persons[i].first_name + ' ' + data.persons[i].last_name + '</td>';
+                }
+                if(data.persons[i].job_title !== null) {
+                    staffDetail += '<td>' + data.persons[i].job_title + '</td>'
+                }
+                if(data.persons[i].email !== null) {
+                    staffDetail += '<td>' + data.persons[i].email + '</td>'
+                }
+                    $("#staffMembers").append('<tr>' +
+                        staffDetail +
                     '</tr>');
             }
             // Show navigation if content.

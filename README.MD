@@ -26,6 +26,10 @@ A) Libraries of city, that belong to the same consortium ([https://olli-suutari-
 B) Libraries of city ([https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?city=jyväskylä&lib=85159&lang=fi)](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?city=jyväskylä&lib=85159&lang=fi)
 C) Libraries of consortium  ([https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85159&consortium=2113&lang=fi)](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85159&consortium=2113&lang=fi)
 
+Large schedules for info screens can be used with the &large=true parameter, eq.
+https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/schedule.html?lib=85160&lang=fi&large=true
+This increases the schedule font sizes dynamically to be used in a 1080 * 1920 info screens.
+
 
 
 **Library list**
