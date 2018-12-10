@@ -126,20 +126,20 @@ function getWeekSchelude(direction, lib) {
                         // Split long info strings in half, ignore longer than 60/80 chars.
                         var infoText = data.schedules[i].info;
                         if(largeSchedules) {
-                            if (infoText.length > 30 && infoText.length < 60) {
-                                infoText = splitString(infoText);
-                                totalRows = totalRows +1;
-                            }
-                            else if(infoText.length > 60) {
-                                totalRows = totalRows +1;
-                            }
-                        }
-                        else {
-                            if (infoText.length > 40 && infoText.length < 80) {
+                            if (infoText.length > 30 && infoText.length < 80) {
                                 infoText = splitString(infoText);
                                 totalRows = totalRows +1;
                             }
                             else if(infoText.length > 80) {
+                                totalRows = totalRows +1;
+                            }
+                        }
+                        else {
+                            if (infoText.length > 40 && infoText.length < 90) {
+                                infoText = splitString(infoText);
+                                totalRows = totalRows +1;
+                            }
+                            else if(infoText.length > 90) {
                                 totalRows = totalRows +1;
                             }
                         }
