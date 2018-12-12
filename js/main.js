@@ -114,9 +114,7 @@ var contactsIsEmpty = true;
 var noServices = true;
 var indexItemClicked = false;
 // divClone & active tab are used with consortium.js
-// Active tab: 0 = info, 1 = contact details, 3 = services.
 var divClone = '';
-var activeTab = 0;
 
 var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang;
 function fetchInformation(language, lib) {
@@ -166,7 +164,7 @@ function fetchInformation(language, lib) {
 			//if empty, hide transit toggle:
 			$('#transitAccessibilityToggle').css('visibility', 'hidden');
 
-			
+
 			}
             if (data.extra.transit.buses != null && data.extra.transit.buses !== "") {
                 transitIsEmpty = false;
@@ -339,10 +337,29 @@ function fetchInformation(language, lib) {
             if (isEmpty($('#postalAddress'))) {
                 if (data.mail_address != null) {
                     var boxNumber = '';
-                    if (data.mail_address.box_number != null) {
-                        boxNumber = 'PL ' + data.mail_address.box_number + '<br>';
+                    if (data.mail_address.box_number !== null) {
+                        boxNumber = 'PL ' + data.mail_address.box_number;
                     }
-                    $("#postalAddress").append(data.name + '<br>' + boxNumber + data.mail_address.zipcode + ' ' + data.mail_address.area);
+                    // Generate postal address based on available data.
+                    var postalString = '';
+                    if(data.name !== null && data.name.length !== 0) {
+                        postalString += data.name + '<br>';
+                    }
+                    if(boxNumber != null && boxNumber.length !== 0) {
+                        postalString += boxNumber + '<br>';
+                    }
+                    if(data.mail_address.zipcode !== null && data.mail_address.zipcode.length !== 0) {
+                        postalString += data.mail_address.zipcode + ' ';
+                    }
+                    if(data.mail_address.area !== null && data.mail_address.area.length !== 0) {
+                        postalString += data.mail_address.area;
+                    }
+                    if(postalString !== data.name + '<br>') {
+                        $("#postalAddress").append(postalString);
+                    }
+                    else {
+                        $("#postalTh").css('display', 'none');
+                    }
                 }
             }
             // Get coordinates to be used in loadMap function.
@@ -353,9 +370,12 @@ function fetchInformation(language, lib) {
             }
         }
         if (isEmpty($('#email'))) {
-            if (data.email != null) {
+            if (data.email != null && data.email.length !== 0) {
                 contactsIsEmpty = false;
                 $("#email").append(data.email);
+            }
+            else {
+                $("#emailTh").css('display', 'none');
             }
         }
         // Show navigation if content.
@@ -367,11 +387,16 @@ function fetchInformation(language, lib) {
     // Phone numbers.
     if (isEmpty($('#phoneNumbers'))) {
         $.getJSON(jsonp_url + "&with=phone_numbers", function (data) {
-            for (var i = 0; i < data.phone_numbers.length; i++) {
-                $("#phoneNumbers").append('<tr>' +
-                    '<td>' + data.phone_numbers[i].name + '</td>' +
-                    '<td>' + data.phone_numbers[i].number + '</td>' +
-                    '</tr>');
+            if(data.phone_numbers.length === 0) {
+                $('.phone-numbers').css('display', 'none');
+            }
+            else {
+                for (var i = 0; i < data.phone_numbers.length; i++) {
+                    $("#phoneNumbers").append('<tr>' +
+                        '<td>' + data.phone_numbers[i].name + '</td>' +
+                        '<td>' + data.phone_numbers[i].number + '</td>' +
+                        '</tr>');
+                }
             }
             // Show navigation if content.
             if (!isEmpty($('#phoneNumbers'))) {
@@ -387,20 +412,31 @@ function fetchInformation(language, lib) {
     // Staff list
     if (isEmpty($('#staffMembers'))) {
         $.getJSON(jsonp_url + "&with=persons", function (data) {
-			//sort staff by last name
-			data.persons.sort(function(el1,el2){
-			return compare(el1, el2, "last_name")
-			});
-            for (var i = 0; i < data.persons.length; i++) {
-				var phoneNb = '';
-					if (data.persons[i].phone != null) {
-						phoneNb = data.persons[i].phone ;
-					};
-                $("#staffMembers").append('<tr>' +
-                    '<td>' + data.persons[i].first_name + ' ' + data.persons[i].last_name + '</td>' +
-                    '<td>' + data.persons[i].job_title + '</td>' +
-					'<td>' + phoneNb + '</td>' +
-                    '</tr>');
+            // Hide staff if none found.
+            if(data.persons.length === 0) {
+                $('.staff').css('display', 'none');
+            }
+            else {
+              //sort staff by last name
+        			data.persons.sort(function(el1,el2){
+        			return compare(el1, el2, "last_name")
+        			});
+                for (var i = 0; i < data.persons.length; i++) {
+                    var staffDetail = "";
+                    if(data.persons[i].first_name !== null) {
+                        staffDetail += '<td>' + data.persons[i].first_name + ' ' + data.persons[i].last_name + '</td>';
+                    }
+                    if(data.persons[i].job_title !== null) {
+                        staffDetail += '<td>' + data.persons[i].job_title + '</td>'
+                    }
+                    //changed next lines to show phone, not email
+                    if(data.persons[i].phone !== null) {
+                        staffDetail += '<td>' + data.persons[i].phone + '</td>'
+                    }
+                    $("#staffMembers").append('<tr>' +
+                        staffDetail +
+                        '</tr>');
+                }
             }
             // Show navigation if content.
             if (!isEmpty($('#staffMembers'))) {
@@ -761,6 +797,20 @@ function bindActions() {
         }
     });
 
+    if(activeTab === 0) {
+        $("#navYhteystiedot").removeClass( "active" );
+        $("#navPalvelut").removeClass( "active" );
+        $(".yhteystiedot").hide(0);
+        $(".palvelut").hide(0);
+        // Show selected section + add active to nav.
+        $("#navEsittely").addClass( "active" );
+        $(".esittely").show(0);
+        // Hide infobox if visible.
+        if(isInfoBoxVisible) {
+            toggleInfoBox();
+        }
+    }
+
     if(activeTab === 1) {
         $("#navEsittely").removeClass( "active" );
         $("#navPalvelut").removeClass( "active" );
@@ -769,12 +819,13 @@ function bindActions() {
         // Show selected section + add active to nav.
         $("#navYhteystiedot").addClass( "active" );
         $(".yhteystiedot").show(0);
-        if(!mapLoaded && lat != null) {
-            setTimeout(function(){
-                loadMap();
-            }, 750);
-            mapLoaded = true;
-        }
+        // If no timeout is used, map may not load correctly. If if clause is not inside the timeout, map won't be loaded if contacts is the default tab.
+        setTimeout(function(){
+            if(!mapLoaded && lat != null) {
+                loadMap();mapLoaded = true;
+            }
+        }, 750);
+
         // Hide infobox if visible.
         if(isInfoBoxVisible) {
             toggleInfoBox();
@@ -785,8 +836,8 @@ function bindActions() {
                 navigateToDefault();
             }
         }, 100);
-
     }
+
     if(activeTab === 2) {
         // Hide other sections & active nav styles.
         $("#navEsittely").removeClass( "active" );
