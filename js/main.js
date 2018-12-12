@@ -422,6 +422,7 @@ function fetchInformation(language, lib) {
         			return compare(el1, el2, "last_name")
         			});
                 for (var i = 0; i < data.persons.length; i++) {
+                    var phoneNb = "";
                     var staffDetail = "";
                     if(data.persons[i].first_name !== null) {
                         staffDetail += '<td>' + data.persons[i].first_name + ' ' + data.persons[i].last_name + '</td>';
@@ -429,10 +430,13 @@ function fetchInformation(language, lib) {
                     if(data.persons[i].job_title !== null) {
                         staffDetail += '<td>' + data.persons[i].job_title + '</td>'
                     }
-                    //changed next lines to show phone, not email
+                    //Need to be shure to get a new td-tag even if there is no phone number
                     if(data.persons[i].phone !== null) {
-                        staffDetail += '<td>' + data.persons[i].phone + '</td>'
-                    }
+                        phoneNb = data.persons[i].phone ;
+                      }
+
+                    staffDetail += '<td>' + phoneNb + '</td>'
+
                     $("#staffMembers").append('<tr>' +
                         staffDetail +
                         '</tr>');
