@@ -774,6 +774,20 @@ function bindActions() {
         }
     });
 
+    if(activeTab === 0) {
+        $("#navYhteystiedot").removeClass( "active" );
+        $("#navPalvelut").removeClass( "active" );
+        $(".yhteystiedot").hide(0);
+        $(".palvelut").hide(0);
+        // Show selected section + add active to nav.
+        $("#navEsittely").addClass( "active" );
+        $(".esittely").show(0);
+        // Hide infobox if visible.
+        if(isInfoBoxVisible) {
+            toggleInfoBox();
+        }
+    }
+
     if(activeTab === 1) {
         $("#navEsittely").removeClass( "active" );
         $("#navPalvelut").removeClass( "active" );
@@ -799,8 +813,8 @@ function bindActions() {
                 navigateToDefault();
             }
         }, 100);
-
     }
+
     if(activeTab === 2) {
         // Hide other sections & active nav styles.
         $("#navEsittely").removeClass( "active" );
