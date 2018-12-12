@@ -340,8 +340,12 @@ function fetchInformation(language, lib) {
                     if(data.mail_address.area !== null && data.mail_address.area.length !== 0) {
                         postalString += data.mail_address.area;
                     }
-
-                    $("#postalAddress").append(postalString);
+                    if(postalString !== data.name + '<br>') {
+                        $("#postalAddress").append(postalString);
+                    }
+                    else {
+                        $("#postalTh").css('display', 'none');
+                    }
                 }
             }
             // Get coordinates to be used in loadMap function.
